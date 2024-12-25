@@ -5,44 +5,20 @@
 
 #include "logger.h"
 #include "player.h"
+#include "map.h"
 
-typedef struct {
-
-    int armor;
-    int gold;
-} Player;
-
-void initlizeMap(){
-    Log("Map initialized successfully.", INFO);
-}
-
-// Singleton design
-typedef struct {
-    int data;
-} Map;
-
-static Map* instance = NULL;
-
-Map* getMapInstance() {
-    // First call
-    if (instance == NULL) {
-        instance = (Map*)malloc(sizeof(Map));
-        if (instance == NULL) {
-            Log("MEM alloc failed f:%s l:%d", ERROR, __FILE__, __LINE__);
-            exit(1);
-        }
-        initlizeMap();
-        // implemenet
-
-    }
-    return instance;
-}
 
 int main()
 {
     Log("Program started.", DEBUG_);
+
+    // Initialize Player and Map
+    Player* mainPlayer = getPlayerInstance();
     Map* map = getMapInstance();
-//    initilizeMap()
+
+
+    Log("Player GOLD: %d", DEBUG_, mainPlayer->gold);
+
 
 
 
