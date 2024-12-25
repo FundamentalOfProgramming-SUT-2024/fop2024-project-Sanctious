@@ -5,8 +5,6 @@
 
 #include "logger.h"
 
-
-
 typedef struct {
     int data;
 } Player;
@@ -39,6 +37,7 @@ Map* getMapInstance() {
 
 int main()
 {
+    Log("Program started.", DEBUG_);
     Map* map = getMapInstance();
 //    initilizeMap()
 

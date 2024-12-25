@@ -8,20 +8,29 @@ void Log(char *msg, LogType type, ...) {
     va_start(args, msg);
     switch(type){
         case ERROR:
-            printf("<!>ERROR:   ");
+            printf("<!>ERROR:");
             vprintf(msg, args);
+            printf("\n");
             break;
         case INFO:
-            printf("<+>INFO:    ");
+            printf("<+>INFO:");
             vprintf(msg, args);
+            printf("\n");
             break;
         case WARNING:
-            printf("<?>WARNING: ");
+            printf("<?>WARNING:");
             vprintf(msg, args);
+            printf("\n");
+            break;
+        case DEBUG_:
+            #ifdef DEBUG
+                printf("<*>DEBUG:");
+                vprintf(msg, args);
+                printf("\n");
+            #endif
             break;
 
     }
-    printf("\n");
     va_end(args);
 
 }

@@ -4,7 +4,8 @@
 typedef enum {
     ERROR,
     INFO,
-    WARNING
+    WARNING,
+    DEBUG_
 } LogType;
 
 void Log(char *, LogType, ...);
