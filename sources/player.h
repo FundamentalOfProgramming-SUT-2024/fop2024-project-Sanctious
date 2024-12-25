@@ -21,7 +21,7 @@ typedef struct {
 } Player;
 
 
-void initializePlayer();
+void initializePlayer(Player*);
 Player* getPlayerInstance();
 
 #endif

@@ -3,18 +3,16 @@
 
 #include "item.h"
 // its a bad practice but i have now other idea
-#define MAXDOORS 16
 #define MAXITEMS 64
-
+#define MAXROOMS 16
 // maybe define a coordinate system ?
 
-typedef struct {
-    int gridWidth;
-    int girdHeight;
-} Map;
+typedef enum {
+    TREASURE,
+    NORMAL,
+    TRAP
+} RoomType;
 
-void initializeMap();
-Map* getMapInstance();
 
 typedef struct {
     int gridXPosition;
@@ -23,10 +21,26 @@ typedef struct {
     int gridWidth;
     int gridHeight;
 
+    RoomType type;
+
     int num_items;
-    Item items[MAXITEMS];
+    Item* items[MAXITEMS];
+
+    // implement doors
 //    Item doors[MAXITEMS];
 } Room;
+
+typedef struct {
+    int gridWidth;
+    int girdHeight;
+
+    int num_rooms;
+    Room* rooms[MAXROOMS];
+} Map;
+
+void initializeMap(Map*);
+Map* getMapInstance();
+
 
 void renderRoom(Room*);
 

@@ -17,7 +17,7 @@ Player* getPlayerInstance() {
             Log("MEM alloc failed f:%s l:%d", ERROR, __FILE__, __LINE__);
             exit(1);
         }
-        initializePlayer();
+        initializePlayer(instance);
         // implemenet
 
     }
@@ -25,9 +25,9 @@ Player* getPlayerInstance() {
 }
 
 
-void initializePlayer(){
-    getPlayerInstance()->gold = 2;
+void initializePlayer(Player* player){
+    player->gold = 2;
 
-    Log("Player initialized successfully.", INFO);
-    Log("Player GOLD: %d", DEBUG_, getPlayerInstance()->gold);
+    Log("Player initialized successfully.", DEBUG_);
+    Log("Player GOLD: %d", DEBUG_, player->gold);
 }

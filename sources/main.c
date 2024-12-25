@@ -18,6 +18,9 @@ int main()
     Player* mainPlayer = getPlayerInstance();
 
 
+//    for (int i = 0; i < map->num_rooms; i++){
+//        printf("%d\n", map->rooms[i]->type);
+//    }
     // main loop
     // render rooms/map
     // render player/other objects
