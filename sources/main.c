@@ -6,6 +6,7 @@
 #include "logger.h"
 #include "player.h"
 #include "map.h"
+#include "item.h"
 
 
 int main()
@@ -13,12 +14,13 @@ int main()
     Log("Program started.", DEBUG_);
 
     // Initialize Player and Map
-    Player* mainPlayer = getPlayerInstance();
     Map* map = getMapInstance();
+    Player* mainPlayer = getPlayerInstance();
 
 
-    Log("Player GOLD: %d", DEBUG_, mainPlayer->gold);
-
+    // main loop
+    // render rooms/map
+    // render player/other objects
 
 
 

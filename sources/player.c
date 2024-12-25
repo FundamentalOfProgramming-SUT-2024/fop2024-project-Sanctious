@@ -27,5 +27,7 @@ Player* getPlayerInstance() {
 
 void initializePlayer(){
     getPlayerInstance()->gold = 2;
+
     Log("Player initialized successfully.", INFO);
+    Log("Player GOLD: %d", DEBUG_, getPlayerInstance()->gold);
 }

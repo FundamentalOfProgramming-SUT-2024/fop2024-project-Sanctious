@@ -3,9 +3,12 @@
 
 #include "logger.h"
 #include "map.h"
+#include "item.h"
 
 void initializeMap();
 static Map* instance = NULL;
+// It shouldnt be here
+void renderRoom(Room* room);
 
 // Singleton design
 
@@ -28,5 +31,9 @@ Map* getMapInstance() {
 void initializeMap(){
 
     Log("Map initialized successfully.", INFO);
+}
+
+void renderRoom(Room* room){
+
 }
 
