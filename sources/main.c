@@ -4,9 +4,12 @@
 #include <string.h>
 
 #include "logger.h"
+#include "player.h"
 
 typedef struct {
-    int data;
+
+    int armor;
+    int gold;
 } Player;
 
 void initlizeMap(){
