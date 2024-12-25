@@ -32,7 +32,7 @@ typedef struct {
 
 typedef struct {
     int gridWidth;
-    int girdHeight;
+    int gridHeight;
 
     int num_rooms;
     Room* rooms[MAXROOMS];

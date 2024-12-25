@@ -19,7 +19,7 @@ int main()
 
 
 //    for (int i = 0; i < map->num_rooms; i++){
-//        printf("%d\n", map->rooms[i]->type);
+//        printf("%d\n", map->rooms[i]->gridXPosition);
 //    }
     // main loop
     // render rooms/map
