@@ -9,6 +9,7 @@
 #include "map.h"
 #include "config.h"
 #include "logger.h"
+#include "player.h"
 
 FT_Library ft;
 FT_Face face;
@@ -121,6 +122,27 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
     glDisable(GL_BLEND);
 }
 
+void renderPlayer(){
+    renderText(getPlayerInstance()->gridXPosition, getPlayerInstance()->gridYPosition, "@", 0.0, 1.0, 1.0, 1.0);
+}
+
+void processKeyboard(unsigned char key, int x, int y) {
+    Player* player = getPlayerInstance();
+
+	if (key == 'w')
+        if (isValidPos(player->gridXPosition, player->gridYPosition-1))
+            player->gridYPosition -= 1;
+    if (key == 'd')
+        if (isValidPos(player->gridXPosition+1, player->gridYPosition))
+            player->gridXPosition += 1;
+    if (key == 's')
+        if (isValidPos(player->gridXPosition, player->gridYPosition+1))
+            player->gridYPosition += 1;
+    if (key == 'a')
+        if (isValidPos(player->gridXPosition-1, player->gridYPosition))
+            player->gridXPosition -= 1;
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -133,10 +155,12 @@ void display() {
 
         for (int j = 0; j < room->gridWidth; j++) {
             for (int k = 0; k < room->gridHeight; k++) {
-                renderText(room->gridXPosition + j, room->gridYPosition + k, "A", 1.0, 0.0, 0.0, 1.0);
+//                renderText(room->gridXPosition + j, room->gridYPosition + k, "A", 1.0, 0.0, 0.0, 1.0);
             }
         }
     }
+
+    renderPlayer();
 
     glFlush();
 }
@@ -159,6 +183,9 @@ void render(int argc, char** argv) {
 
     initFreeType("fonts/FreeSans.otf");
 
+    glutKeyboardFunc(processKeyboard);
+
+    glutIdleFunc(display);
     glutDisplayFunc(display);
 
     glutMainLoop();

@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "item.h"
+#include "map.h"
 
 // its a bad practice but i have now other idea
 #define MAX_INVENTORY_SIZE 16
@@ -23,5 +24,7 @@ typedef struct {
 
 void initializePlayer(Player*);
 Player* getPlayerInstance();
+Room* findPlayerRoom();
+char isValidPos(int , int);
 
 #endif
