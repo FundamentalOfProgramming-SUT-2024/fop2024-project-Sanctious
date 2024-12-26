@@ -5,6 +5,8 @@
 #include "logger.h"
 #include "map.h"
 #include "item.h"
+#include "config.h"
+
 
 #define RANDOM(min, max) ((rand() % ((max) - (min) + 1)) + (min))
 
@@ -20,7 +22,7 @@ Map* getMapInstance() {
     if (instance == NULL) {
         instance = (Map*)malloc(sizeof(Map));
         if (instance == NULL) {
-            Log("MEM alloc failed f:%s l:%d", ERROR, __FILE__, __LINE__);
+            Log("MEM alloc failed f:%s l:%d", _ERROR_, __FILE__, __LINE__);
             exit(1);
         }
         initializeMap(instance);
@@ -35,15 +37,15 @@ void initializeMap(Map* map){
     srand(time(NULL));
 
     map->num_rooms = 0;
-    map->gridWidth = 200;
-    map->gridHeight = 200;
+    map->gridWidth = XCELLS;
+    map->gridHeight = YCELLS;
 
     int _tlwidth = 0;
     int _tlheight = 0;
-    int _thwidth = 200;
-    int _thheight = 200;
+    int _thwidth = XCELLS;
+    int _thheight = YCELLS;
 
-    for (int i = 0; i < 5; i++){
+    for (int i = 0; i < 3; i++){
         // Or create n rooms beforehand then loop through them
         Room* _room = (Room *) malloc(1 * sizeof(Room));
         _room->type = TREASURE;
@@ -55,8 +57,8 @@ void initializeMap(Map* map){
         if (rand()%2){
             _room->gridXPosition = RANDOM(_tlwidth, _thwidth);
             _room->gridYPosition = RANDOM(_tlheight, _thheight);
-            _room->gridHeight = 0;
-            _room->gridWidth = 0;
+            _room->gridHeight = 2;
+            _room->gridWidth = 2;
 
 
             _tlheight = (_thheight+_tlheight)/2;
@@ -65,20 +67,17 @@ void initializeMap(Map* map){
         else{
             _room->gridXPosition = RANDOM(_tlwidth, _thwidth);
             _room->gridYPosition = RANDOM(_tlheight, _thheight);
-            _room->gridHeight = 0;
-            _room->gridWidth = 0;
+            _room->gridHeight = 2;
+            _room->gridWidth = 2;
 
             _tlwidth = (_thwidth+_tlwidth)/2;
         }
 
-        Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", DEBUG_, i+1,
+        Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, i+1,
             _room->gridXPosition, _room->gridYPosition, _room->gridWidth, _room->gridHeight);
     }
 
-    Log("Map initialized successfully.", DEBUG_);
+    Log("Map initialized successfully.", _DEBUG_);
 }
 
-void renderRoom(Room* room){
-
-}
 

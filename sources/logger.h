@@ -2,10 +2,10 @@
 #define LOGGER2_H
 
 typedef enum {
-    ERROR,
-    INFO,
-    WARNING,
-    DEBUG_
+    _ERROR_,
+    _INFO_,
+    _WARNING_,
+    _DEBUG_
 } LogType;
 
 void Log(char *, LogType, ...);

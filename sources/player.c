@@ -14,7 +14,7 @@ Player* getPlayerInstance() {
     if (instance == NULL) {
         instance = (Player*)malloc(sizeof(Player));
         if (instance == NULL) {
-            Log("MEM alloc failed f:%s l:%d", ERROR, __FILE__, __LINE__);
+            Log("MEM alloc failed f:%s l:%d", _ERROR_, __FILE__, __LINE__);
             exit(1);
         }
         initializePlayer(instance);
@@ -28,6 +28,6 @@ Player* getPlayerInstance() {
 void initializePlayer(Player* player){
     player->gold = 2;
 
-    Log("Player initialized successfully.", DEBUG_);
-    Log("Player GOLD: %d", DEBUG_, player->gold);
+    Log("Player initialized successfully.", _DEBUG_);
+    Log("Player GOLD: %d", _DEBUG_, player->gold);
 }

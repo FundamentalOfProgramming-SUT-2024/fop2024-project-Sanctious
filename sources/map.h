@@ -2,9 +2,7 @@
 #define MAP_H
 
 #include "item.h"
-// its a bad practice but i have now other idea
-#define MAXITEMS 64
-#define MAXROOMS 16
+#include "config.h"
 // maybe define a coordinate system ?
 
 typedef enum {
@@ -41,7 +39,5 @@ typedef struct {
 void initializeMap(Map*);
 Map* getMapInstance();
 
-
-void renderRoom(Room*);
 
 #endif

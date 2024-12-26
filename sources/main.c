@@ -7,16 +7,18 @@
 #include "player.h"
 #include "map.h"
 #include "item.h"
+#include "renderer.h"
 
 
-int main()
+int main(int argc, char** argv)
 {
-    Log("Program started.", DEBUG_);
+    Log("Program started.", _DEBUG_);
 
     // Initialize Player and Map
     Map* map = getMapInstance();
     Player* mainPlayer = getPlayerInstance();
 
+    render(argc, argv);
 
 //    for (int i = 0; i < map->num_rooms; i++){
 //        printf("%d\n", map->rooms[i]->gridXPosition);

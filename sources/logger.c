@@ -7,22 +7,22 @@ void Log(char *msg, LogType type, ...) {
     va_list args;
     va_start(args, msg);
     switch(type){
-        case ERROR:
+        case _ERROR_:
             printf("<!>ERROR: ");
             vprintf(msg, args);
             printf("\n");
             break;
-        case INFO:
+        case _INFO_:
             printf("<+>INFO: ");
             vprintf(msg, args);
             printf("\n");
             break;
-        case WARNING:
+        case _WARNING_:
             printf("<?>WARNING: ");
             vprintf(msg, args);
             printf("\n");
             break;
-        case DEBUG_:
+        case _DEBUG_:
             #ifdef DEBUG
                 printf("<*>DEBUG: ");
                 vprintf(msg, args);
