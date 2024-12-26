@@ -14,6 +14,8 @@
 FT_Library ft;
 FT_Face face;
 
+float r,g=1.0f,b=1.0f;
+
 void initFreeType(const char* fontPath) {
     if (FT_Init_FreeType(&ft)) {
         Log("FreeType init failed.", _ERROR_);
@@ -123,7 +125,7 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
 }
 
 void renderPlayer(){
-    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "@", 0.0, 1.0, 1.0, 1.0);
+    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "@", r, g, b, 1.0);
 }
 
 void processKeyboard(unsigned char key, int x, int y) {
@@ -165,6 +167,20 @@ void display() {
     glFlush();
 }
 
+void playerChangeColor(int c){
+    if (c%2){
+        r = 1.0f;
+        g = 1.0f;
+        b = 0.0f;
+    }
+    else{
+        r = 0.0f;
+        b = 1.0f;
+        g = 1.0f;
+    }
+    glutTimerFunc(500, playerChangeColor, c+1);
+}
+
 void render(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -187,6 +203,8 @@ void render(int argc, char** argv) {
 
     glutIdleFunc(display);
     glutDisplayFunc(display);
+
+    glutTimerFunc(500, playerChangeColor, 0);
 
     glutMainLoop();
 }
