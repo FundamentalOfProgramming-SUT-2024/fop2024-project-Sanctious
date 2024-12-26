@@ -56,7 +56,7 @@ void renderRoomBox(int x, int y, int width, int height, float r, float g, float 
     glEnd();
 }
 
-void renderText(int col, int row, const char* text, float textR, float textG, float textB, float alpha, float bgR, float bgG, float bgB, float bgAlpha) {
+void renderText(int col, int row, const char* text, float textR, float textG, float textB, float alpha) {
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
@@ -65,14 +65,6 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glColor4f(bgR, bgG, bgB, bgAlpha);
-    glBegin(GL_QUADS);
-    glVertex2f(x, y);
-    glVertex2f(x + cellWidth, y);
-    glVertex2f(x + cellWidth, y + cellHeight);
-    glVertex2f(x, y + cellHeight);
-    glEnd();
 
     glColor4f(textR, textG, textB, alpha);
 
@@ -91,14 +83,16 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
         GLuint texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
-            GL_RED,
+            GL_ALPHA,
             glyph->bitmap.width,
             glyph->bitmap.rows,
             0,
-            GL_RED,
+            GL_ALPHA,
             GL_UNSIGNED_BYTE,
             glyph->bitmap.buffer
         );
@@ -108,19 +102,17 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        float xpos = x + glyph->bitmap_left * (cellWidth / 48.0f);
-        float ypos = y - (glyph->bitmap.rows - glyph->bitmap_top) * (cellHeight / 48.0f);
-        float w = glyph->bitmap.width * (cellWidth / 48.0f);
-        float h = glyph->bitmap.rows * (cellHeight / 48.0f);
+//        Log("glyph xsize: %d xpos: %f ysize: %d", _DEBUG_, glyph->bitmap.width, x, glyph->bitmap.rows);
 
+        // Render quad with that texture ( glyph texture )
         glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0); glVertex2f(xpos, ypos);
-        glTexCoord2f(1.0, 0.0); glVertex2f(xpos + w, ypos);
-        glTexCoord2f(1.0, 1.0); glVertex2f(xpos + w, ypos + h);
-        glTexCoord2f(0.0, 1.0); glVertex2f(xpos, ypos + h);
+        glTexCoord2f(0.0, 0.0); glVertex2f(x, y);
+        glTexCoord2f(1.0, 0.0); glVertex2f(x + cellWidth, y);
+        glTexCoord2f(1.0, 1.0); glVertex2f(x + cellWidth, y + cellHeight);
+        glTexCoord2f(0.0, 1.0); glVertex2f(x, y + cellHeight);
         glEnd();
 
-        x += (glyph->advance.x >> 6) * (cellWidth / 48.0f);
+        x += cellWidth;
 
         glDeleteTextures(1, &texture);
     }
@@ -141,6 +133,7 @@ void display() {
 
         for (int j = 0; j < room->gridWidth; j++) {
             for (int k = 0; k < room->gridHeight; k++) {
+                renderText(room->gridXPosition + j, room->gridYPosition + k, "A", 1.0, 0.0, 0.0, 1.0);
             }
         }
     }
@@ -164,7 +157,7 @@ void render(int argc, char** argv) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    initFreeType("fonts/Orbitron-Regular.ttf");
+    initFreeType("fonts/FreeSans.otf");
 
     glutDisplayFunc(display);
 

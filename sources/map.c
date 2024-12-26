@@ -42,8 +42,8 @@ void initializeMap(Map* map){
 
     int _tlwidth = 0;
     int _tlheight = 0;
-    int _thwidth = XCELLS;
-    int _thheight = YCELLS;
+    int _thwidth = XCELLS-1;
+    int _thheight = YCELLS-1;
 
     for (int i = 0; i < 3; i++){
         // Or create n rooms beforehand then loop through them
@@ -57,8 +57,8 @@ void initializeMap(Map* map){
         if (rand()%2){
             _room->gridXPosition = RANDOM(_tlwidth, _thwidth);
             _room->gridYPosition = RANDOM(_tlheight, _thheight);
-            _room->gridHeight = 2;
-            _room->gridWidth = 2;
+            _room->gridHeight = 1;
+            _room->gridWidth = 1;
 
 
             _tlheight = (_thheight+_tlheight)/2;
@@ -67,8 +67,8 @@ void initializeMap(Map* map){
         else{
             _room->gridXPosition = RANDOM(_tlwidth, _thwidth);
             _room->gridYPosition = RANDOM(_tlheight, _thheight);
-            _room->gridHeight = 2;
-            _room->gridWidth = 2;
+            _room->gridHeight = 1;
+            _room->gridWidth = 1;
 
             _tlwidth = (_thwidth+_tlwidth)/2;
         }
