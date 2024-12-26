@@ -8,8 +8,7 @@
 #define MAX_INVENTORY_SIZE 16
 
 typedef struct {
-    int gridXPosition;
-    int gridYPosition;
+    gCord pos;
 
     int inventory_size;
     Item inventory[MAX_INVENTORY_SIZE];

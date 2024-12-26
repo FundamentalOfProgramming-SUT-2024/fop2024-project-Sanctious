@@ -11,13 +11,25 @@ typedef enum {
     TRAP
 } RoomType;
 
+typedef struct {
+    int gridX;
+    int gridY;
+
+} gCord;
 
 typedef struct {
-    int gridXPosition;
-    int gridYPosition;
+    int gridW;
+    int gridH;
 
-    int gridWidth;
-    int gridHeight;
+} gScale;
+
+typedef struct {
+    gCord path[MAX_CORRIDOR_LENGTH];
+} Corridor;
+
+typedef struct {
+    gCord pos;
+    gScale scale;
 
     RoomType type;
 
@@ -28,12 +40,16 @@ typedef struct {
 //    Item doors[MAXITEMS];
 } Room;
 
+
 typedef struct {
-    int gridWidth;
-    int gridHeight;
+    gScale scale;
+
+    // valid cords maybe ?
+    // gCord validlocs[];
 
     int num_rooms;
     Room* rooms[MAXROOMS];
+    Corridor* corridors[MAXCORRIDORS];
 } Map;
 
 void initializeMap(Map*);

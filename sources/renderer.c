@@ -123,24 +123,24 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
 }
 
 void renderPlayer(){
-    renderText(getPlayerInstance()->gridXPosition, getPlayerInstance()->gridYPosition, "@", 0.0, 1.0, 1.0, 1.0);
+    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "@", 0.0, 1.0, 1.0, 1.0);
 }
 
 void processKeyboard(unsigned char key, int x, int y) {
     Player* player = getPlayerInstance();
 
 	if (key == 'w')
-        if (isValidPos(player->gridXPosition, player->gridYPosition-1))
-            player->gridYPosition -= 1;
+        if (isValidPos(player->pos.gridX, player->pos.gridY-1))
+            player->pos.gridY -= 1;
     if (key == 'd')
-        if (isValidPos(player->gridXPosition+1, player->gridYPosition))
-            player->gridXPosition += 1;
+        if (isValidPos(player->pos.gridX+1, player->pos.gridY))
+            player->pos.gridX += 1;
     if (key == 's')
-        if (isValidPos(player->gridXPosition, player->gridYPosition+1))
-            player->gridYPosition += 1;
+        if (isValidPos(player->pos.gridX, player->pos.gridY+1))
+            player->pos.gridY += 1;
     if (key == 'a')
-        if (isValidPos(player->gridXPosition-1, player->gridYPosition))
-            player->gridXPosition -= 1;
+        if (isValidPos(player->pos.gridX-1, player->pos.gridY))
+            player->pos.gridX -= 1;
 }
 
 void display() {
@@ -151,11 +151,11 @@ void display() {
     for (int i = 0; i < map->num_rooms; i++) {
         Room* room = map->rooms[i];
 
-        renderRoomBox(room->gridXPosition, room->gridYPosition, room->gridWidth, room->gridHeight, 1.0, 1.0, 1.0);
+        renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH, 0.5, 0.5, 0.5);
 
-        for (int j = 0; j < room->gridWidth; j++) {
-            for (int k = 0; k < room->gridHeight; k++) {
-//                renderText(room->gridXPosition + j, room->gridYPosition + k, "A", 1.0, 0.0, 0.0, 1.0);
+        for (int j = 0; j < room->scale.gridW; j++) {
+            for (int k = 0; k < room->scale.gridH; k++) {
+//                renderText(room->pos.gridX + j, room->pos.gridY + k, "A", 1.0, 0.0, 0.0, 1.0);
             }
         }
     }

@@ -37,8 +37,8 @@ void initializeMap(Map* map){
     srand(time(NULL));
 
     map->num_rooms = 0;
-    map->gridWidth = XCELLS;
-    map->gridHeight = YCELLS;
+    map->scale.gridW = XCELLS;
+    map->scale.gridH = YCELLS;
 
     int _tlwidth = 0;
     int _tlheight = 0;
@@ -51,14 +51,14 @@ void initializeMap(Map* map){
     getMapInstance()->rooms[getMapInstance()->num_rooms] = _room;
     getMapInstance()->num_rooms++;
 
-    _room->gridXPosition = _thwidth/2-3;
-    _room->gridYPosition = _thheight/2-3;
-    _room->gridHeight = 10;
-    _room->gridWidth = 10;
+    _room->pos.gridX = _thwidth/2-3;
+    _room->pos.gridY = _thheight/2-3;
+    _room->scale.gridH = 10;
+    _room->scale.gridW = 10;
 
 
     Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, 1,
-        _room->gridXPosition, _room->gridYPosition, _room->gridWidth, _room->gridHeight);
+        _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
 
     // generate map
 //    for (int i = 0; i < 3; i++){
@@ -71,26 +71,26 @@ void initializeMap(Map* map){
 //
 //        // split vertical
 //        if (rand()%2){
-//            _room->gridXPosition = RANDOM(_tlwidth, _thwidth);
-//            _room->gridYPosition = RANDOM(_tlheight, _thheight);
-//            _room->gridHeight = 1;
-//            _room->gridWidth = 1;
+//            _room->pos.gridX = RANDOM(_tlwidth, _thwidth);
+//            _room->pos.gridY = RANDOM(_tlheight, _thheight);
+//            _room->scale.gridH = 1;
+//            _room->scale.gridW = 1;
 //
 //
 //            _tlheight = (_thheight+_tlheight)/2;
 //        }
 //        // split vertical
 //        else{
-//            _room->gridXPosition = RANDOM(_tlwidth, _thwidth);
-//            _room->gridYPosition = RANDOM(_tlheight, _thheight);
-//            _room->gridHeight = 1;
-//            _room->gridWidth = 1;
+//            _room->pos.gridX = RANDOM(_tlwidth, _thwidth);
+//            _room->pos.gridY = RANDOM(_tlheight, _thheight);
+//            _room->scale.gridH = 1;
+//            _room->scale.gridW = 1;
 //
 //            _tlwidth = (_thwidth+_tlwidth)/2;
 //        }
 //
 //        Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, i+1,
-//            _room->gridXPosition, _room->gridYPosition, _room->gridWidth, _room->gridHeight);
+//            _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
 //    }
 
     Log("Map initialized successfully.", _DEBUG_);
