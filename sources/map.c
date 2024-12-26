@@ -60,6 +60,21 @@ void initializeMap(Map* map){
     Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, 1,
         _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
 
+    _room = (Room *) malloc(1 * sizeof(Room));
+    _room->type = TREASURE;
+
+    getMapInstance()->rooms[getMapInstance()->num_rooms] = _room;
+    getMapInstance()->num_rooms++;
+
+    _room->pos.gridX = 0;
+    _room->pos.gridY = 0;
+    _room->scale.gridH = 5;
+    _room->scale.gridW = 5;
+
+
+    Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, 1,
+        _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
+
     // generate map
 //    for (int i = 0; i < 3; i++){
 //        // Or create n rooms beforehand then loop through them
