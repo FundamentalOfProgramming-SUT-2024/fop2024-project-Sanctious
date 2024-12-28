@@ -9,6 +9,8 @@
 
 
 #define RANDOM(min, max) ((rand() % ((max) - (min) + 1)) + (min))
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
+#define MAX(X, Y) (((X) < (Y)) ? (Y) : (X))
 
 void initializeMap();
 static Map* instance = NULL;
@@ -40,73 +42,43 @@ void initializeMap(Map* map){
     map->scale.gridW = XCELLS;
     map->scale.gridH = YCELLS;
 
-    int _tlwidth = 0;
-    int _tlheight = 0;
-    int _thwidth = XCELLS-1;
-    int _thheight = YCELLS-1;
+    int _lowerXpos, _higherXpos, _lowerYpos, _higherYpos;
 
-    Room* _room = (Room *) malloc(1 * sizeof(Room));
-    _room->type = TREASURE;
+    // i should replace this with a more dynamic code
+    // maybe other variable names
+    // adding buffer zone to one pos is enough
+    // Generate map
 
-    getMapInstance()->rooms[getMapInstance()->num_rooms] = _room;
-    getMapInstance()->num_rooms++;
+    for (int i = 0; i < MAPDIV; i++){
+        _lowerXpos = (XCELLS-1)/MAPDIV * i + BUFFER_ZONE;
+        _higherXpos = (XCELLS-1)/MAPDIV * (i+1) -MIN_ROOM_WIDTH;
+        for (int j = 0; j < MAPDIV; j++){
+            _lowerYpos = (YCELLS-1)/MAPDIV * j + BUFFER_ZONE;
+            _higherYpos = (YCELLS-1)/MAPDIV * (j+1) -MIN_ROOM_HEIGHT;
+            // assuming that rooms dont collide
+            Room* _room = (Room *) malloc(1 * sizeof(Room));
+            _room->type = TREASURE;
 
-    _room->pos.gridX = _thwidth/2-3;
-    _room->pos.gridY = _thheight/2-3;
-    _room->scale.gridH = 10;
-    _room->scale.gridW = 10;
+            getMapInstance()->rooms[getMapInstance()->num_rooms] = _room;
+            getMapInstance()->num_rooms++;
+
+            int roomminw = MIN_ROOM_WIDTH;
+            int roomminh = MIN_ROOM_HEIGHT;
+
+            _room->pos.gridX = RANDOM(_lowerXpos, _higherXpos);
+            _room->pos.gridY = RANDOM(_lowerYpos, _higherYpos);
+
+            int roommaxw = MAX(roomminw, _higherXpos - _room->pos.gridX);
+            int roommaxh = MAX(roomminh, _higherYpos - _room->pos.gridY);
+
+            _room->scale.gridH = RANDOM(roomminh, roommaxh);
+            _room->scale.gridW = RANDOM(roomminw, roommaxw);
 
 
-    Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, 1,
-        _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
-
-    _room = (Room *) malloc(1 * sizeof(Room));
-    _room->type = TREASURE;
-
-    getMapInstance()->rooms[getMapInstance()->num_rooms] = _room;
-    getMapInstance()->num_rooms++;
-
-    _room->pos.gridX = 0;
-    _room->pos.gridY = 0;
-    _room->scale.gridH = 5;
-    _room->scale.gridW = 5;
-
-
-    Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, 1,
-        _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
-
-    // generate map
-//    for (int i = 0; i < 3; i++){
-//        // Or create n rooms beforehand then loop through them
-//        Room* _room = (Room *) malloc(1 * sizeof(Room));
-//        _room->type = TREASURE;
-//
-//        getMapInstance()->rooms[getMapInstance()->num_rooms] = _room;
-//        getMapInstance()->num_rooms++;
-//
-//        // split vertical
-//        if (rand()%2){
-//            _room->pos.gridX = RANDOM(_tlwidth, _thwidth);
-//            _room->pos.gridY = RANDOM(_tlheight, _thheight);
-//            _room->scale.gridH = 1;
-//            _room->scale.gridW = 1;
-//
-//
-//            _tlheight = (_thheight+_tlheight)/2;
-//        }
-//        // split vertical
-//        else{
-//            _room->pos.gridX = RANDOM(_tlwidth, _thwidth);
-//            _room->pos.gridY = RANDOM(_tlheight, _thheight);
-//            _room->scale.gridH = 1;
-//            _room->scale.gridW = 1;
-//
-//            _tlwidth = (_thwidth+_tlwidth)/2;
-//        }
-//
-//        Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, i+1,
-//            _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
-//    }
+            Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, getMapInstance()->num_rooms,
+                _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
+        }
+    }
 
     Log("Map initialized successfully.", _DEBUG_);
 }

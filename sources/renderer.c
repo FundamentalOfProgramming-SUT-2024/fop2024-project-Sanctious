@@ -39,15 +39,15 @@ float gridCellHeight() {
 }
 
 void renderRoomBox(int x, int y, int width, int height, float r, float g, float b) {
-    glColor3f(r, g, b);
+    glColor3f(0.2, 0.2, 1);
 
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
-    float xpos = x * cellWidth;
-    float ypos = y * cellHeight;
-    float w = width * cellWidth;
-    float h = height * cellHeight;
+    float xpos = (x-1) * cellWidth;
+    float ypos = (y-1) * cellHeight;
+    float w = (width+2) * cellWidth;
+    float h = (height+2) * cellHeight;
 
     glDisable(GL_BLEND);
 
@@ -57,6 +57,26 @@ void renderRoomBox(int x, int y, int width, int height, float r, float g, float 
     glVertex2f(xpos + w, ypos + h);
     glVertex2f(xpos, ypos + h);
     glEnd();
+
+    glColor3f(r, g, b);
+
+    cellWidth = gridCellWidth();
+    cellHeight = gridCellHeight();
+
+    xpos = x * cellWidth;
+    ypos = y * cellHeight;
+    w = width * cellWidth;
+    h = height * cellHeight;
+
+    glDisable(GL_BLEND);
+
+    glBegin(GL_QUADS);
+    glVertex2f(xpos, ypos);
+    glVertex2f(xpos + w, ypos);
+    glVertex2f(xpos + w, ypos + h);
+    glVertex2f(xpos, ypos + h);
+    glEnd();
+
 }
 
 void renderText(int col, int row, const char* text, float textR, float textG, float textB, float alpha) {
@@ -125,7 +145,8 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
 }
 
 void renderPlayer(){
-    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "@", r, g, b, 1.0);
+    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "O", r, g, b, 1.0);
+    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", r, g, b, 1.0);
 }
 
 void processKeyboard(unsigned char key, int x, int y) {

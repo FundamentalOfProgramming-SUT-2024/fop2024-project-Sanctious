@@ -3,7 +3,9 @@
 
 #include "item.h"
 #include "config.h"
-// maybe define a coordinate system ?
+
+struct Room;
+typedef struct Room Room;
 
 typedef enum {
     TREASURE,
@@ -28,6 +30,12 @@ typedef struct {
 } Corridor;
 
 typedef struct {
+    Corridor corridor;
+    Room* first;
+    Room* second;
+} Door;
+
+struct Room{
     gCord pos;
     gScale scale;
 
@@ -35,10 +43,9 @@ typedef struct {
 
     int num_items;
     Item* items[MAXITEMS];
+    Door* doors[MAXITEMS];
 
-    // implement doors
-//    Item doors[MAXITEMS];
-} Room;
+};
 
 
 typedef struct {

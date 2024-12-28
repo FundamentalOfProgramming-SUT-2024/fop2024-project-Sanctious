@@ -16,6 +16,12 @@
 // Map
 #define XCELLS 40
 #define YCELLS 40
+#define MAPDIV 3
+#define MIN_ROOM_WIDTH 4
+#define MIN_ROOM_HEIGHT 4
+#define BUFFER_ZONE 1
+
+// Render
 #define CELLSIZE (float) (WINDOW_WIDTH/XCELLS)
 
 // Game Logic
