@@ -114,7 +114,6 @@ void generateCorridor(Door* door){
     corridor->path[0].gridY = pos1.gridY;
 
     for (int i = 1; i <= corridor->path_length; i++){
-        printf("%d %d %d %d\n", xprog, yprog, corridor->path_length);
         int random = rand()%2;
         if (xprog == pos2.gridX-pos1.gridX) random = 0;
         if (yprog == pos2.gridY-pos1.gridY) random = 1;
@@ -126,9 +125,11 @@ void generateCorridor(Door* door){
         corridor->path[i].gridY = pos1.gridY + yprog;
     }
 
-
     door->corridor = corridor;
     door->connectedd->corridor = corridor;
+
+    Log("Corridor generated with sp: (%d, %d) ep: (%d, %d).", _DEBUG_,
+         pos1.gridX, pos1.gridY, pos1.gridX + xprog, pos1.gridY + yprog);
 
 
 }
@@ -148,7 +149,6 @@ void generateDoors(Map* map){
     }
     map->rooms[0]->doors[0]->connectedd = map->rooms[1]->doors[0];
     generateCorridor(map->rooms[0]->doors[0]);
-    printf("%d", map->rooms[0]->doors[0]->corridor->path_length);
 //    for (int i = 0; i < )
 
 }

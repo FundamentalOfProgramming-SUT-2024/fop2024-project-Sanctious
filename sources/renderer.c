@@ -97,7 +97,7 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
         unsigned int charCode = *p;
 
         if (FT_Load_Char(face, charCode, FT_LOAD_RENDER)) {
-            fprintf(stderr, "Failed to load Glyph for '%c'\n", *p);
+            Log("Failed to load glyph.", _ERROR_);
             continue;
         }
 
@@ -124,8 +124,6 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-//        Log("glyph xsize: %d xpos: %f ysize: %d", _DEBUG_, glyph->bitmap.width, x, glyph->bitmap.rows);
 
         // Render quad with that texture ( glyph texture )
         glBegin(GL_QUADS);
