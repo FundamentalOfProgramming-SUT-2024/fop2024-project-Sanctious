@@ -28,6 +28,7 @@
 
 // its a bad practice but i have now other idea
 #define MAXITEMS 64
+#define MAXDOORS 10
 #define MAXROOMS 10
 #define MAXCORRIDORS
 #define MAX_CORRIDOR_LENGTH 50

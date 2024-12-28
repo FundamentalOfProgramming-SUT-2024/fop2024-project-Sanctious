@@ -7,6 +7,9 @@
 struct Room;
 typedef struct Room Room;
 
+struct Door;
+typedef struct Door Door;
+
 typedef enum {
     TREASURE,
     NORMAL,
@@ -26,14 +29,18 @@ typedef struct {
 } gScale;
 
 typedef struct {
+    int path_length;
     gCord path[MAX_CORRIDOR_LENGTH];
 } Corridor;
 
-typedef struct {
-    Corridor corridor;
-    Room* first;
-    Room* second;
-} Door;
+struct Door{
+
+    gCord pos; // pos in parent room
+
+    Corridor* corridor;
+    Room* parentr; // parent room
+    Door* connectedd; // connected door
+} ;
 
 struct Room{
     gCord pos;
@@ -43,7 +50,8 @@ struct Room{
 
     int num_items;
     Item* items[MAXITEMS];
-    Door* doors[MAXITEMS];
+    int num_doors;
+    Door* doors[MAXDOORS];
 
 };
 

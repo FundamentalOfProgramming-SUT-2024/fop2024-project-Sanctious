@@ -166,6 +166,15 @@ void processKeyboard(unsigned char key, int x, int y) {
             player->pos.gridX -= 1;
 }
 
+void renderDoors(Room* room){
+    for (int i = 0; i < room->num_doors; i++){
+        renderText(room->doors[i]->pos.gridX, room->doors[i]->pos.gridY, "+", 0.4, 0.1, 0.7, 1.0);
+    }
+}
+
+void renderCorridors(Room* room){
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -175,12 +184,19 @@ void display() {
         Room* room = map->rooms[i];
 
         renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH, 0.5, 0.5, 0.5);
+        renderDoors(room);
+        renderCorridors(room);
 
         for (int j = 0; j < room->scale.gridW; j++) {
             for (int k = 0; k < room->scale.gridH; k++) {
 //                renderText(room->pos.gridX + j, room->pos.gridY + k, "A", 1.0, 0.0, 0.0, 1.0);
             }
         }
+    }
+
+    Corridor* cor = map->rooms[0]->doors[0]->corridor;
+    for (int i = 0; i < cor->path_length; i++){
+        renderText(cor->path[i].gridX, cor->path[i].gridY, "O", 0.6, 0.4, 0.7, 1.0);
     }
 
     renderPlayer();

@@ -28,8 +28,9 @@ Player* getPlayerInstance() {
 
 void initializePlayer(Player* player){
     player->gold = 2;
-    player->pos.gridX = 17;
-    player->pos.gridY = 17;
+
+    player->pos.gridX = getMapInstance()->rooms[0]->pos.gridX + 1;
+    player->pos.gridY = getMapInstance()->rooms[0]->pos.gridY + 1;
 
     Log("Player initialized successfully.", _DEBUG_);
     Log("Player GOLD: %d", _DEBUG_, player->gold);
