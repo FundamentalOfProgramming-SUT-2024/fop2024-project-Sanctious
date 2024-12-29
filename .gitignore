@@ -5,3 +5,7 @@
 # generated directories
 bin/
 obj/
+build/
+dependencies/
+
+CMakeLists.txt

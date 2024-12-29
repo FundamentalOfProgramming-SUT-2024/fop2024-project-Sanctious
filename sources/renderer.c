@@ -227,7 +227,7 @@ void render(int argc, char** argv) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+    glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0,-1,1);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
