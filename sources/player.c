@@ -53,11 +53,21 @@ Room* findPlayerRoom(){
 
 char isValidPos(int gridXP, int gridYP){
     // A bad implementation
-    Room* room = findPlayerRoom();
-    if (room->pos.gridX <= gridXP &&
-            gridXP < room->scale.gridW+room->pos.gridX &&
-            room->pos.gridY <= gridYP &&
-            gridYP < room->scale.gridH+room->pos.gridY)
-        return 1;
+    // Only calculate this once and you are good to go
+    Map* map = getMapInstance();
+    for (int i = 0; i < map->num_corridors; i++){
+        Corridor* cor = map->corridors[i];
+        for (int j = 0; j < cor->path_length; j++){
+            if (gridXP == cor->path[j].gridX && gridYP == cor->path[j].gridY) return 1;
+        }
+    }
+    for (int i = 0; i < map->num_rooms; i++) {
+        Room* room = map->rooms[i];
+        if (room->pos.gridX <= gridXP &&
+                gridXP < room->scale.gridW+room->pos.gridX &&
+                room->pos.gridY <= gridYP &&
+                gridYP < room->scale.gridH+room->pos.gridY)
+            return 1;
+    }
     return 0;
 }

@@ -170,7 +170,14 @@ void renderDoors(Room* room){
     }
 }
 
-void renderCorridors(Room* room){
+void renderCorridors(Map* map){
+
+    for (int i = 0; i < map->num_corridors; i++){
+        Corridor* cor = map->corridors[i];
+        for (int j = 0; j < cor->path_length; j++){
+            renderText(cor->path[j].gridX, cor->path[j].gridY, "O", 0.6, 0.4, 0.7, 1.0);
+        }
+    }
 }
 
 void display() {
@@ -183,7 +190,6 @@ void display() {
 
         renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH, 0.5, 0.5, 0.5);
         renderDoors(room);
-        renderCorridors(room);
 
         for (int j = 0; j < room->scale.gridW; j++) {
             for (int k = 0; k < room->scale.gridH; k++) {
@@ -192,11 +198,7 @@ void display() {
         }
     }
 
-    Corridor* cor = map->rooms[0]->doors[0]->corridor;
-    for (int i = 0; i < cor->path_length; i++){
-        renderText(cor->path[i].gridX, cor->path[i].gridY, "O", 0.6, 0.4, 0.7, 1.0);
-    }
-
+    renderCorridors(map);
     renderPlayer();
 
     glFlush();

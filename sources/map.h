@@ -4,11 +4,21 @@
 #include "item.h"
 #include "config.h"
 
+extern const int qdirs[4][2]; // 4 neighs quad
+extern const int odirs[8][2]; // 8 neighs octa
+
 struct Room;
 typedef struct Room Room;
 
 struct Door;
 typedef struct Door Door;
+
+typedef enum {
+    UP = 0,
+    LEFT = 1,
+    DOWN = 2,
+    RIGHT = 3
+} Direction;
 
 typedef enum {
     TREASURE,
@@ -34,7 +44,7 @@ typedef struct {
 } Corridor;
 
 struct Door{
-
+    Direction dir; // direction relative to the room
     gCord pos; // pos in parent room
 
     Corridor* corridor;
@@ -45,6 +55,7 @@ struct Door{
 struct Room{
     gCord pos;
     gScale scale;
+    gCord rrp; // relative room position in rooms grid
 
     RoomType type;
 
@@ -64,11 +75,13 @@ typedef struct {
 
     int num_rooms;
     Room* rooms[MAXROOMS];
+    int num_corridors;
     Corridor* corridors[MAXCORRIDORS];
 } Map;
 
 void initializeMap(Map*);
 Map* getMapInstance();
+Room* findRoomByRRP(int, int);
 
 
 #endif

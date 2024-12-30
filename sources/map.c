@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "logger.h"
 #include "map.h"
@@ -12,10 +13,26 @@
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) < (Y)) ? (Y) : (X))
 
+const int qdirs[4][2] = {
+    {-1, 0},
+    {1, 0},
+    {0, -1},
+    {0, 1}
+};
+
+const int odirs[8][2] = {
+    {-1, 0},
+    {1, 0},
+    {0, -1},
+    {0, 1},
+    {-1, -1},
+    {-1, 1},
+    {1, -1},
+    {1, 1}
+};
+
 void initializeMap();
 static Map* instance = NULL;
-// It shouldnt be here
-void renderRoom(Room* room);
 
 // Singleton design
 
@@ -34,7 +51,8 @@ Map* getMapInstance() {
     return instance;
 }
 
-void generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
+// Factory design
+Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
     Room* _room = (Room *) malloc(1 * sizeof(Room));
     _room->type = type;
     _room->num_doors = 0;
@@ -50,6 +68,8 @@ void generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
 
     Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, map->num_rooms,
         _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
+
+    return _room;
 }
 
 void generateRooms(Map* map){
@@ -74,22 +94,24 @@ void generateRooms(Map* map){
 
             // assuming that rooms dont collide
             // it is ensured that _higherXpos - _x is greater than MIN_ROOM_WIDTH
-            generateRoom(map, _x, _y,
+            Room* _room =generateRoom(map, _x, _y,
                 RANDOM(MIN_ROOM_WIDTH, _higherXpos - _x + MIN_ROOM_WIDTH),
                 RANDOM(MIN_ROOM_HEIGHT, _higherYpos - _y + MIN_ROOM_HEIGHT),
                 TREASURE);
 
+            _room->rrp.gridX = i;
+            _room->rrp.gridY = j;
 
 
 
         }
     }
-
-    Log("Map initialized successfully.", _DEBUG_);
 }
-void generateDoor(){}
 
 void generateCorridor(Door* door){
+    // handle duplicate
+    if (door->corridor != NULL) return;
+
     gCord pos1 = door->pos;
     gCord pos2 = door->connectedd->pos;
 
@@ -106,6 +128,7 @@ void generateCorridor(Door* door){
 
     // Create a new corridor
     Corridor* corridor = (Corridor *) malloc(1 * sizeof(Corridor));
+    // Predetermined corridor path length
     corridor->path_length = abs(pos2.gridY-pos1.gridY) + abs(pos2.gridX-pos1.gridX) + 1;
 
     // for now path length is constant there is no collision with other rooms
@@ -125,8 +148,14 @@ void generateCorridor(Door* door){
         corridor->path[i].gridY = pos1.gridY + yprog;
     }
 
+    // Add corridor to both doors
     door->corridor = corridor;
     door->connectedd->corridor = corridor;
+
+    // Add corridor to map
+    Map* map = getMapInstance();
+    map->corridors[map->num_corridors] = corridor;
+    map->num_corridors++;
 
     Log("Corridor generated with sp: (%d, %d) ep: (%d, %d).", _DEBUG_,
          pos1.gridX, pos1.gridY, pos1.gridX + xprog, pos1.gridY + yprog);
@@ -134,21 +163,114 @@ void generateCorridor(Door* door){
 
 }
 
+Room* findRoomByRRP(int _rx, int _ry){
+    Map* map = getMapInstance();
+    for (int i = 0; i < map->num_rooms; i++){
+        Room* room = map->rooms[i];
+        if (room->rrp.gridX == _rx && room->rrp.gridY == _ry) return room;
+    }
+    return NULL;
+}
+
+static Door* findOppositeDoor(Room* room, Direction direction){
+    for (int i = 0; i < room->num_doors; i++){
+        Door* door = room->doors[i];
+        if (abs(door->dir-direction)==2) return door;
+    }
+    return NULL;
+}
+
+void connectExistingDoors(Map* map){
+
+    for (int i = 0; i < map->num_rooms; i++){
+        Room* room = map->rooms[i];
+        for (int j = 0; j < room->num_doors; j++){
+            Door* door = room->doors[j];
+            // ensured that a room in that dir exists
+            Room* nroom = NULL;
+            if (door->dir == UP) nroom = findRoomByRRP(room->rrp.gridX, room->rrp.gridY-1);
+            if (door->dir == DOWN) nroom = findRoomByRRP(room->rrp.gridX, room->rrp.gridY+1);
+            if (door->dir == LEFT) nroom = findRoomByRRP(room->rrp.gridX-1, room->rrp.gridY);
+            if (door->dir == RIGHT) nroom = findRoomByRRP(room->rrp.gridX+1, room->rrp.gridY);
+
+            //a door exists
+            //no duplicate corridor is handled
+            door->connectedd = findOppositeDoor(nroom, door->dir);
+            generateCorridor(door);
+
+        }
+    }
+}
+
+void generateDoor(int _gx, int _gy, Room* room, Direction direction){
+    Door* door = (Door *) malloc(1 * sizeof(Door));
+
+    door->parentr = room;
+    door->dir = direction;
+    door->corridor = NULL;
+    door->pos.gridX = _gx;
+    door->pos.gridY = _gy;
+    room->doors[room->num_doors] = door;
+    room->num_doors++;
+}
+
 void generateDoors(Map* map){
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
-        int _x = RANDOM(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
-        Door* door = (Door *) malloc(1 * sizeof(Door));
 
-        door->parentr = room;
-        door->pos.gridX = _x;
-        door->pos.gridY = room->pos.gridY-1;
-        room->doors[room->num_doors] = door;
-        room->num_doors++;
+
+        int _rx1, _rx2, _ry1, _ry2, _x1, _x2, _y1, _y2;
+        /*
+                 ___rx1_
+                |       |
+                |       |
+            _ry1|       |_ry2
+                |       |
+                |_______|
+                   _rx2
+
+        */
+        // Fixed pos
+        _x1 = room->pos.gridX-1;
+        _x2 = room->pos.gridX + room->scale.gridW;
+        _y1 = room->pos.gridY-1;
+        _y2 = room->pos.gridY + room->scale.gridH;
+        // Random door pos
+        _rx1 = RANDOM(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
+        _rx2 = RANDOM(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
+        _ry1 = RANDOM(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
+        _ry2 = RANDOM(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
+        // Remove left door
+        if (room->rrp.gridX == 0) _ry1 = -1;
+        // Remove right door
+        if (room->rrp.gridX == MAPDIV-1) _ry2 = -1;
+        // Remove top door
+        if (room->rrp.gridY == 0) _rx1 = -1;
+        // Remove bottom door
+        if (room->rrp.gridY == MAPDIV-1) _rx2 = -1;
+
+        // top door
+        if (_rx1 != -1){
+            generateDoor(_rx1, _y1, room, UP);
+        }
+        // bottom door
+        if (_rx2 != -1){
+            generateDoor(_rx2, _y2, room, DOWN);
+        }
+        // left door
+        if (_ry1 != -1){
+            generateDoor(_x1, _ry1, room, LEFT);
+        }
+        // right door
+        if (_ry2 != -1){
+            generateDoor(_x2, _ry2, room, RIGHT);
+        }
 
     }
-    map->rooms[0]->doors[0]->connectedd = map->rooms[1]->doors[0];
-    generateCorridor(map->rooms[0]->doors[0]);
+
+
+
+
 //    for (int i = 0; i < )
 
 }
@@ -158,11 +280,15 @@ void initializeMap(Map* map){
     srand(time(NULL));
 
     map->num_rooms = 0;
+    map->num_corridors = 0;
     map->scale.gridW = XCELLS;
     map->scale.gridH = YCELLS;
 
     generateRooms(map);
     generateDoors(map);
+    connectExistingDoors(map);
+
+    Log("Map initialized successfully.", _DEBUG_);
 
 }
 
