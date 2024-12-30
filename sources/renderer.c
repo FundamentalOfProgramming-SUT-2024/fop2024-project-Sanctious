@@ -142,6 +142,72 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
     glDisable(GL_BLEND);
 }
 
+void renderString(int x, int y, char* text, float _red, float _green, float _blue, float _alpha) {
+    float cellWidth = gridCellWidth();
+    float cellHeight = gridCellHeight();
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glColor4f(_red, _green, _blue, _alpha);
+
+    glEnable(GL_TEXTURE_2D);
+
+    for (const char* p = text; *p; p++) {
+        unsigned int charCode = *p;
+
+        if (FT_Load_Char(face, charCode, FT_LOAD_RENDER)) {
+            Log("Failed to load glyph.", _ERROR_);
+            continue;
+        }
+
+        FT_GlyphSlot glyph = face->glyph;
+
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_ALPHA,
+            glyph->bitmap.width,
+            glyph->bitmap.rows,
+            0,
+            GL_ALPHA,
+            GL_UNSIGNED_BYTE,
+            glyph->bitmap.buffer
+        );
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // Render quad with that texture ( glyph texture )
+        float scale = 2.0f;
+        float xpos = x + face->glyph->bitmap_left * scale;
+        float ypos = y - (face->glyph->bitmap_top) * scale;
+        float w = face->glyph->bitmap.width * scale;
+        float h = face->glyph->bitmap.rows * scale;
+
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(xpos, ypos);         // Bottom-left
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(xpos + w, ypos);    // Bottom-righ1
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(xpos + w, ypos + h); // Top-right
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(xpos, ypos + h);    // Top-left
+        glEnd();
+
+        x += (face->glyph->advance.x >> 6) * scale;
+
+        glDeleteTextures(1, &texture);
+    }
+
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+}
+
 void renderPlayer(){
     renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "O", r, g, b, 1.0);
     renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", r, g, b, 1.0);
@@ -200,6 +266,7 @@ void display() {
 
     renderCorridors(map);
     renderPlayer();
+    renderString(0, 50, "Hello World!", 0.5f, 0.1f, 0.9f, 1.0f);
 
     glFlush();
 }
