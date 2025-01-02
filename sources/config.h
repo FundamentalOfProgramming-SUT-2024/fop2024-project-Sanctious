@@ -14,6 +14,7 @@
 #define YBUFFER_ZONE 30
 #define LOWER_YBUFFER_ZONE 30
 #define EXTRA_BUFFER 40 // Extra space for walls
+#define MAX_SCENES 10
 
 
 // Map

@@ -11,12 +11,28 @@
 #include "main.h"
 #include "scene.h"
 
+// ***********************************************************
+extern void initscene_main_menu();
+extern void initscene_game();
+
+
+const int NUM_SCENES = 2;
+const void (*SCENES[MAX_SCENES])() = {&initscene_main_menu,
+                &initscene_game
+};
+// ***********************************************************
+
+
 static Game* instance = NULL;
 
 void initializeGame(Game* game){
     game->num_scenes = 0;
     game->currentScene = NULL;
-    addScene("main_menu", &display);
+
+    for (int i = 0; i < NUM_SCENES; i++){
+        (*(SCENES[i]))();
+    }
+
     game->currentScene = getSceneByID("main_menu");
 
     Log("Game handler initialized successfully.", _DEBUG_);
@@ -39,13 +55,14 @@ Game* getGameInstance() {
 int main(int argc, char** argv)
 {
     Log("Game started...", _DEBUG_);
+    // Initialize Game and create Scenes
     Game* game = getGameInstance();
 
     // Initialize Player and Map
     Map* map = getMapInstance();
     Player* mainPlayer = getPlayerInstance();
 
-    render(argc, argv);
+    glutinit(argc, argv);
 
 //    for (int i = 0; i < map->num_rooms; i++){
 //        printf("%d\n", map->rooms[i]->gridXPosition);
