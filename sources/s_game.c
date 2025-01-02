@@ -138,7 +138,6 @@ static void playerChangeColor(int c){
 void initscene_game(){
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));
 
-    scene->sceneID = (char *) malloc(MAX_STR_SIZE * sizeof(char));
     strcpy(scene->sceneID, "game");
 
     scene->onEnter = NULL;

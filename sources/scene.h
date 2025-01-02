@@ -1,9 +1,10 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "config.h"
 
 typedef struct{
-    char* sceneID;
+    char sceneID[MAX_STR_SIZE];
 
     void (*onKeypress)(unsigned char, int, int);
     void (*onSpecialKeypress)(int, int, int);

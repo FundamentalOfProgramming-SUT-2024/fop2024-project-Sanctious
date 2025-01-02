@@ -11,7 +11,7 @@ typedef struct {
     gCord pos;
 
     int inventory_size;
-    Item inventory[MAX_INVENTORY_SIZE];
+    Item* inventory[MAX_INVENTORY_SIZE];
 
     int armor;
     int gold;
