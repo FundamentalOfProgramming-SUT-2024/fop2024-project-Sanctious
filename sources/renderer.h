@@ -2,5 +2,6 @@
 #define RENDERER_H
 
 void render(int, char**);
+void display();
 
 #endif

@@ -45,8 +45,6 @@ Map* getMapInstance() {
             exit(1);
         }
         initializeMap(instance);
-        // implemenet
-
     }
     return instance;
 }

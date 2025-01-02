@@ -1,15 +1,12 @@
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-#include <ft2build.h>
+#include "renderlibs.h"
 #include <stdio.h>
-#include FT_FREETYPE_H
 
 #include "renderer.h"
 #include "map.h"
 #include "config.h"
 #include "logger.h"
 #include "player.h"
+#include "main.h"
 
 FT_Library ft;
 FT_Face face;
@@ -318,8 +315,8 @@ void render(int argc, char** argv) {
     glutKeyboardFunc(processKeyboard);
     glutSpecialFunc(processSKeyboard);
 
-    glutIdleFunc(display);
-    glutDisplayFunc(display);
+    glutIdleFunc(*getGameInstance()->currentScene->renderfunc);
+    glutDisplayFunc(*getGameInstance()->currentScene->renderfunc);
 
     glutTimerFunc(500, playerChangeColor, 0);
 

@@ -5,7 +5,6 @@
 //  ****Game Settings****
 //  *********************
 
-
 // Window
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -31,11 +30,13 @@
 // Game Logic
 
 // its a bad practice but i have now other idea
+#define MAX_NUM_SCENES 10
 #define MAXITEMS 64
 #define MAXDOORS 10
 #define MAXROOMS 10
-#define MAXCORRIDORS
+#define MAXCORRIDORS 50
 #define MAX_CORRIDOR_LENGTH 50
+#define MAX_STR_SIZE 256
 
 
 #endif

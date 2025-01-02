@@ -19,8 +19,6 @@ Player* getPlayerInstance() {
             exit(1);
         }
         initializePlayer(instance);
-        // implemenet
-
     }
     return instance;
 }
