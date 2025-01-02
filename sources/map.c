@@ -212,6 +212,9 @@ void generateDoor(int _gx, int _gy, Room* room, Direction direction){
     door->pos.gridY = _gy;
     room->doors[room->num_doors] = door;
     room->num_doors++;
+
+    Log("Door generated with pos: (%d, %d).", _DEBUG_,
+         door->pos.gridX, door->pos.gridY);
 }
 
 void generateDoors(Map* map){

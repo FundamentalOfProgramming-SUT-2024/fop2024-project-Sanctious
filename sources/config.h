@@ -8,14 +8,18 @@
 
 // Window
 #define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 800
+#define WINDOW_HEIGHT 600
 #define WINDOW_XPOS 500
 #define WINDOW_YPOS 250
+#define XBUFFER_ZONE 0
+#define YBUFFER_ZONE 30
+#define LOWER_YBUFFER_ZONE 30
+#define EXTRA_BUFFER 40 // Extra space for walls
 
 
 // Map
 #define XCELLS 40
-#define YCELLS 40
+#define YCELLS 30
 #define MAPDIV 3
 #define MIN_ROOM_WIDTH 4
 #define MIN_ROOM_HEIGHT 4

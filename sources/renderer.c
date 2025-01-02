@@ -44,8 +44,8 @@ void renderRoomBox(int x, int y, int width, int height, float r, float g, float 
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
-    float xpos = (x-1) * cellWidth;
-    float ypos = (y-1) * cellHeight;
+    float xpos = (x-1) * cellWidth + XBUFFER_ZONE;
+    float ypos = (y-1) * cellHeight + YBUFFER_ZONE;
     float w = (width+2) * cellWidth;
     float h = (height+2) * cellHeight;
 
@@ -63,8 +63,8 @@ void renderRoomBox(int x, int y, int width, int height, float r, float g, float 
     cellWidth = gridCellWidth();
     cellHeight = gridCellHeight();
 
-    xpos = x * cellWidth;
-    ypos = y * cellHeight;
+    xpos = x * cellWidth + XBUFFER_ZONE;
+    ypos = y * cellHeight + YBUFFER_ZONE;
     w = width * cellWidth;
     h = height * cellHeight;
 
@@ -83,8 +83,8 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
-    float x = col * cellWidth;
-    float y = row * cellHeight;
+    float x = col * cellWidth + XBUFFER_ZONE;
+    float y = row * cellHeight + YBUFFER_ZONE;
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -186,7 +186,7 @@ void renderString(int x, int y, char* text, float _red, float _green, float _blu
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // Render quad with that texture ( glyph texture )
-        float scale = 2.0f;
+        float scale = 0.5f;
         float xpos = x + face->glyph->bitmap_left * scale;
         float ypos = y - (face->glyph->bitmap_top) * scale;
         float w = face->glyph->bitmap.width * scale;
@@ -230,6 +230,15 @@ void processKeyboard(unsigned char key, int x, int y) {
             player->pos.gridX -= 1;
 }
 
+void processSKeyboard(int key, int x, int y) {
+    Player* player = getPlayerInstance();
+
+	if (key == GLUT_KEY_F5){
+        glutLeaveGameMode();
+        exit(0);
+	}
+}
+
 void renderDoors(Room* room){
     for (int i = 0; i < room->num_doors; i++){
         renderText(room->doors[i]->pos.gridX, room->doors[i]->pos.gridY, "+", 0.4, 0.1, 0.7, 1.0);
@@ -266,7 +275,7 @@ void display() {
 
     renderCorridors(map);
     renderPlayer();
-    renderString(0, 50, "Hello World!", 0.5f, 0.1f, 0.9f, 1.0f);
+    renderString(0, 20, "Hello World!", 0.5f, 0.1f, 0.9f, 1.0f);
 
     glFlush();
 }
@@ -287,28 +296,33 @@ void playerChangeColor(int c){
 
 void render(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
+    glutInitWindowSize(WINDOW_WIDTH+XBUFFER_ZONE+EXTRA_BUFFER, WINDOW_HEIGHT+YBUFFER_ZONE+EXTRA_BUFFER+LOWER_YBUFFER_ZONE);
     glutInitWindowPosition(WINDOW_XPOS, WINDOW_YPOS);
     glutCreateWindow("Rogue");
+//    glutCreateWindow()
+    Log("Game window created.", _DEBUG_);
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0,-1,1);
+    gluOrtho2D(0, WINDOW_WIDTH+XBUFFER_ZONE+EXTRA_BUFFER, WINDOW_HEIGHT+YBUFFER_ZONE+EXTRA_BUFFER+LOWER_YBUFFER_ZONE, 0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    initFreeType("fonts/FreeSans.otf");
+    initFreeType("fonts/Orbitron-Regular.ttf");
+    Log("Font loaded.", _DEBUG_);
 
     glutKeyboardFunc(processKeyboard);
+    glutSpecialFunc(processSKeyboard);
 
     glutIdleFunc(display);
     glutDisplayFunc(display);
 
     glutTimerFunc(500, playerChangeColor, 0);
 
+    Log("Entering game loop...", _DEBUG_);
     glutMainLoop();
 }
