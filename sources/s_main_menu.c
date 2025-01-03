@@ -6,9 +6,6 @@
 #include <ctype.h>
 
 static Menu menu;
-
-extern FT_Library ft;
-extern FT_Face face;
 //
 //menu->buttons
 //menu->num buttons
@@ -48,10 +45,10 @@ static void render() {
             glLineWidth(1.5f);
             glColor3f(0.5f, 0.5f, 0.5f);
             glBegin(GL_LINE_LOOP);
-                glVertex2f(extra->pos.x+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset, extra->pos.y);
-                glVertex2f(extra->pos.x+extra->boxWidth+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset, extra->pos.y);
-                glVertex2f(extra->pos.x+extra->boxWidth+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset, extra->pos.y-extra->boxHeight);
-                glVertex2f(extra->pos.x+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset, extra->pos.y-extra->boxHeight);
+                glVertex2f(extra->pos.x+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset-5, extra->pos.y+5);
+                glVertex2f(extra->pos.x+extra->boxWidth+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset+5, extra->pos.y+5);
+                glVertex2f(extra->pos.x+extra->boxWidth+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset+5, extra->pos.y-extra->boxHeight-5);
+                glVertex2f(extra->pos.x+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset-5, extra->pos.y-extra->boxHeight-5);
             glEnd();
             renderString(extra->pos.x+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset, extra->pos.y, extra->input, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
         }
@@ -63,58 +60,18 @@ static void render() {
     glFlush();
 }
 
-
-// Function to calculate the width of a string
-int calculateTextWidth(FT_Face face, const char* text, float scale) {
-    int width = 0;
-    for (const char* p = text; *p; p++) {
-         if (FT_Load_Char(face, *p, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
-            continue;
-        }
-
-        width += (face->glyph->advance.x >> 6) * scale;
-
-    }
-
-    return width;
-}
-
-// Function to calculate the height of a string
-int calculateTextHeight(FT_Face face, const char* text, float scale) {
-    int maxTop = 0;
-    int minBottom = 0;
-
-    for (const char* p = text; *p; p++) {
-        if (FT_Load_Char(face, *p, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
-            continue; // Skip characters that fail to load
-        }
-
-        FT_GlyphSlot glyph = face->glyph;
-
-        // Calculate the top and bottom positions of the glyph
-        int top = glyph->bitmap_top * scale;
-        int bottom = top - (glyph->bitmap.rows * scale);
-
-        // Update the overall maxTop and minBottom
-        if (top > maxTop) maxTop = top;
-        if (bottom < minBottom) minBottom = bottom;
-    }
-
-    return maxTop - minBottom; // Total height
-}
-
-
 static void processSKeyboard(int key, int x, int y) {
     if (key == GLUT_KEY_F3){
-        menu.num_elements = 5;
+        menu.num_elements = 6;
         menu.hover_element = -1;
-        int x = WINDOW_WIDTH+XBUFFER_ZONE+EXTRA_BUFFER-calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f);
+        int x = RWINDOW_WIDTH-calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f);
         menu.uiElements[0] = createButton((Pos) {x/2, 60});
     //    ((ButtonExtra *) menu.uiElements[0]->UIExtra)->isActive = 1;
         menu.uiElements[1] = createButton((Pos) {x/2, 100});
         menu.uiElements[2] = createButton((Pos) {x/2, 140});
         menu.uiElements[3] = createButton((Pos) {x/2, 180});
         menu.uiElements[4] = createInputField((Pos) {x/2-100, 220});
+        menu.uiElements[5] = createInputField((Pos) {x/2-100, 260});
     }
 	if (key == GLUT_KEY_F2){
 //        void * temp = (menu.uiElements[0]->UIExtra);

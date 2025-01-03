@@ -162,7 +162,7 @@ void renderString(int x, int y, char* text, float _red, float _green, float _blu
 void glutinit(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-    glutInitWindowSize(WINDOW_WIDTH+XBUFFER_ZONE+EXTRA_BUFFER, WINDOW_HEIGHT+YBUFFER_ZONE+EXTRA_BUFFER+LOWER_YBUFFER_ZONE);
+    glutInitWindowSize(RWINDOW_WIDTH, RWINDOW_HEIGHT);
     glutInitWindowPosition(WINDOW_XPOS, WINDOW_YPOS);
     glutCreateWindow("Rogue");
 //    glutCreateWindow()
@@ -172,7 +172,7 @@ void glutinit(int argc, char** argv) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, WINDOW_WIDTH+XBUFFER_ZONE+EXTRA_BUFFER, WINDOW_HEIGHT+YBUFFER_ZONE+EXTRA_BUFFER+LOWER_YBUFFER_ZONE, 0);
+    gluOrtho2D(0, RWINDOW_WIDTH, RWINDOW_HEIGHT, 0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

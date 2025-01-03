@@ -2,6 +2,8 @@
 #include "stdlib.h"
 #include <strings.h>
 
+extern FT_Library ft;
+extern FT_Face face;
 //Color* ColorRed = NULL;
 //
 //void initializeColors(){
@@ -9,6 +11,37 @@
 //
 //}
 
+
+// Render width
+int calculateTextWidth(FT_Face face, const char* text, float scale) {
+    int width = 0;
+    for (const char* p = text; *p; p++) {
+         if (FT_Load_Char(face, *p, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
+            continue;
+        }
+        width += (face->glyph->advance.x >> 6) * scale;
+    }
+    return width;
+}
+
+// Render height
+int calculateTextHeight(FT_Face face, const char* text, float scale) {
+    int maxTop = 0;
+    int minBottom = 0;
+    for (const char* p = text; *p; p++) {
+        if (FT_Load_Char(face, *p, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
+            continue;
+        }
+        FT_GlyphSlot glyph = face->glyph;
+
+        int top = glyph->bitmap_top * scale;
+        int bottom = top - (glyph->bitmap.rows * scale);
+
+        if (top > maxTop) maxTop = top;
+        if (bottom < minBottom) minBottom = bottom;
+    }
+    return maxTop - minBottom;
+}
 
 UIElement* createButton(Pos pos){
     UIElement* btn = (UIElement *) malloc(1 * sizeof(UIElement));
@@ -40,7 +73,7 @@ UIElement* createInputField(Pos pos){
 
     inpConfig->pos = pos;
     inpConfig->boxOffset = 20;
-    inpConfig->boxWidth = 100;
+    inpConfig->boxWidth = 200;
     inpConfig->boxHeight = 20;
 
     strcpy(inpConfig->label, "AMOGUGGSuDAUSD");

@@ -1,8 +1,11 @@
 #ifndef UIUTILS_H
 #define UIUTILS_H
 
+#include "renderlibs.h"
 #include "config.h"
 
+extern FT_Library ft;
+extern FT_Face face;
 //widgetmanager->crearte color list of colors
 //widgetManager ->getcolor by name
 // Rendering & Keyboard handling is not implemented here
@@ -71,6 +74,8 @@ typedef struct{
 
 UIElement* createButton();
 UIElement* createInputField();
+int calculateTextWidth(FT_Face face, const char* text, float scale);
+int calculateTextHeight(FT_Face face, const char* text, float scale);
 //extern Color* ColorRed;
 //extern Color* ColorBlue;
 //extern Color* ColorAqua;
