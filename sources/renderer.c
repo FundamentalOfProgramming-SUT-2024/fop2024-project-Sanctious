@@ -97,9 +97,6 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
 }
 
 void renderString(int x, int y, char* text, float _red, float _green, float _blue, float _alpha) {
-    float cellWidth = gridCellWidth();
-    float cellHeight = gridCellHeight();
-
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

@@ -38,6 +38,7 @@
 #define MAXCORRIDORS 50
 #define MAX_CORRIDOR_LENGTH 50
 #define MAX_STR_SIZE 256
+#define MAX_UIELEMENTS 40
 
 
 #endif
