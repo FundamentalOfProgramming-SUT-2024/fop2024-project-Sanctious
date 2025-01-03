@@ -17,7 +17,7 @@ typedef struct{
 
 typedef enum {
     UI_BUTTON,
-    UI_INPUT,
+    UI_INPUTFIELD,
     UI_LABEL,
 } UIElementType;
 
@@ -40,7 +40,13 @@ typedef struct {
     // Button config
     Pos pos;
     char label[MAX_STR_SIZE];
+    char input[MAX_STR_SIZE];
     int* scale;
+
+    int boxWidth;
+    int boxHeight;
+    int boxOffset;
+
     // A -> active, DA -> deactive
     Color Acolor;
     Color Abgcolor;
@@ -48,7 +54,7 @@ typedef struct {
     Color DAbgcolor;
 
     int isActive;
-} TextboxExtra;
+} InputFieldExtra;
 
 typedef struct{
     UIElementType type;
@@ -64,6 +70,7 @@ typedef struct{
 } Menu;
 
 UIElement* createButton();
+UIElement* createInputField();
 //extern Color* ColorRed;
 //extern Color* ColorBlue;
 //extern Color* ColorAqua;
