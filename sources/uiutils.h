@@ -71,10 +71,11 @@ typedef struct {
     char label[MAX_STR_SIZE];
     int num_options;
     int curOption;
-    char* options[MAX_STR_SIZE];
+    char options[MAX_STR_SIZE][MAX_STR_SIZE];
     float scale;
 
-    Color color;
+    Color Acolor;
+    Color DAcolor;
 
     int isActive;
 } CarouselExtra;
@@ -86,9 +87,12 @@ typedef struct {
     int minValue;
     int maxValue;
     int curValue;
+    int stepValue;
     float scale;
+    float sliderOffset;
 
-    Color color;
+    Color Acolor;
+    Color DAcolor;
 
     int isActive;
 } SliderExtra;
@@ -119,11 +123,11 @@ typedef struct{
 UIElement* createButton(Pos pos, char* text, float scale);
 UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, int boxOffset);
 UIElement* createLabel(Pos pos, char* text, float scale, Color color);
-UIElement* createCarousel(Pos pos, char* text, char* options, int num_options, float scale, Color color);
-UIElement* createSlider(Pos pos, char* text, float scale, Color color);
+UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, float scale);
+UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float scale, float sliderOffset);
 char* maskString(char* text, char* output, char mask);
 int calculateTextWidth(const char* text, float scale);
 int calculateTextHeight(const char* text, float scale);
-
+void renderMenu(Menu* menu);
 
 #endif
