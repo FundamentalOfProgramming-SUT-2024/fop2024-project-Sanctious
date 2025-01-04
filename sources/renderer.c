@@ -22,7 +22,7 @@ void initFreeType(const char* fontPath) {
         exit(1);
     }
 
-    FT_Set_Pixel_Sizes(face, 0, 48);
+    FT_Set_Pixel_Sizes(face, 0, FONTQUALITY);
 }
 
 float gridCellWidth() {
@@ -96,7 +96,7 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
     glDisable(GL_BLEND);
 }
 
-void renderString(int x, int y, char* text, float _red, float _green, float _blue, float _alpha) {
+void renderString(int x, int y, char* text, float scale, float _red, float _green, float _blue, float _alpha) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -137,7 +137,6 @@ void renderString(int x, int y, char* text, float _red, float _green, float _blu
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // Render quad with that texture ( glyph texture )
-        float scale = 0.5f;
         float xpos = x + face->glyph->bitmap_left * scale;
         float ypos = y - (face->glyph->bitmap_top) * scale;
         float w = face->glyph->bitmap.width * scale;

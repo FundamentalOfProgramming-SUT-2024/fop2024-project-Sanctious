@@ -30,6 +30,8 @@
 #define BUFFER_ZONE 1
 
 // Render
+#define FONTQUALITY 96 // 24 * x
+#define FONTNORMALSCALE (0.25f) // 1 / x
 #define CELLSIZE (float) (WINDOW_WIDTH/XCELLS)
 
 // Game Logic

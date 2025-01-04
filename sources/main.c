@@ -14,12 +14,27 @@
 // ***********************************************************
 extern void initscene_main_menu();
 extern void initscene_game();
+extern void initscene_leaderboard_menu();
+extern void initscene_loadgame_menu();
+extern void initscene_newgame_menu();
+extern void initscene_profile_menu();
+extern void initscene_register_menu();
+extern void initscene_login_menu();
+extern void initscene_settings_menu();
 
 
-const int NUM_SCENES = 2;
-const void (*SCENES[MAX_SCENES])() = {&initscene_main_menu,
-                &initscene_game
-};
+const int NUM_SCENES = 9;
+const void (*SCENES[MAX_SCENES])() =
+    {   &initscene_main_menu,
+        &initscene_game,
+        &initscene_leaderboard_menu,
+        &initscene_loadgame_menu,
+        &initscene_newgame_menu,
+        &initscene_profile_menu,
+        &initscene_register_menu,
+        &initscene_login_menu,
+        &initscene_settings_menu,
+    };
 // ***********************************************************
 
 

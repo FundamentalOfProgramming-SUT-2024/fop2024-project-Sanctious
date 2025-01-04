@@ -6,14 +6,6 @@
 #include <ctype.h>
 
 static Menu menu;
-//
-//menu->buttons
-//menu->num buttons
-
-//label
-
-// temp fix
-int calculateTextWidth(FT_Face face, const char* text, float scale);
 
 static void render() {
 
@@ -31,47 +23,54 @@ static void render() {
         if(menu.uiElements[i]->type == UI_BUTTON){
             ButtonExtra* extra = (ButtonExtra *) menu.uiElements[i]->UIExtra;
             if (menu.hover_element == i)
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
             else
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
         }
         // Input field
         if(menu.uiElements[i]->type == UI_INPUTFIELD){
             InputFieldExtra* extra = (InputFieldExtra *) menu.uiElements[i]->UIExtra;
             if (menu.hover_element == i)
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
             else
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
             glLineWidth(1.5f);
             glColor3f(0.5f, 0.5f, 0.5f);
+            int _x = extra->pos.x+calculateTextWidth(extra->label, extra->scale)+extra->boxOffset;
             glBegin(GL_LINE_LOOP);
-                glVertex2f(extra->pos.x+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset-5, extra->pos.y+5);
-                glVertex2f(extra->pos.x+extra->boxWidth+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset+5, extra->pos.y+5);
-                glVertex2f(extra->pos.x+extra->boxWidth+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset+5, extra->pos.y-extra->boxHeight-5);
-                glVertex2f(extra->pos.x+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset-5, extra->pos.y-extra->boxHeight-5);
+                glVertex2f(_x-5, extra->pos.y+7);
+                glVertex2f(_x+extra->boxWidth+5, extra->pos.y+7);
+                glVertex2f(_x+extra->boxWidth+5, extra->pos.y-extra->boxHeight-5);
+                glVertex2f(_x-5, extra->pos.y-extra->boxHeight-5);
             glEnd();
-            renderString(extra->pos.x+calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f)+extra->boxOffset, extra->pos.y, extra->input, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(_x, extra->pos.y, extra->input, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+        }
+        // Label
+        if(menu.uiElements[i]->type == UI_LABEL){
+            LabelExtra* extra = (LabelExtra *) menu.uiElements[i]->UIExtra;
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->color.r, extra->color.g, extra->color.b, extra->color.a);
         }
     }
 
 
-    renderString(0, 20, "Welcome to rogue!", 0.5f, 0.1f, 0.9f, 1.0f);
+    renderString(0, 20, "Welcome to rogue!", FONTNORMALSCALE, 0.5f, 0.1f, 0.9f, 1.0f);
 
     glFlush();
 }
 
 static void processSKeyboard(int key, int x, int y) {
     if (key == GLUT_KEY_F3){
-        menu.num_elements = 6;
+        menu.num_elements = 7;
+        menu.num_interactable_elements = 6;
         menu.hover_element = -1;
-        int x = RWINDOW_WIDTH-calculateTextWidth(face, "AMOGUGGSuDAUSD", 0.5f);
-        menu.uiElements[0] = createButton((Pos) {x/2, 60});
+        menu.uiElements[0] = createButton((Pos) {-1, 50}, "Hello!", FONTNORMALSCALE);
     //    ((ButtonExtra *) menu.uiElements[0]->UIExtra)->isActive = 1;
-        menu.uiElements[1] = createButton((Pos) {x/2, 100});
-        menu.uiElements[2] = createButton((Pos) {x/2, 140});
-        menu.uiElements[3] = createButton((Pos) {x/2, 180});
-        menu.uiElements[4] = createInputField((Pos) {x/2-100, 220});
-        menu.uiElements[5] = createInputField((Pos) {x/2-100, 260});
+        menu.uiElements[1] = createButton((Pos) {-1, 100}, "test!", FONTNORMALSCALE);
+        menu.uiElements[2] = createButton((Pos) {-1, 160}, "AMOGUASUDAUSD", FONTNORMALSCALE*2);
+        menu.uiElements[3] = createButton((Pos) {-1, 200}, "SUSSY baka!!", FONTNORMALSCALE);
+        menu.uiElements[4] = createInputField((Pos) {-1, 250}, "Login:", FONTNORMALSCALE, (Scale) {100, 30}, 20);
+        menu.uiElements[5] = createInputField((Pos) {-1, 300}, "Register:", FONTNORMALSCALE,(Scale) {100, 30}, 20);
+        menu.uiElements[6] = createLabel((Pos) {-1, 350}, "Enter", FONTNORMALSCALE, (Color) {0.7, 0, 0, 1});
     }
 	if (key == GLUT_KEY_F2){
 //        void * temp = (menu.uiElements[0]->UIExtra);
@@ -79,12 +78,12 @@ static void processSKeyboard(int key, int x, int y) {
         changeScene(getSceneByID("game"));
 	}
 	if (key == GLUT_KEY_DOWN){
-        if (menu.hover_element < menu.num_elements-1) menu.hover_element += 1;
+        if (menu.hover_element < menu.num_interactable_elements-1) menu.hover_element += 1;
         else menu.hover_element = 0;
 	}
 	if (key == GLUT_KEY_UP){
        if (menu.hover_element > 0) menu.hover_element -= 1;
-       else menu.hover_element = menu.num_elements-1;
+       else menu.hover_element = menu.num_interactable_elements-1;
 	}
 
 }
@@ -93,6 +92,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
     // key == 8 -> backspace
 	if (isprint(key) || key == 8){
+        if (menu.hover_element >= 0 && menu.hover_element <= menu.num_elements-1)
         if (menu.uiElements[menu.hover_element]->type == UI_INPUTFIELD){
             InputFieldExtra* extra = (InputFieldExtra *) menu.uiElements[menu.hover_element]->UIExtra;
             int len = strlen(extra->input);
@@ -105,8 +105,21 @@ static void processKeyboard(unsigned char key, int x, int y) {
                 extra->input[len] = key;
                 extra->input[len+1] = '\0';
             }
+            extra->boxWidth = 5+calculateTextWidth(extra->input, extra->scale);
         }
 	}
+
+	// Manually handle buttons
+	// key == 13 -> Enter key
+    if (key == 13){
+        if (menu.hover_element >= 0 && menu.hover_element <= menu.num_elements-1)
+        if (menu.uiElements[menu.hover_element]->type == UI_BUTTON){
+            ButtonExtra* extra = (ButtonExtra *) menu.uiElements[menu.hover_element]->UIExtra;
+            extra->Acolor = (Color ) {0.1f, 0.1f, 0.1f, 1};
+
+        }
+    }
+
 }
 
 void initscene_main_menu(){

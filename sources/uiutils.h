@@ -15,8 +15,12 @@ typedef struct{
 
 //create a list of colors const
 typedef struct{
-    int x, y;
+    float x, y;
 } Pos;
+
+typedef struct{
+    float w, h;
+} Scale;
 
 typedef enum {
     UI_BUTTON,
@@ -29,7 +33,7 @@ typedef struct {
     // Button config
     Pos pos;
     char label[MAX_STR_SIZE];
-    int* scale;
+    float scale;
     // A -> active, DA -> deactive
     Color Acolor;
     Color Abgcolor;
@@ -44,7 +48,7 @@ typedef struct {
     Pos pos;
     char label[MAX_STR_SIZE];
     char input[MAX_STR_SIZE];
-    int* scale;
+    float scale;
 
     int boxWidth;
     int boxHeight;
@@ -59,6 +63,15 @@ typedef struct {
     int isActive;
 } InputFieldExtra;
 
+typedef struct {
+    // Button config
+    Pos pos;
+    char label[MAX_STR_SIZE];
+    float scale;
+
+    Color color;
+} LabelExtra;
+
 typedef struct{
     UIElementType type;
     void* UIExtra; // element specific code
@@ -68,14 +81,16 @@ typedef struct{
 typedef struct{
     int hover_element;
 
+    int num_interactable_elements;
     int num_elements;
     UIElement* uiElements[MAX_UIELEMENTS];
 } Menu;
 
-UIElement* createButton();
-UIElement* createInputField();
-int calculateTextWidth(FT_Face face, const char* text, float scale);
-int calculateTextHeight(FT_Face face, const char* text, float scale);
+UIElement* createButton(Pos pos, char* text, float scale);
+UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, int boxOffset);
+UIElement* createLabel(Pos pos, char* text, float scale, Color color);
+int calculateTextWidth(const char* text, float scale);
+int calculateTextHeight(const char* text, float scale);
 //extern Color* ColorRed;
 //extern Color* ColorBlue;
 //extern Color* ColorAqua;

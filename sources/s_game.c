@@ -115,7 +115,7 @@ static void render() {
 
     renderCorridors(map);
     renderPlayer();
-    renderString(0, 20, "Hello World!", 0.5f, 0.1f, 0.9f, 1.0f);
+    renderString(0, 20, "Hello World!", FONTNORMALSCALE, 0.5f, 0.1f, 0.9f, 1.0f);
 
     glFlush();
 }

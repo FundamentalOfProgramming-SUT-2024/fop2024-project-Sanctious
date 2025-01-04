@@ -13,7 +13,7 @@ extern FT_Face face;
 
 
 // Render width
-int calculateTextWidth(FT_Face face, const char* text, float scale) {
+int calculateTextWidth(const char* text, float scale) {
     int width = 0;
     for (const char* p = text; *p; p++) {
          if (FT_Load_Char(face, *p, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
@@ -25,7 +25,7 @@ int calculateTextWidth(FT_Face face, const char* text, float scale) {
 }
 
 // Render height
-int calculateTextHeight(FT_Face face, const char* text, float scale) {
+int calculateTextHeight(const char* text, float scale) {
     int maxTop = 0;
     int minBottom = 0;
     for (const char* p = text; *p; p++) {
@@ -43,15 +43,23 @@ int calculateTextHeight(FT_Face face, const char* text, float scale) {
     return maxTop - minBottom;
 }
 
-UIElement* createButton(Pos pos){
+// Button creation
+UIElement* createButton(Pos pos, char* text, float scale){
     UIElement* btn = (UIElement *) malloc(1 * sizeof(UIElement));
     btn->type = UI_BUTTON;
     ButtonExtra* btnConfig = (ButtonExtra *) malloc(1 * sizeof(ButtonExtra));
+    btnConfig->scale = scale;
 
-    btnConfig->pos = pos;
 
-    strcpy(btnConfig->label, "AMOGUGGSuDAUSD");
+    strcpy(btnConfig->label, text);
 
+    float x = pos.x;
+    float y = pos.y;
+    // Center
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale))/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+
+    btnConfig->pos = (Pos) {x, y};
 //    Color* red = (Color *) malloc(1 * sizeof(Color));
 //    *red = (Color) {0.5, 0.5, 0.5, 1};
 //    Color* blue = (Color *) malloc(1 * sizeof(Color));
@@ -66,19 +74,27 @@ UIElement* createButton(Pos pos){
     return btn;
 }
 
-UIElement* createInputField(Pos pos){
+// Input field creation
+UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, int boxOffset){
     UIElement* inp = (UIElement *) malloc(1 * sizeof(UIElement));
     inp->type = UI_INPUTFIELD;
     InputFieldExtra* inpConfig = (InputFieldExtra *) malloc(1 * sizeof(InputFieldExtra));
+    inpConfig->scale = scale;
 
-    inpConfig->pos = pos;
-    inpConfig->boxOffset = 20;
-    inpConfig->boxWidth = 200;
-    inpConfig->boxHeight = 20;
+    inpConfig->boxOffset = boxOffset;
+    inpConfig->boxWidth = boxScale.w;
+    inpConfig->boxHeight = boxScale.h;
 
-    strcpy(inpConfig->label, "AMOGUGGSuDAUSD");
+    strcpy(inpConfig->label, text);
     strcpy(inpConfig->input, "");
 
+    float x = pos.x;
+    float y = pos.y;
+    // Center
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale)-inpConfig->boxWidth-inpConfig->boxOffset)/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+
+    inpConfig->pos = (Pos) {x, y};
 //    Color* red = (Color *) malloc(1 * sizeof(Color));
 //    *red = (Color) {0.5, 0.5, 0.5, 1};
 //    Color* blue = (Color *) malloc(1 * sizeof(Color));
@@ -91,4 +107,27 @@ UIElement* createInputField(Pos pos){
     inp->UIExtra = (void *) inpConfig;
 
     return inp;
+}
+
+// Label creation
+UIElement* createLabel(Pos pos, char* text, float scale, Color color){
+    UIElement* label = (UIElement *) malloc(1 * sizeof(UIElement));
+    label->type = UI_LABEL;
+    LabelExtra* labelConfig = (LabelExtra *) malloc(1 * sizeof(LabelExtra));
+    labelConfig->scale = scale;
+
+    strcpy(labelConfig->label, text);
+
+    float x = pos.x;
+    float y = pos.y;
+    // Center
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale))/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+
+    labelConfig->pos = (Pos) {x, y};
+    labelConfig->color = color;
+
+    label->UIExtra = (void *) labelConfig;
+
+    return label;
 }
