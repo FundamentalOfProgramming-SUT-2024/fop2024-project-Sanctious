@@ -30,7 +30,7 @@ void changeScene(Scene* nextScene){
     glutKeyboardFunc(*nextScene->onKeypress);
     glutSpecialFunc(*nextScene->onSpecialKeypress);
 
-    glutIdleFunc(*nextScene->update);
+//    glutIdleFunc(*nextScene->update); // FPS Limit
     glutDisplayFunc(*nextScene->update);
 
     Log("Changed scene from %s to %s.", _DEBUG_, currentScene->sceneID, nextScene->sceneID);

@@ -184,6 +184,13 @@ void renderString(int x, int y, char* text, float scale, float red, float green,
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 }
+
+void fpsLimit(int value) {
+    glutPostRedisplay();
+    glutTimerFunc(1000/60, fpsLimit, 0);
+}
+
+
 void glutinit(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
@@ -208,8 +215,9 @@ void glutinit(int argc, char** argv) {
     glutKeyboardFunc(*getGameInstance()->currentScene->onKeypress);
     glutSpecialFunc(*getGameInstance()->currentScene->onSpecialKeypress);
 
-    glutIdleFunc(*getGameInstance()->currentScene->update);
+//    glutIdleFunc(*getGameInstance()->currentScene->update);
     glutDisplayFunc(*getGameInstance()->currentScene->update);
+    glutTimerFunc(0, fpsLimit, 0);
 
 //    glutTimerFunc(500, playerChangeColor, 0);
 

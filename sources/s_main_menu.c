@@ -52,15 +52,12 @@ static void render() {
         }
     }
 
-
-    renderString(100, 100, "Helló wórld!", FONTNORMALSCALE*2, 0.5f, 0.1f, 0.9f, 1.0f);
-
     glFlush();
 }
 
 static void processSKeyboard(int key, int x, int y) {
     if (key == GLUT_KEY_F3){
-        menu.num_elements = 7;
+        menu.num_elements = 8;
         menu.num_interactable_elements = 6;
         menu.hover_element = -1;
         menu.uiElements[0] = createButton((Pos) {-1, 50}, "Hello!", FONTNORMALSCALE);
@@ -71,6 +68,7 @@ static void processSKeyboard(int key, int x, int y) {
         menu.uiElements[4] = createInputField((Pos) {-1, 250}, "Login:", FONTNORMALSCALE, (Scale) {100, 30}, 20);
         menu.uiElements[5] = createInputField((Pos) {-1, 300}, "Register:", FONTNORMALSCALE,(Scale) {100, 30}, 20);
         menu.uiElements[6] = createLabel((Pos) {-1, 350}, "Enter", FONTNORMALSCALE, (Color) {0.7, 0, 0, 1});
+        menu.uiElements[7] = createLabel((Pos) {-1, 400}, "Enter", FONTNORMALSCALE*2, (Color) {0.7, 0, 0, 1});
     }
 	if (key == GLUT_KEY_F2){
 //        void * temp = (menu.uiElements[0]->UIExtra);
