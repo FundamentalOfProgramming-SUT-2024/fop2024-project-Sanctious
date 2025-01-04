@@ -74,11 +74,12 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
 
     glEnable(GL_TEXTURE_2D);
 
-    for (const char* p = text; *p; p++) {
-        unsigned int charCode = *p;
+    const char* p = text;
+    while (*p) {
+        uint32_t charCode = decodeUTF8(&p);
 
         if (FT_Load_Char(face, charCode, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
-            Log("Failed to load glyph.", _ERROR_);
+            Log("Failed to load glyph for codepoint %u\n", _ERROR_, charCode);
             continue;
         }
 

@@ -60,15 +60,15 @@ static void processSKeyboard(int key, int x, int y) {
         menu.num_elements = 8;
         menu.num_interactable_elements = 6;
         menu.hover_element = -1;
-        menu.uiElements[0] = createButton((Pos) {-1, 50}, "Hello!", FONTNORMALSCALE);
+        menu.uiElements[0] = createButton((Pos) {-1, 100}, "Hello!", FONTNORMALSCALE);
     //    ((ButtonExtra *) menu.uiElements[0]->UIExtra)->isActive = 1;
-        menu.uiElements[1] = createButton((Pos) {-1, 100}, "test!", FONTNORMALSCALE);
-        menu.uiElements[2] = createButton((Pos) {-1, 160}, "AMOGUASUDAUSD", FONTNORMALSCALE*2);
-        menu.uiElements[3] = createButton((Pos) {-1, 200}, "SUSSY baka!!", FONTNORMALSCALE);
-        menu.uiElements[4] = createInputField((Pos) {-1, 250}, "Login:", FONTNORMALSCALE, (Scale) {100, 30}, 20);
-        menu.uiElements[5] = createInputField((Pos) {-1, 300}, "Register:", FONTNORMALSCALE,(Scale) {100, 30}, 20);
-        menu.uiElements[6] = createLabel((Pos) {-1, 350}, "Enter", FONTNORMALSCALE, (Color) {0.7, 0, 0, 1});
-        menu.uiElements[7] = createLabel((Pos) {-1, 400}, "Enter", FONTNORMALSCALE*2, (Color) {0.7, 0, 0, 1});
+        menu.uiElements[1] = createButton((Pos) {-1, 150}, "test!", FONTNORMALSCALE);
+        menu.uiElements[2] = createButton((Pos) {-1, 200}, "AMOGUASUDAUSD", FONTNORMALSCALE*2);
+        menu.uiElements[3] = createButton((Pos) {-1, 250}, "SUSSY baka!!", FONTNORMALSCALE);
+        menu.uiElements[4] = createInputField((Pos) {-1, 300}, "Login:", FONTNORMALSCALE, (Scale) {100, 30}, 20);
+        menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register:", FONTNORMALSCALE,(Scale) {100, 30}, 20);
+        menu.uiElements[6] = createLabel((Pos) {-1, 400}, "Enter", FONTNORMALSCALE, (Color) {0.7, 0, 0, 1});
+        menu.uiElements[7] = createLabel((Pos) {-1, 40}, "Welcome to Rogue!", FONTNORMALSCALE*2, (Color) {0.7, 0, 0, 1});
     }
 	if (key == GLUT_KEY_F2){
 //        void * temp = (menu.uiElements[0]->UIExtra);

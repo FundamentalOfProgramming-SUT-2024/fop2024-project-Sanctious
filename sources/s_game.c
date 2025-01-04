@@ -6,16 +6,16 @@
 
 float r,g=1.0f,b=1.0f;
 
-static void renderRoomBox(int x, int y, int width, int height, float r, float g, float b) {
+static void renderRoomBox(float x, float y, int width, int height, float r, float g, float b) {
     glColor3f(0.2, 0.2, 1);
 
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
-    float xpos = (x-1) * cellWidth + XBUFFER_ZONE;
-    float ypos = (y-1) * cellHeight + YBUFFER_ZONE;
-    float w = (width+2) * cellWidth;
-    float h = (height+2) * cellHeight;
+    float xpos = (x-0.5) * cellWidth + XBUFFER_ZONE;
+    float ypos = (y-0.5) * cellHeight + YBUFFER_ZONE;
+    float w = (width+1) * cellWidth;
+    float h = (height+1) * cellHeight;
 
     glDisable(GL_BLEND);
 
@@ -90,7 +90,7 @@ static void renderCorridors(Map* map){
     for (int i = 0; i < map->num_corridors; i++){
         Corridor* cor = map->corridors[i];
         for (int j = 0; j < cor->path_length; j++){
-            renderText(cor->path[j].gridX, cor->path[j].gridY, "O", 0.6, 0.4, 0.7, 1.0);
+            renderText(cor->path[j].gridX, cor->path[j].gridY, "ô", 0.6, 0.4, 0.7, 0.5);
         }
     }
 }
@@ -99,6 +99,7 @@ static void render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     Map* map = getMapInstance();
+    renderCorridors(map);
 
     for (int i = 0; i < map->num_rooms; i++) {
         Room* room = map->rooms[i];
@@ -113,7 +114,6 @@ static void render() {
         }
     }
 
-    renderCorridors(map);
     renderPlayer();
     renderString(0, 20, "Hello World!", FONTNORMALSCALE, 0.5f, 0.1f, 0.9f, 1.0f);
 
