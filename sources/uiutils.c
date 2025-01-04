@@ -43,6 +43,13 @@ int calculateTextHeight(const char* text, float scale) {
     return maxTop - minBottom;
 }
 
+char* maskString(char* text, char* output, char mask){
+    for (int i = 0; i < strlen(text); i++) {
+        output[i] = mask;
+    }
+    output[strlen(text)] = '\0';
+}
+
 // Button creation
 UIElement* createButton(Pos pos, char* text, float scale){
     UIElement* btn = (UIElement *) malloc(1 * sizeof(UIElement));
@@ -102,7 +109,9 @@ UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, in
 
     inpConfig->Acolor = (Color) {0.5, 0.5, 0.5, 1};
     inpConfig->DAcolor = (Color) {0, 0.5, 0.5, 1};
+    inpConfig->masking = 0;
     inpConfig->isActive = 0;
+    inpConfig->maxLength = 20;
 
     inp->UIExtra = (void *) inpConfig;
 
@@ -130,4 +139,50 @@ UIElement* createLabel(Pos pos, char* text, float scale, Color color){
     label->UIExtra = (void *) labelConfig;
 
     return label;
+}
+
+// Carousel creation
+UIElement* createCarousel(Pos pos, char* text, char* options, int num_options, float scale, Color color){
+    UIElement* carousel = (UIElement *) malloc(1 * sizeof(UIElement));
+    carousel->type = UI_CAROUSEL;
+    CarouselExtra* carouselConfig = (CarouselExtra *) malloc(1 * sizeof(CarouselExtra));
+    carouselConfig->scale = scale;
+
+    strcpy(carouselConfig->label, text);
+
+    float x = pos.x;
+    float y = pos.y;
+    // Center
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale))/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+
+    carouselConfig->pos = (Pos) {x, y};
+    carouselConfig->color = color;
+
+    carousel->UIExtra = (void *) carouselConfig;
+
+    return carousel;
+}
+
+// Slider creation
+UIElement* createSlider(Pos pos, char* text, float scale, Color color){
+    UIElement* slider = (UIElement *) malloc(1 * sizeof(UIElement));
+    slider->type = UI_SLIDER;
+    SliderExtra* sliderConfig = (SliderExtra *) malloc(1 * sizeof(SliderExtra));
+    sliderConfig->scale = scale;
+
+    strcpy(sliderConfig->label, text);
+
+    float x = pos.x;
+    float y = pos.y;
+    // Center
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale))/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+
+    sliderConfig->pos = (Pos) {x, y};
+    sliderConfig->color = color;
+
+    slider->UIExtra = (void *) sliderConfig;
+
+    return slider;
 }

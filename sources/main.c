@@ -8,6 +8,7 @@
 #include "map.h"
 #include "item.h"
 #include "renderer.h"
+#include "renderlibs.h"
 #include "main.h"
 #include "scene.h"
 
@@ -70,14 +71,12 @@ Game* getGameInstance() {
 int main(int argc, char** argv)
 {
     Log("Game started...", _DEBUG_);
-    // Initialize Game and create Scenes
-    Game* game = getGameInstance();
 
     // Initialize Player and Map
     Map* map = getMapInstance();
     Player* mainPlayer = getPlayerInstance();
 
-    glutinit(argc, argv);
+    initializeRenderer(argc, argv);
 
 //    for (int i = 0; i < map->num_rooms; i++){
 //        printf("%d\n", map->rooms[i]->gridXPosition);
@@ -85,8 +84,10 @@ int main(int argc, char** argv)
     // main loop
     // render rooms/map
     // render player/other objects
-
-
+    // Initialize Game and create Scenes
+    Game* game = getGameInstance();
+    Log("Entering game loop...", _DEBUG_);
+    glutMainLoop();
 
     return 0;
 }

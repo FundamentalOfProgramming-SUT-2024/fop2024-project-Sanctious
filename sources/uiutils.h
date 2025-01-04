@@ -6,14 +6,11 @@
 
 extern FT_Library ft;
 extern FT_Face face;
-//widgetmanager->crearte color list of colors
-//widgetManager ->getcolor by name
-// Rendering & Keyboard handling is not implemented here
+
 typedef struct{
     float r, g, b, a;
 } Color;
 
-//create a list of colors const
 typedef struct{
     float x, y;
 } Pos;
@@ -26,11 +23,13 @@ typedef enum {
     UI_BUTTON,
     UI_INPUTFIELD,
     UI_LABEL,
+    UI_CAROUSEL,
+    UI_SLIDER,
 } UIElementType;
 
 
+// Button config
 typedef struct {
-    // Button config
     Pos pos;
     char label[MAX_STR_SIZE];
     float scale;
@@ -43,10 +42,11 @@ typedef struct {
     int isActive;
 } ButtonExtra;
 
+// InputField config
 typedef struct {
-    // Button config
     Pos pos;
     char label[MAX_STR_SIZE];
+    int maxLength;
     char input[MAX_STR_SIZE];
     float scale;
 
@@ -60,11 +60,41 @@ typedef struct {
     Color DAcolor;
     Color DAbgcolor;
 
+    int masking;
+//    char maskChar;
     int isActive;
 } InputFieldExtra;
 
+// Carousel config
 typedef struct {
-    // Button config
+    Pos pos;
+    char label[MAX_STR_SIZE];
+    int num_options;
+    int curOption;
+    char* options[MAX_STR_SIZE];
+    float scale;
+
+    Color color;
+
+    int isActive;
+} CarouselExtra;
+
+// Slider config
+typedef struct {
+    Pos pos;
+    char label[MAX_STR_SIZE];
+    int minValue;
+    int maxValue;
+    int curValue;
+    float scale;
+
+    Color color;
+
+    int isActive;
+} SliderExtra;
+
+// Label config
+typedef struct {
     Pos pos;
     char label[MAX_STR_SIZE];
     float scale;
@@ -89,11 +119,11 @@ typedef struct{
 UIElement* createButton(Pos pos, char* text, float scale);
 UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, int boxOffset);
 UIElement* createLabel(Pos pos, char* text, float scale, Color color);
+UIElement* createCarousel(Pos pos, char* text, char* options, int num_options, float scale, Color color);
+UIElement* createSlider(Pos pos, char* text, float scale, Color color);
+char* maskString(char* text, char* output, char mask);
 int calculateTextWidth(const char* text, float scale);
 int calculateTextHeight(const char* text, float scale);
-//extern Color* ColorRed;
-//extern Color* ColorBlue;
-//extern Color* ColorAqua;
 
 
 #endif

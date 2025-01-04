@@ -43,7 +43,15 @@ static void render() {
                 glVertex2f(_x+extra->boxWidth+5, extra->pos.y-extra->boxHeight-5);
                 glVertex2f(_x-5, extra->pos.y-extra->boxHeight-5);
             glEnd();
-            renderString(_x, extra->pos.y, extra->input, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+
+            char output[MAX_STR_SIZE];
+            if (extra->masking){
+                maskString(extra->input, output, '*');
+                renderString(_x, extra->pos.y, output, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            }
+            else{
+                renderString(_x, extra->pos.y, extra->input, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            }
         }
         // Label
         if(menu.uiElements[i]->type == UI_LABEL){
@@ -56,20 +64,6 @@ static void render() {
 }
 
 static void processSKeyboard(int key, int x, int y) {
-    if (key == GLUT_KEY_F3){
-        menu.num_elements = 8;
-        menu.num_interactable_elements = 6;
-        menu.hover_element = -1;
-        menu.uiElements[0] = createButton((Pos) {-1, 100}, "Hello!", FONTNORMALSCALE);
-    //    ((ButtonExtra *) menu.uiElements[0]->UIExtra)->isActive = 1;
-        menu.uiElements[1] = createButton((Pos) {-1, 150}, "test!", FONTNORMALSCALE);
-        menu.uiElements[2] = createButton((Pos) {-1, 200}, "AMOGUASUDAUSD", FONTNORMALSCALE*2);
-        menu.uiElements[3] = createButton((Pos) {-1, 250}, "SUSSY baka!!", FONTNORMALSCALE);
-        menu.uiElements[4] = createInputField((Pos) {-1, 300}, "Login:", FONTNORMALSCALE, (Scale) {100, 30}, 20);
-        menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register:", FONTNORMALSCALE,(Scale) {100, 30}, 20);
-        menu.uiElements[6] = createLabel((Pos) {-1, 400}, "Enter", FONTNORMALSCALE, (Color) {0.7, 0, 0, 1});
-        menu.uiElements[7] = createLabel((Pos) {-1, 40}, "Welcome to Rogue!", FONTNORMALSCALE*2, (Color) {0.7, 0, 0, 1});
-    }
 	if (key == GLUT_KEY_F2){
 //        void * temp = (menu.uiElements[0]->UIExtra);
 //        ((ButtonExtra *) temp)->isActive = !((ButtonExtra *) temp)->isActive;
@@ -100,10 +94,18 @@ static void processKeyboard(unsigned char key, int x, int y) {
             }
             // Other characters
             else{
-                extra->input[len] = key;
-                extra->input[len+1] = '\0';
+                if (len < extra->maxLength){
+                    extra->input[len] = key;
+                    extra->input[len+1] = '\0';
+                }
             }
+            // Automatic box resizing
             extra->boxWidth = 5+calculateTextWidth(extra->input, extra->scale);
+            if (extra->masking){
+                char output[MAX_STR_SIZE];
+                maskString(extra->input, output, '*');
+                extra->boxWidth = 5+calculateTextWidth(output, extra->scale);
+            }
         }
 	}
 
@@ -121,6 +123,21 @@ static void processKeyboard(unsigned char key, int x, int y) {
 }
 
 void initscene_main_menu(){
+    // Menu
+    menu.num_elements = 8;
+    menu.num_interactable_elements = 6;
+    menu.hover_element = -1;
+    menu.uiElements[0] = createButton((Pos) {-1, 100}, "Hello!", FONTNORMALSCALE);
+    menu.uiElements[1] = createButton((Pos) {-1, 150}, "test!", FONTNORMALSCALE);
+    menu.uiElements[2] = createButton((Pos) {-1, 200}, "AMOGUASUDAUSD", FONTNORMALSCALE*2);
+    menu.uiElements[3] = createButton((Pos) {-1, 250}, "SUSSY baka!!", FONTNORMALSCALE);
+    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "Login:", FONTNORMALSCALE, (Scale) {200, 30}, 20);
+    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;
+    menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register:", FONTNORMALSCALE,(Scale) {200, 30}, 20);
+    menu.uiElements[6] = createLabel((Pos) {-1, 400}, "Enter", FONTNORMALSCALE, (Color) {0.7, 0, 0, 1});
+    menu.uiElements[7] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, (Color) {0.7, 0, 0, 1});
+
+    // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));
 
     strcpy(scene->sceneID, "main_menu");

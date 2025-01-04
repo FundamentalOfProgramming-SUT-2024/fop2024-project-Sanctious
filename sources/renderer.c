@@ -192,7 +192,7 @@ void fpsLimit(int value) {
 }
 
 
-void glutinit(int argc, char** argv) {
+void initializeRenderer(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
     glutInitWindowSize(RWINDOW_WIDTH, RWINDOW_HEIGHT);
@@ -219,9 +219,4 @@ void glutinit(int argc, char** argv) {
 //    glutIdleFunc(*getGameInstance()->currentScene->update);
     glutDisplayFunc(*getGameInstance()->currentScene->update);
     glutTimerFunc(0, fpsLimit, 0);
-
-//    glutTimerFunc(500, playerChangeColor, 0);
-
-    Log("Entering game loop...", _DEBUG_);
-    glutMainLoop();
 }
