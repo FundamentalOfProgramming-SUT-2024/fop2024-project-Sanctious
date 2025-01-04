@@ -53,7 +53,7 @@ static void render() {
     }
 
 
-    renderString(0, 20, "Welcome to rogue!", FONTNORMALSCALE, 0.5f, 0.1f, 0.9f, 1.0f);
+    renderString(0, 20, "Hello!……€€€", FONTNORMALSCALE, 0.5f, 0.1f, 0.9f, 1.0f);
 
     glFlush();
 }

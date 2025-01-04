@@ -41,7 +41,7 @@ const void (*SCENES[MAX_SCENES])() =
 static Game* instance = NULL;
 
 void initializeGame(Game* game){
-    game->num_scenes = 0;
+    game->num_scenes = 0; // It's handled in addScene function
     game->currentScene = NULL;
 
     for (int i = 0; i < NUM_SCENES; i++){

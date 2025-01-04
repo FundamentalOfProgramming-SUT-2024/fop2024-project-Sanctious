@@ -1,5 +1,6 @@
 #include "renderlibs.h"
 #include <stdio.h>
+#include <stdint.h>
 
 #include "renderer.h"
 #include "map.h"
@@ -10,6 +11,32 @@
 
 FT_Library ft;
 FT_Face face;
+
+uint32_t decodeUTF8(const char** text) {
+    const unsigned char* ptr = (const unsigned char*)(*text);
+    uint32_t code = 0;
+
+    if (*ptr < 0x80) { // Single-byte (ASCII)
+        code = *ptr;
+        (*text)++;
+    } else if ((*ptr & 0xE0) == 0xC0) {
+        if ((*(ptr + 1) & 0xC0) != 0x80) return 0;
+        code = ((*ptr & 0x1F) << 6) | (*(ptr + 1) & 0x3F);
+        (*text) += 2;
+    } else if ((*ptr & 0xF0) == 0xE0) {
+        if ((*(ptr + 1) & 0xC0) != 0x80 || (*(ptr + 2) & 0xC0) != 0x80) return 0;
+        code = ((*ptr & 0x0F) << 12) | ((*(ptr + 1) & 0x3F) << 6) | (*(ptr + 2) & 0x3F);
+        (*text) += 3;
+    } else if ((*ptr & 0xF8) == 0xF0) {
+        if ((*(ptr + 1) & 0xC0) != 0x80 || (*(ptr + 2) & 0xC0) != 0x80 || (*(ptr + 3) & 0xC0) != 0x80) return 0;
+        code = ((*ptr & 0x07) << 18) | ((*(ptr + 1) & 0x3F) << 12) | ((*(ptr + 2) & 0x3F) << 6) | (*(ptr + 3) & 0x3F);
+        (*text) += 4;
+    } else {
+        return 0; // Invalid UTF-8 sequence
+    }
+
+    return code;
+}
 
 void initFreeType(const char* fontPath) {
     if (FT_Init_FreeType(&ft)) {
@@ -95,20 +122,20 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 }
-
-void renderString(int x, int y, char* text, float scale, float _red, float _green, float _blue, float _alpha) {
+void renderString(int x, int y, char* text, float scale, float red, float green, float blue, float alpha) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glColor4f(_red, _green, _blue, _alpha);
+    glColor4f(red, green, blue, alpha);
 
     glEnable(GL_TEXTURE_2D);
 
-    for (const char* p = text; *p; p++) {
-        unsigned int charCode = *p;
+    const char* p = text;
+    while (*p) {
+        uint32_t charCode = decodeUTF8(&p);
 
         if (FT_Load_Char(face, charCode, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
-            Log("Failed to load glyph.", _ERROR_);
+            Log("Failed to load glyph for codepoint %u\n", _ERROR_, charCode);
             continue;
         }
 
@@ -136,20 +163,20 @@ void renderString(int x, int y, char* text, float scale, float _red, float _gree
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        // Render quad with that texture ( glyph texture )
-        float xpos = x + face->glyph->bitmap_left * scale;
-        float ypos = y - (face->glyph->bitmap_top) * scale;
-        float w = face->glyph->bitmap.width * scale;
-        float h = face->glyph->bitmap.rows * scale;
+        float xpos = x + glyph->bitmap_left * scale;
+        float ypos = y - glyph->bitmap_top * scale;
+        float w = glyph->bitmap.width * scale;
+        float h = glyph->bitmap.rows * scale;
 
+        // Render Quad with that texture
         glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f); glVertex2f(xpos, ypos);         // Bottom-left
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(xpos + w, ypos);    // Bottom-righ1
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(xpos + w, ypos);    // Bottom-right
         glTexCoord2f(1.0f, 1.0f); glVertex2f(xpos + w, ypos + h); // Top-right
         glTexCoord2f(0.0f, 1.0f); glVertex2f(xpos, ypos + h);    // Top-left
         glEnd();
 
-        x += (face->glyph->advance.x >> 6) * scale;
+        x += (glyph->advance.x >> 6) * scale;
 
         glDeleteTextures(1, &texture);
     }
@@ -157,7 +184,6 @@ void renderString(int x, int y, char* text, float scale, float _red, float _gree
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 }
-
 void glutinit(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
