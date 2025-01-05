@@ -48,8 +48,8 @@ static void renderRoomBox(float x, float y, int width, int height, float r, floa
 }
 
 static void renderPlayer(){
-    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "O", r, g, b, 1.0);
-    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", r, g, b, 1.0);
+    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "O", COLOR_HOT_PINK);
+    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", COLOR_HOT_PINK);
 }
 
 static void processKeyboard(unsigned char key, int x, int y) {
@@ -81,7 +81,7 @@ static void processSKeyboard(int key, int x, int y) {
 
 static void renderDoors(Room* room){
     for (int i = 0; i < room->num_doors; i++){
-        renderText(room->doors[i]->pos.gridX, room->doors[i]->pos.gridY, "+", 0.4, 0.1, 0.7, 1.0);
+        renderText(room->doors[i]->pos.gridX, room->doors[i]->pos.gridY, "+", COLOR_BROWN);
     }
 }
 
@@ -90,7 +90,9 @@ static void renderCorridors(Map* map){
     for (int i = 0; i < map->num_corridors; i++){
         Corridor* cor = map->corridors[i];
         for (int j = 0; j < cor->path_length; j++){
-            renderText(cor->path[j].gridX, cor->path[j].gridY, "ô", 0.6, 0.4, 0.7, 0.5);
+            Color color = COLOR_AMBER;
+            color.a = 0.5f;
+            renderText(cor->path[j].gridX, cor->path[j].gridY, "ô", color);
         }
     }
 }
@@ -115,7 +117,7 @@ static void render() {
     }
 
     renderPlayer();
-    renderString(0, 20, "Hello World!", FONTNORMALSCALE, 0.5f, 0.1f, 0.9f, 1.0f);
+    renderString(0, 20, "Hello World!", FONTNORMALSCALE, COLOR_PURPLE);
 
     glFlush();
 }

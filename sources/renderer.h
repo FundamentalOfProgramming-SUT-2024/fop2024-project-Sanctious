@@ -1,9 +1,13 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+typedef struct{
+    float r, g, b, a;
+} Color;
+
 void initializeRenderer(int, char**);
-void renderText(int col, int row, const char* text, float textR, float textG, float textB, float alpha);
-void renderString(int x, int y, char* text, float scale, float _red, float _green, float _blue, float _alpha);
+void renderText(int col, int row, const char* text, Color color);
+void renderString(int x, int y, char* text, float fontScale, Color color);
 float gridCellWidth();
 float gridCellHeight();
 

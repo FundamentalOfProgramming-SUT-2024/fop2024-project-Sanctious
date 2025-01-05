@@ -60,7 +60,7 @@ float gridCellHeight() {
     return (float)WINDOW_HEIGHT / YCELLS;
 }
 
-void renderText(int col, int row, const char* text, float textR, float textG, float textB, float alpha) {
+void renderText(int col, int row, const char* text, Color color) {
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
@@ -70,7 +70,7 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glColor4f(textR, textG, textB, alpha);
+    glColor4f(color.r, color.g, color.b, color.a);
 
     glEnable(GL_TEXTURE_2D);
 
@@ -123,11 +123,11 @@ void renderText(int col, int row, const char* text, float textR, float textG, fl
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 }
-void renderString(int x, int y, char* text, float scale, float red, float green, float blue, float alpha) {
+void renderString(int x, int y, char* text, float fontScale, Color color) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glColor4f(red, green, blue, alpha);
+    glColor4f(color.r, color.g, color.b, color.a);
 
     glEnable(GL_TEXTURE_2D);
 
@@ -164,10 +164,10 @@ void renderString(int x, int y, char* text, float scale, float red, float green,
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        float xpos = x + glyph->bitmap_left * scale;
-        float ypos = y - glyph->bitmap_top * scale;
-        float w = glyph->bitmap.width * scale;
-        float h = glyph->bitmap.rows * scale;
+        float xpos = x + glyph->bitmap_left * fontScale;
+        float ypos = y - glyph->bitmap_top * fontScale;
+        float w = glyph->bitmap.width * fontScale;
+        float h = glyph->bitmap.rows * fontScale;
 
         // Render Quad with that texture
         glBegin(GL_QUADS);
@@ -177,7 +177,7 @@ void renderString(int x, int y, char* text, float scale, float red, float green,
         glTexCoord2f(0.0f, 1.0f); glVertex2f(xpos, ypos + h);    // Top-left
         glEnd();
 
-        x += (glyph->advance.x >> 6) * scale;
+        x += (glyph->advance.x >> 6) * fontScale;
 
         glDeleteTextures(1, &texture);
     }

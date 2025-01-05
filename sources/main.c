@@ -78,14 +78,9 @@ int main(int argc, char** argv)
 
     initializeRenderer(argc, argv);
 
-//    for (int i = 0; i < map->num_rooms; i++){
-//        printf("%d\n", map->rooms[i]->gridXPosition);
-//    }
-    // main loop
-    // render rooms/map
-    // render player/other objects
     // Initialize Game and create Scenes
     Game* game = getGameInstance();
+
     Log("Entering game loop...", _DEBUG_);
     glutMainLoop();
 

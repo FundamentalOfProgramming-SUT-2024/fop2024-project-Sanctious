@@ -5,28 +5,21 @@
 
 extern FT_Library ft;
 extern FT_Face face;
-//Color* ColorRed = NULL;
-//
-//void initializeColors(){
-//    *ColorRed = (Color) {0.5, 0.5, 0.5, 1};
-//
-//}
-
 
 // Render width
-int calculateTextWidth(const char* text, float scale) {
+int calculateTextWidth(const char* text, float fontScale) {
     int width = 0;
     for (const char* p = text; *p; p++) {
          if (FT_Load_Char(face, *p, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
             continue;
         }
-        width += (face->glyph->advance.x >> 6) * scale;
+        width += (face->glyph->advance.x >> 6) * fontScale;
     }
     return width;
 }
 
 // Render height
-int calculateTextHeight(const char* text, float scale) {
+int calculateTextHeight(const char* text, float fontScale) {
     int maxTop = 0;
     int minBottom = 0;
     for (const char* p = text; *p; p++) {
@@ -35,8 +28,8 @@ int calculateTextHeight(const char* text, float scale) {
         }
         FT_GlyphSlot glyph = face->glyph;
 
-        int top = glyph->bitmap_top * scale;
-        int bottom = top - (glyph->bitmap.rows * scale);
+        int top = glyph->bitmap_top * fontScale;
+        int bottom = top - (glyph->bitmap.rows * fontScale);
 
         if (top > maxTop) maxTop = top;
         if (bottom < minBottom) minBottom = bottom;
@@ -52,11 +45,11 @@ char* maskString(char* text, char* output, char mask){
 }
 
 // Button creation
-UIElement* createButton(Pos pos, char* text, float scale){
+UIElement* createButton(Pos pos, char* text, float fontScale){
     UIElement* btn = (UIElement *) malloc(1 * sizeof(UIElement));
     btn->type = UI_BUTTON;
     ButtonExtra* btnConfig = (ButtonExtra *) malloc(1 * sizeof(ButtonExtra));
-    btnConfig->scale = scale;
+    btnConfig->fontScale = fontScale;
 
 
     strcpy(btnConfig->label, text);
@@ -64,17 +57,12 @@ UIElement* createButton(Pos pos, char* text, float scale){
     float x = pos.x;
     float y = pos.y;
     // Center
-    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale))/2;
-    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, fontScale))/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, fontScale))/2; // Text is rendering upwards
 
     btnConfig->pos = (Pos) {x, y};
-//    Color* red = (Color *) malloc(1 * sizeof(Color));
-//    *red = (Color) {0.5, 0.5, 0.5, 1};
-//    Color* blue = (Color *) malloc(1 * sizeof(Color));
-//    *blue = (Color) {0, 0.5, 0.5, 1};
-
-    btnConfig->Acolor = (Color) {0.5, 0.5, 0.5, 1};
-    btnConfig->DAcolor = (Color) {0, 0.5, 0.5, 1};
+    btnConfig->Acolor = COLOR_GRAY;
+    btnConfig->DAcolor = COLOR_CYAN;
     btnConfig->isActive = 0;
 
     btn->UIExtra = (void *) btnConfig;
@@ -83,11 +71,11 @@ UIElement* createButton(Pos pos, char* text, float scale){
 }
 
 // Input field creation
-UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, int boxOffset){
+UIElement* createInputField(Pos pos, char* text, float fontScale, Scale boxScale, int boxOffset){
     UIElement* inp = (UIElement *) malloc(1 * sizeof(UIElement));
     inp->type = UI_INPUTFIELD;
     InputFieldExtra* inpConfig = (InputFieldExtra *) malloc(1 * sizeof(InputFieldExtra));
-    inpConfig->scale = scale;
+    inpConfig->fontScale = fontScale;
 
     inpConfig->boxOffset = boxOffset;
     inpConfig->boxWidth = boxScale.w;
@@ -99,17 +87,12 @@ UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, in
     float x = pos.x;
     float y = pos.y;
     // Center
-    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale)-inpConfig->boxWidth-inpConfig->boxOffset)/2;
-    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, fontScale)-inpConfig->boxWidth-inpConfig->boxOffset)/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, fontScale))/2; // Text is rendering upwards
 
     inpConfig->pos = (Pos) {x, y};
-//    Color* red = (Color *) malloc(1 * sizeof(Color));
-//    *red = (Color) {0.5, 0.5, 0.5, 1};
-//    Color* blue = (Color *) malloc(1 * sizeof(Color));
-//    *blue = (Color) {0, 0.5, 0.5, 1};
-
-    inpConfig->Acolor = (Color) {0.5, 0.5, 0.5, 1};
-    inpConfig->DAcolor = (Color) {0, 0.5, 0.5, 1};
+    inpConfig->Acolor = COLOR_GRAY;
+    inpConfig->DAcolor = COLOR_CYAN;
     inpConfig->masking = 0;
     inpConfig->isActive = 0;
     inpConfig->maxLength = 20;
@@ -120,19 +103,19 @@ UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, in
 }
 
 // Label creation
-UIElement* createLabel(Pos pos, char* text, float scale, Color color){
+UIElement* createLabel(Pos pos, char* text, float fontScale, Color color){
     UIElement* label = (UIElement *) malloc(1 * sizeof(UIElement));
     label->type = UI_LABEL;
     LabelExtra* labelConfig = (LabelExtra *) malloc(1 * sizeof(LabelExtra));
-    labelConfig->scale = scale;
+    labelConfig->fontScale = fontScale;
 
     strcpy(labelConfig->label, text);
 
     float x = pos.x;
     float y = pos.y;
     // Center
-    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale))/2;
-    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, fontScale))/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, fontScale))/2; // Text is rendering upwards
 
     labelConfig->pos = (Pos) {x, y};
     labelConfig->color = color;
@@ -143,23 +126,23 @@ UIElement* createLabel(Pos pos, char* text, float scale, Color color){
 }
 
 // Carousel creation
-UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, float scale){
+UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, float fontScale){
     UIElement* carousel = (UIElement *) malloc(1 * sizeof(UIElement));
     carousel->type = UI_CAROUSEL;
     CarouselExtra* carouselConfig = (CarouselExtra *) malloc(1 * sizeof(CarouselExtra));
-    carouselConfig->scale = scale;
+    carouselConfig->fontScale = fontScale;
 
     strcpy(carouselConfig->label, text);
 
     float x = pos.x;
     float y = pos.y;
     // Center
-    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale))/2;
-    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, fontScale))/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, fontScale))/2; // Text is rendering upwards
 
     carouselConfig->pos = (Pos) {x, y};
-    carouselConfig->Acolor = (Color) {0.5, 0.5, 0.5, 1};
-    carouselConfig->DAcolor = (Color) {0, 0.5, 0.5, 1};
+    carouselConfig->Acolor = COLOR_GRAY;
+    carouselConfig->DAcolor = COLOR_CYAN;
 
     carouselConfig->curOption = 0;
     carouselConfig->num_options = num_options;
@@ -173,19 +156,19 @@ UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, 
 }
 
 // Slider creation
-UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float scale, float sliderOffset){
+UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset){
     UIElement* slider = (UIElement *) malloc(1 * sizeof(UIElement));
     slider->type = UI_SLIDER;
     SliderExtra* sliderConfig = (SliderExtra *) malloc(1 * sizeof(SliderExtra));
-    sliderConfig->scale = scale;
+    sliderConfig->fontScale = fontScale;
 
     strcpy(sliderConfig->label, text);
 
     float x = pos.x;
     float y = pos.y;
     // Center
-    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, scale)-sliderOffset)/2;
-    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, scale))/2; // Text is rendering upwards
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, fontScale)-sliderOffset)/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, fontScale))/2; // Text is rendering upwards
 
     sliderConfig->pos = (Pos) {x, y};
     sliderConfig->sliderOffset = sliderOffset;
@@ -193,8 +176,8 @@ UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int max
     sliderConfig->minValue = minValue;
     sliderConfig->maxValue = maxValue;
     sliderConfig->stepValue = stepValue;
-    sliderConfig->Acolor = (Color) {0.5, 0.5, 0.5, 1};
-    sliderConfig->DAcolor = (Color) {0, 0.5, 0.5, 1};
+    sliderConfig->Acolor = COLOR_GRAY;
+    sliderConfig->DAcolor = COLOR_CYAN;
 
     slider->UIExtra = (void *) sliderConfig;
 
@@ -211,66 +194,77 @@ void renderMenu(Menu* menu) {
         // Button
         if(menu->uiElements[i]->type == UI_BUTTON){
             ButtonExtra* extra = (ButtonExtra *) menu->uiElements[i]->UIExtra;
-            if (menu->hover_element == i)
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            if (menu->hover_element == i){
+                renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
+                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+            }
             else
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
         }
         // Input field
         else if(menu->uiElements[i]->type == UI_INPUTFIELD){
             InputFieldExtra* extra = (InputFieldExtra *) menu->uiElements[i]->UIExtra;
-            if (menu->hover_element == i)
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            if (menu->hover_element == i){
+                renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
+                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+            }
             else
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
             glLineWidth(1.5f);
             glColor3f(0.5f, 0.5f, 0.5f);
-            int _x = extra->pos.x+calculateTextWidth(extra->label, extra->scale)+extra->boxOffset;
+            int _x = extra->pos.x+calculateTextWidth(extra->label, extra->fontScale)+extra->boxOffset;
             glBegin(GL_LINE_LOOP);
-                glVertex2f(_x-5, extra->pos.y+7);
-                glVertex2f(_x+extra->boxWidth+5, extra->pos.y+7);
-                glVertex2f(_x+extra->boxWidth+5, extra->pos.y-extra->boxHeight-5);
-                glVertex2f(_x-5, extra->pos.y-extra->boxHeight-5);
+                glVertex2f(_x-INPUTBOX_LEFTMARGIN, extra->pos.y+INPUTBOX_BOTTOMMARGIN);
+                glVertex2f(_x+extra->boxWidth+INPUTBOX_RIGHTMARGIN, extra->pos.y+INPUTBOX_BOTTOMMARGIN);
+                glVertex2f(_x+extra->boxWidth+INPUTBOX_RIGHTMARGIN, extra->pos.y-extra->boxHeight-INPUTBOX_TOPMARGIN);
+                glVertex2f(_x-INPUTBOX_LEFTMARGIN, extra->pos.y-extra->boxHeight-INPUTBOX_TOPMARGIN);
             glEnd();
 
             char output[MAX_STR_SIZE];
             if (extra->masking){
-                maskString(extra->input, output, '*');
-                renderString(_x, extra->pos.y, output, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+                maskString(extra->input, output, PASSWORDMASK_CHAR);
+                renderString(_x, extra->pos.y, output, extra->fontScale, extra->DAcolor);
             }
             else{
-                renderString(_x, extra->pos.y, extra->input, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+                renderString(_x, extra->pos.y, extra->input, extra->fontScale, extra->DAcolor);
             }
+
         }
         // Carousel
         else if(menu->uiElements[i]->type == UI_CAROUSEL){
             CarouselExtra* extra = (CarouselExtra *) menu->uiElements[i]->UIExtra;
-            if (menu->hover_element == i)
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            if (menu->hover_element == i){
+                renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
+                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+            }
             else
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
-            renderString(extra->pos.x+120, extra->pos.y, "<", extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
-            renderString(extra->pos.x+140, extra->pos.y, extra->options[extra->curOption], extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
-            renderString(extra->pos.x+240, extra->pos.y, ">", extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
+            renderString(extra->pos.x+120, extra->pos.y, "<", extra->fontScale, extra->Acolor);
+            renderString(extra->pos.x+140, extra->pos.y, extra->options[extra->curOption], extra->fontScale, extra->DAcolor);
+            renderString(extra->pos.x+240, extra->pos.y, ">", extra->fontScale, extra->Acolor);
+
+
         }
         // Slider
         else if(menu->uiElements[i]->type == UI_SLIDER){
             SliderExtra* extra = (SliderExtra *) menu->uiElements[i]->UIExtra;
-            if (menu->hover_element == i)
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            if (menu->hover_element == i){
+                renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
+                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+            }
             else
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
 
             char str[MAX_STR_SIZE];
             sprintf(str, "%d", extra->curValue);
-            renderString(extra->pos.x+100, extra->pos.y, "<", extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
-            renderString(extra->pos.x+calculateTextWidth(extra->label, extra->scale)+extra->sliderOffset, extra->pos.y, str, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
-            renderString(extra->pos.x+200, extra->pos.y, ">", extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            renderString(extra->pos.x+100, extra->pos.y, "<", extra->fontScale, extra->Acolor);
+            renderString(extra->pos.x+calculateTextWidth(extra->label, extra->fontScale)+extra->sliderOffset, extra->pos.y, str, extra->fontScale, extra->DAcolor);
+            renderString(extra->pos.x+200, extra->pos.y, ">", extra->fontScale, extra->Acolor);
         }
         // Label
         else if(menu->uiElements[i]->type == UI_LABEL){
             LabelExtra* extra = (LabelExtra *) menu->uiElements[i]->UIExtra;
-            renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->color.r, extra->color.g, extra->color.b, extra->color.a);
+            renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->color);
         }
     }
 }

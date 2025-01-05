@@ -80,11 +80,11 @@ void generateRooms(Map* map){
     // Generate map
 
     for (int i = 0; i < MAPDIV; i++){
-        _lowerXpos = (XCELLS-1)/MAPDIV * i + BUFFER_ZONE;
-        _higherXpos = (XCELLS-1)/MAPDIV * (i+1) -MIN_ROOM_WIDTH;
+        _lowerXpos = (XCELLS-1)/MAPDIV * i + ROOM_LEFTBUFFER;
+        _higherXpos = (XCELLS-1)/MAPDIV * (i+1) -MIN_ROOM_WIDTH-ROOM_RIGHTBUFFER;
         for (int j = 0; j < MAPDIV; j++){
-            _lowerYpos = (YCELLS-1)/MAPDIV * j + BUFFER_ZONE;
-            _higherYpos = (YCELLS-1)/MAPDIV * (j+1) -MIN_ROOM_HEIGHT;
+            _lowerYpos = (YCELLS-1)/MAPDIV * j + ROOM_TOPBUFFER;
+            _higherYpos = (YCELLS-1)/MAPDIV * (j+1) -MIN_ROOM_HEIGHT -ROOM_BOTTOMBUFFER;
 
 
             int _x = RANDOM(_lowerXpos, _higherXpos);

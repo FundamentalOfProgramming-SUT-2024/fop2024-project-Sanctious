@@ -78,11 +78,11 @@ static void processKeyboard(unsigned char key, int x, int y) {
                 }
             }
             // Automatic box resizing
-            extra->boxWidth = 5+calculateTextWidth(extra->input, extra->scale);
+            extra->boxWidth = INPUTBOX_RIGHTMARGIN+calculateTextWidth(extra->input, extra->fontScale);
             if (extra->masking){
                 char output[MAX_STR_SIZE];
-                maskString(extra->input, output, '*');
-                extra->boxWidth = 5+calculateTextWidth(output, extra->scale);
+                maskString(extra->input, output, PASSWORDMASK_CHAR);
+                extra->boxWidth = INPUTBOX_RIGHTMARGIN+calculateTextWidth(output, extra->fontScale);
             }
         }
 	}
@@ -93,7 +93,22 @@ static void processKeyboard(unsigned char key, int x, int y) {
         if (menu.hover_element >= 0 && menu.hover_element <= menu.num_elements-1)
         if (menu.uiElements[menu.hover_element]->type == UI_BUTTON){
             ButtonExtra* extra = (ButtonExtra *) menu.uiElements[menu.hover_element]->UIExtra;
-            extra->Acolor = (Color ) {0.1f, 0.1f, 0.1f, 1};
+            // Manually handle button press
+            switch(menu.hover_element){
+            case 0:
+
+                break;
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+                break;
+
+            }
 
         }
     }
@@ -111,11 +126,12 @@ void initscene_main_menu(){
     menu.uiElements[3] = createButton((Pos) {-1, 250}, "SUSSY baka!!", FONTNORMALSCALE);
     menu.uiElements[4] = createInputField((Pos) {-1, 300}, "Login :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;
+    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
     menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register :", FONTNORMALSCALE,(Scale) {200, 30}, 20);
     menu.uiElements[6] = createCarousel((Pos) {-1, 400}, "Options :",(char *[]){"Hello", "Test", "Poopak"}, 3, FONTNORMALSCALE);
     menu.uiElements[7] = createSlider((Pos) {-1, 450}, "Slider :", 50, 0, 100, 5, FONTNORMALSCALE, 50);
-    menu.uiElements[8] = createLabel((Pos) {-1, 500}, "Enter", FONTNORMALSCALE, (Color) {0.7, 0, 0, 1});
-    menu.uiElements[9] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, (Color) {0.7, 0, 0, 1});
+    menu.uiElements[8] = createLabel((Pos) {-1, 500}, "Enter", FONTNORMALSCALE, COLOR_CRIMSON);
+    menu.uiElements[9] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, COLOR_CRIMSON);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

@@ -3,13 +3,10 @@
 
 #include "renderlibs.h"
 #include "config.h"
+#include "renderer.h"
 
 extern FT_Library ft;
 extern FT_Face face;
-
-typedef struct{
-    float r, g, b, a;
-} Color;
 
 typedef struct{
     float x, y;
@@ -32,7 +29,7 @@ typedef enum {
 typedef struct {
     Pos pos;
     char label[MAX_STR_SIZE];
-    float scale;
+    float fontScale;
     // A -> active, DA -> deactive
     Color Acolor;
     Color Abgcolor;
@@ -47,8 +44,8 @@ typedef struct {
     Pos pos;
     char label[MAX_STR_SIZE];
     int maxLength;
-    char input[MAX_STR_SIZE];
-    float scale;
+    char input[MAX_STRING_INPUT];
+    float fontScale;
 
     int boxWidth;
     int boxHeight;
@@ -71,8 +68,8 @@ typedef struct {
     char label[MAX_STR_SIZE];
     int num_options;
     int curOption;
-    char options[MAX_STR_SIZE][MAX_STR_SIZE];
-    float scale;
+    char options[MAX_CAROUSEL_OPTIONS][MAX_STR_SIZE];
+    float fontScale;
 
     Color Acolor;
     Color DAcolor;
@@ -88,7 +85,7 @@ typedef struct {
     int maxValue;
     int curValue;
     int stepValue;
-    float scale;
+    float fontScale;
     float sliderOffset;
 
     Color Acolor;
@@ -101,7 +98,7 @@ typedef struct {
 typedef struct {
     Pos pos;
     char label[MAX_STR_SIZE];
-    float scale;
+    float fontScale;
 
     Color color;
 } LabelExtra;
@@ -117,17 +114,17 @@ typedef struct{
 
     int num_interactable_elements;
     int num_elements;
-    UIElement* uiElements[MAX_UIELEMENTS];
+    UIElement* uiElements[MAX_MENU_UIELEMENTS];
 } Menu;
 
-UIElement* createButton(Pos pos, char* text, float scale);
-UIElement* createInputField(Pos pos, char* text, float scale, Scale boxScale, int boxOffset);
-UIElement* createLabel(Pos pos, char* text, float scale, Color color);
-UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, float scale);
-UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float scale, float sliderOffset);
+UIElement* createButton(Pos pos, char* text, float fontScale);
+UIElement* createInputField(Pos pos, char* text, float fontScale, Scale boxScale, int boxOffset);
+UIElement* createLabel(Pos pos, char* text, float fontScale, Color color);
+UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, float fontScale);
+UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
 char* maskString(char* text, char* output, char mask);
-int calculateTextWidth(const char* text, float scale);
-int calculateTextHeight(const char* text, float scale);
+int calculateTextWidth(const char* text, float fontScale);
+int calculateTextHeight(const char* text, float fontScale);
 void renderMenu(Menu* menu);
 
 #endif
