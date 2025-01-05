@@ -4,7 +4,7 @@
 #include "config.h"
 #include "player.h"
 
-float r,g=1.0f,b=1.0f;
+float r=1.0f,g=1.0f,b=1.0f;
 
 static void renderRoomBox(float x, float y, int width, int height, float r, float g, float b) {
     glColor3f(0.2, 0.2, 1);
