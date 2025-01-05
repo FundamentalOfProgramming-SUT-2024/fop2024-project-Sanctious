@@ -206,7 +206,6 @@ void renderMenu(Menu* menu) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-    // Draw a smooth 2D box
 
     for (int i = 0; i < menu->num_elements; i++){
         // Button
@@ -250,7 +249,9 @@ void renderMenu(Menu* menu) {
             renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
             else
             renderString(extra->pos.x, extra->pos.y, extra->label, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
-            renderString(extra->pos.x+120, extra->pos.y, extra->options[extra->curOption], extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(extra->pos.x+120, extra->pos.y, "<", extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
+            renderString(extra->pos.x+140, extra->pos.y, extra->options[extra->curOption], extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(extra->pos.x+240, extra->pos.y, ">", extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
         }
         // Slider
         else if(menu->uiElements[i]->type == UI_SLIDER){
@@ -262,7 +263,9 @@ void renderMenu(Menu* menu) {
 
             char str[MAX_STR_SIZE];
             sprintf(str, "%d", extra->curValue);
+            renderString(extra->pos.x+100, extra->pos.y, "<", extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
             renderString(extra->pos.x+calculateTextWidth(extra->label, extra->scale)+extra->sliderOffset, extra->pos.y, str, extra->scale, extra->DAcolor.r, extra->DAcolor.g, extra->DAcolor.b, extra->DAcolor.a);
+            renderString(extra->pos.x+200, extra->pos.y, ">", extra->scale, extra->Acolor.r, extra->Acolor.g, extra->Acolor.b, extra->Acolor.a);
         }
         // Label
         else if(menu->uiElements[i]->type == UI_LABEL){
