@@ -50,7 +50,7 @@ void initializeGame(Game* game){
         (*(SCENES[i]))();
     }
 
-    game->currentScene = getSceneByID("main_menu");
+    game->currentScene = getSceneByID("game");
 
     Log("Game handler initialized successfully.", _DEBUG_);
 }

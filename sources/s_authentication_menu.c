@@ -48,6 +48,10 @@ static void processSKeyboard(int key, int x, int y) {
     menuBasicHandleSKeyboard(&menu, key);
 }
 
+static void onExit(){
+    menu.hover_element = -1;
+}
+
 void initscene_authentication_menu(){
     // Menu
     menu.num_elements = 3;
@@ -78,7 +82,7 @@ void initscene_authentication_menu(){
     strcpy(scene->sceneID, "authentication_menu");
 
     scene->onEnter = NULL;
-    scene->onExit = NULL;
+    scene->onExit = onExit;
     scene->onKeypress = NULL;
     scene->onSpecialKeypress = processSKeyboard;
     scene->onKeypress = processKeyboard;

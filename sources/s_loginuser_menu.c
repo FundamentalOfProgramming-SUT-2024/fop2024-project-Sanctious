@@ -26,11 +26,11 @@ static void processKeyboard(unsigned char key, int x, int y) {
             // Manually handle button press
             switch(menu.hover_element){
             // Login
-            case 3:
+            case 2:
 
                 break;
             // Quit
-            case 4:
+            case 3:
                 changeScene(getSceneByID("authentication_menu"));
                 break;
 
@@ -46,6 +46,10 @@ static void processSKeyboard(int key, int x, int y) {
     menuBasicHandleSKeyboard(&menu, key);
 }
 
+static void onExit(){
+    menu.hover_element = -1;
+}
+
 void initscene_login_menu(){
     // Menu
     menu.num_elements = 5;
@@ -57,8 +61,9 @@ void initscene_login_menu(){
     ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->maxLength = 30;
 
     menu.uiElements[1] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 150}, "Password :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
-    configureInputFieldColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
     ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->masking = 1;
+    ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
+    configureInputFieldColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
 
     menu.uiElements[2] = createButton((Pos) {-1, 300}, "Login", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
@@ -75,7 +80,7 @@ void initscene_login_menu(){
     strcpy(scene->sceneID, "loginuser_menu");
 
     scene->onEnter = NULL;
-    scene->onExit = NULL;
+    scene->onExit = onExit;
     scene->onKeypress = NULL;
     scene->onSpecialKeypress = processSKeyboard;
     scene->onKeypress = processKeyboard;

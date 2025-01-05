@@ -121,8 +121,8 @@ UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int max
 
 void configureButtonColor(UIElement* button, Color Acolor, Color DAcolor);
 void configureInputFieldColor(UIElement* inputField, Color Acolor, Color DAcolor);
-void configureCarousel(UIElement* carousel, Color Acolor, Color DAcolor);
-void configureSlider(UIElement* slider, Color Acolor, Color DAcolor);
+void configureCarouselColor(UIElement* carousel, Color Acolor, Color DAcolor);
+void configureSliderColor(UIElement* slider, Color Acolor, Color DAcolor);
 
 char* maskString(char* text, char* output, char mask);
 int calculateTextWidth(const char* text, float fontScale);
