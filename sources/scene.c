@@ -9,6 +9,8 @@
 void addScene(Scene* scene){
     Game* game = getGameInstance();
 
+    scene->parentScene = NULL;
+
     game->scenes[game->num_scenes] = scene;
     game->num_scenes++;
 

@@ -1,9 +1,7 @@
 #include "scene.h"
-#include "renderlibs.h"
 #include "renderer.h"
 #include "config.h"
 #include "uiutils.h"
-#include <ctype.h>
 
 static Menu menu;
 
@@ -14,89 +12,22 @@ static void render() {
     glFlush();
 }
 
-static void processSKeyboard(int key, int x, int y) {
-	if (key == GLUT_KEY_F2){
-//        void * temp = (menu.uiElements[0]->UIExtra);
-//        ((ButtonExtra *) temp)->isActive = !((ButtonExtra *) temp)->isActive;
-        changeScene(getSceneByID("game"));
-	}
-	else if (key == GLUT_KEY_DOWN){
-        if (menu.hover_element < menu.num_interactable_elements-1) menu.hover_element += 1;
-        else menu.hover_element = 0;
-	}
-	else if (key == GLUT_KEY_UP){
-       if (menu.hover_element > 0) menu.hover_element -= 1;
-       else menu.hover_element = menu.num_interactable_elements-1;
-	}
-	else if (key == GLUT_KEY_RIGHT){
-        if (menu.hover_element >= 0 && menu.hover_element <= menu.num_elements-1){
-            if (menu.uiElements[menu.hover_element]->type == UI_CAROUSEL){
-                CarouselExtra* extra = (CarouselExtra *) menu.uiElements[menu.hover_element]->UIExtra;
-                if (extra->curOption < extra->num_options-1) extra->curOption += 1;
-                else extra->curOption = 0;
-            }
-            else if (menu.uiElements[menu.hover_element]->type == UI_SLIDER){
-                SliderExtra* extra = (SliderExtra *) menu.uiElements[menu.hover_element]->UIExtra;
-                if (extra->curValue < extra->maxValue) extra->curValue += extra->stepValue;
-            }
-        }
-	}
-
-	else if (key == GLUT_KEY_LEFT){
-        if (menu.hover_element >= 0 && menu.hover_element <= menu.num_elements-1){
-            if (menu.uiElements[menu.hover_element]->type == UI_CAROUSEL){
-                CarouselExtra* extra = (CarouselExtra *) menu.uiElements[menu.hover_element]->UIExtra;
-                if (extra->curOption > 0) extra->curOption -= 1;
-                else extra->curOption = extra->num_options-1;
-            }
-            else if (menu.uiElements[menu.hover_element]->type == UI_SLIDER){
-                SliderExtra* extra = (SliderExtra *) menu.uiElements[menu.hover_element]->UIExtra;
-                if (extra->curValue > extra->minValue) extra->curValue -= extra->stepValue;
-            }
-        }
-	}
-
-}
 
 static void processKeyboard(unsigned char key, int x, int y) {
-
-    // key == 8 -> backspace
-	if (isprint(key) || key == 8){
-        if (menu.hover_element >= 0 && menu.hover_element <= menu.num_elements-1)
-        if (menu.uiElements[menu.hover_element]->type == UI_INPUTFIELD){
-            InputFieldExtra* extra = (InputFieldExtra *) menu.uiElements[menu.hover_element]->UIExtra;
-            int len = strlen(extra->input);
-            // Backspace
-            if (key == 8){
-                extra->input[len-1] = '\0';
-            }
-            // Other characters
-            else{
-                if (len < extra->maxLength){
-                    extra->input[len] = key;
-                    extra->input[len+1] = '\0';
-                }
-            }
-            // Automatic box resizing
-            extra->boxWidth = INPUTBOX_RIGHTMARGIN+calculateTextWidth(extra->input, extra->fontScale);
-            if (extra->masking){
-                char output[MAX_STR_SIZE];
-                maskString(extra->input, output, PASSWORDMASK_CHAR);
-                extra->boxWidth = INPUTBOX_RIGHTMARGIN+calculateTextWidth(output, extra->fontScale);
-            }
-        }
-	}
+    // Basic menu keyboard handling is done by UIutils
+    menuBasicHandleKeyboard(&menu, key);
 
 	// Manually handle buttons
 	// key == 13 -> Enter key
-    else if (key == 13){
+    if (key == 13){
         if (menu.hover_element >= 0 && menu.hover_element <= menu.num_elements-1)
         if (menu.uiElements[menu.hover_element]->type == UI_BUTTON){
             ButtonExtra* extra = (ButtonExtra *) menu.uiElements[menu.hover_element]->UIExtra;
             // Manually handle button press
             switch(menu.hover_element){
+            // Authentication
             case 0:
-
+                changeScene(getSceneByID("authentication_menu"));
                 break;
             case 1:
 
@@ -115,23 +46,38 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
 }
 
+static void processSKeyboard(int key, int x, int y) {
+    // Basic menu keyboard handling is done by UIutils
+    menuBasicHandleSKeyboard(&menu, key);
+}
+
 void initscene_settings_menu(){
     // Menu
-    menu.num_elements = 10;
-    menu.num_interactable_elements = 8;
+    menu.num_elements = 8;
+    menu.num_interactable_elements = 7;
     menu.hover_element = -1;
-    menu.uiElements[0] = createButton((Pos) {-1, 100}, "Hello!", FONTNORMALSCALE);
-    menu.uiElements[1] = createButton((Pos) {-1, 150}, "test!", FONTNORMALSCALE);
-    menu.uiElements[2] = createButton((Pos) {-1, 200}, "AMOGUASUDAUSD", FONTNORMALSCALE*2);
-    menu.uiElements[3] = createButton((Pos) {-1, 250}, "SUSSY baka!!", FONTNORMALSCALE);
-    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "Login :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
-    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;
-    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
-    menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register :", FONTNORMALSCALE,(Scale) {200, 30}, 20);
-    menu.uiElements[6] = createCarousel((Pos) {-1, 400}, "Options :",(char *[]){"Hello", "Test", "Poopak"}, 3, FONTNORMALSCALE);
-    menu.uiElements[7] = createSlider((Pos) {-1, 450}, "Slider :", 50, 0, 100, 5, FONTNORMALSCALE, 50);
-    menu.uiElements[8] = createLabel((Pos) {-1, 500}, "Enter", FONTNORMALSCALE, COLOR_CRIMSON);
-    menu.uiElements[9] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, COLOR_CRIMSON);
+    menu.uiElements[0] = createButton((Pos) {-1, 100}, "Authentication", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
+    menu.uiElements[1] = createButton((Pos) {-1, 150}, "New Game", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
+    menu.uiElements[2] = createButton((Pos) {-1, 200}, "Load Game", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
+    menu.uiElements[3] = createButton((Pos) {-1, 250}, "Profile", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_CYAN);
+    menu.uiElements[4] = createButton((Pos) {-1, 300}, "Leaderboard", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_CYAN);
+    menu.uiElements[5] = createButton((Pos) {-1, 350}, "Settings", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[5], COLOR_GRAY, COLOR_CYAN);
+    menu.uiElements[6] = createButton((Pos) {-1, 410}, "Quit", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[6], COLOR_GRAY, COLOR_RUBY);
+//    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "", FONTNORMALSCALE, (Scale) {200, 30}, 20);
+//    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;
+//    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
+//    menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register :", FONTNORMALSCALE,(Scale) {200, 30}, 20);
+//    menu.uiElements[6] = createCarousel((Pos) {-1, 400}, "Options :",(char *[]){"Hello", "Test", "Poopak"}, 3, FONTNORMALSCALE);
+//    menu.uiElements[7] = createSlider((Pos) {-1, 450}, "Slider :", 50, 0, 100, 5, FONTNORMALSCALE, 50);
+//    menu.uiElements[7] = createLabel((Pos) {-1, 460}, "Enter", FONTNORMALSCALE, COLOR_CRIMSON);
+    menu.uiElements[7] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, COLOR_CRIMSON);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

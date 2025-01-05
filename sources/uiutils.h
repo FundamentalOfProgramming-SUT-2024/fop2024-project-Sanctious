@@ -32,9 +32,7 @@ typedef struct {
     float fontScale;
     // A -> active, DA -> deactive
     Color Acolor;
-    Color Abgcolor;
     Color DAcolor;
-    Color DAbgcolor;
 
     int isActive;
 } ButtonExtra;
@@ -53,9 +51,7 @@ typedef struct {
 
     // A -> active, DA -> deactive
     Color Acolor;
-    Color Abgcolor;
     Color DAcolor;
-    Color DAbgcolor;
 
     int masking;
 //    char maskChar;
@@ -122,9 +118,17 @@ UIElement* createInputField(Pos pos, char* text, float fontScale, Scale boxScale
 UIElement* createLabel(Pos pos, char* text, float fontScale, Color color);
 UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, float fontScale);
 UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
+
+void configureButtonColor(UIElement* button, Color Acolor, Color DAcolor);
+void configureInputFieldColor(UIElement* inputField, Color Acolor, Color DAcolor);
+void configureCarousel(UIElement* carousel, Color Acolor, Color DAcolor);
+void configureSlider(UIElement* slider, Color Acolor, Color DAcolor);
+
 char* maskString(char* text, char* output, char mask);
 int calculateTextWidth(const char* text, float fontScale);
 int calculateTextHeight(const char* text, float fontScale);
 void renderMenu(Menu* menu);
+void menuBasicHandleKeyboard(Menu* menu, unsigned char key);
+void menuBasicHandleSKeyboard(Menu* menu, int key);
 
 #endif

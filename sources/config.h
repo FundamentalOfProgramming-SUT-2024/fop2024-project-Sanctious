@@ -18,7 +18,7 @@
 #define RWINDOW_WIDTH       (WINDOW_WIDTH+XBUFFER_ZONE+EXTRA_BUFFER)
 #define RWINDOW_HEIGHT      (WINDOW_HEIGHT+YBUFFER_ZONE+EXTRA_BUFFER+LOWER_YBUFFER_ZONE)
 
-#define MAX_SCENES          10
+#define MAX_SCENES          20
 
 
 // Map
@@ -56,7 +56,7 @@
 #define INPUTBOX_BOTTOMMARGIN   8
 #define INPUTBOX_LEFTMARGIN     5
 #define INPUTBOX_RIGHTMARGIN    5
-#define PASSWORDMASK_CHAR       '@'
+#define PASSWORDMASK_CHAR       '*'
 #define PASSWORD_MAXLENGTH      20
 #define COLOR_RED           (Color) {1.0f, 0.0f, 0.0f, 1.0f}
 #define COLOR_GREEN         (Color) {0.0f, 1.0f, 0.0f, 1.0f}

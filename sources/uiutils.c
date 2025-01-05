@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include <strings.h>
 #include "renderer.h"
+#include <ctype.h>
 
 extern FT_Library ft;
 extern FT_Face face;
@@ -70,6 +71,12 @@ UIElement* createButton(Pos pos, char* text, float fontScale){
     return btn;
 }
 
+void configureButtonColor(UIElement* button, Color Acolor, Color DAcolor){
+    ButtonExtra* extra = (ButtonExtra *) button->UIExtra;
+    extra->Acolor = Acolor;
+    extra->DAcolor = DAcolor;
+}
+
 // Input field creation
 UIElement* createInputField(Pos pos, char* text, float fontScale, Scale boxScale, int boxOffset){
     UIElement* inp = (UIElement *) malloc(1 * sizeof(UIElement));
@@ -100,6 +107,12 @@ UIElement* createInputField(Pos pos, char* text, float fontScale, Scale boxScale
     inp->UIExtra = (void *) inpConfig;
 
     return inp;
+}
+
+void configureInputFieldColor(UIElement* inputField, Color Acolor, Color DAcolor){
+    InputFieldExtra* extra = (InputFieldExtra *) inputField->UIExtra;
+    extra->Acolor = Acolor;
+    extra->DAcolor = DAcolor;
 }
 
 // Label creation
@@ -155,6 +168,12 @@ UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, 
     return carousel;
 }
 
+void configureCarouselColor(UIElement* carousel, Color Acolor, Color DAcolor){
+    CarouselExtra* extra = (CarouselExtra *) carousel->UIExtra;
+    extra->Acolor = Acolor;
+    extra->DAcolor = DAcolor;
+}
+
 // Slider creation
 UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset){
     UIElement* slider = (UIElement *) malloc(1 * sizeof(UIElement));
@@ -183,6 +202,13 @@ UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int max
 
     return slider;
 }
+
+void configureSliderColor(UIElement* slider, Color Acolor, Color DAcolor){
+    SliderExtra* extra = (SliderExtra *) slider->UIExtra;
+    extra->Acolor = Acolor;
+    extra->DAcolor = DAcolor;
+}
+
 
 void renderMenu(Menu* menu) {
     glEnable(GL_BLEND);
@@ -267,4 +293,71 @@ void renderMenu(Menu* menu) {
             renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->color);
         }
     }
+}
+
+void menuBasicHandleKeyboard(Menu* menu, unsigned char key){
+    // key == 8 -> backspace
+	if (isprint(key) || key == 8){
+        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_elements-1)
+        if (menu->uiElements[menu->hover_element]->type == UI_INPUTFIELD){
+            InputFieldExtra* extra = (InputFieldExtra *) menu->uiElements[menu->hover_element]->UIExtra;
+            int len = strlen(extra->input);
+            // Backspace
+            if (key == 8){
+                extra->input[len-1] = '\0';
+            }
+            // Other characters
+            else{
+                if (len < extra->maxLength){
+                    extra->input[len] = key;
+                    extra->input[len+1] = '\0';
+                }
+            }
+            // Automatic box resizing
+            extra->boxWidth = INPUTBOX_RIGHTMARGIN+calculateTextWidth(extra->input, extra->fontScale);
+            if (extra->masking){
+                char output[MAX_STR_SIZE];
+                maskString(extra->input, output, PASSWORDMASK_CHAR);
+                extra->boxWidth = INPUTBOX_RIGHTMARGIN+calculateTextWidth(output, extra->fontScale);
+            }
+        }
+	}
+}
+
+void menuBasicHandleSKeyboard(Menu* menu, int key){
+    if (key == GLUT_KEY_DOWN){
+        if (menu->hover_element < menu->num_interactable_elements-1) menu->hover_element += 1;
+        else menu->hover_element = 0;
+	}
+	else if (key == GLUT_KEY_UP){
+       if (menu->hover_element > 0) menu->hover_element -= 1;
+       else menu->hover_element = menu->num_interactable_elements-1;
+	}
+	else if (key == GLUT_KEY_RIGHT){
+        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_elements-1){
+            if (menu->uiElements[menu->hover_element]->type == UI_CAROUSEL){
+                CarouselExtra* extra = (CarouselExtra *) menu->uiElements[menu->hover_element]->UIExtra;
+                if (extra->curOption < extra->num_options-1) extra->curOption += 1;
+                else extra->curOption = 0;
+            }
+            else if (menu->uiElements[menu->hover_element]->type == UI_SLIDER){
+                SliderExtra* extra = (SliderExtra *) menu->uiElements[menu->hover_element]->UIExtra;
+                if (extra->curValue < extra->maxValue) extra->curValue += extra->stepValue;
+            }
+        }
+	}
+
+	else if (key == GLUT_KEY_LEFT){
+        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_elements-1){
+            if (menu->uiElements[menu->hover_element]->type == UI_CAROUSEL){
+                CarouselExtra* extra = (CarouselExtra *) menu->uiElements[menu->hover_element]->UIExtra;
+                if (extra->curOption > 0) extra->curOption -= 1;
+                else extra->curOption = extra->num_options-1;
+            }
+            else if (menu->uiElements[menu->hover_element]->type == UI_SLIDER){
+                SliderExtra* extra = (SliderExtra *) menu->uiElements[menu->hover_element]->UIExtra;
+                if (extra->curValue > extra->minValue) extra->curValue -= extra->stepValue;
+            }
+        }
+	}
 }
