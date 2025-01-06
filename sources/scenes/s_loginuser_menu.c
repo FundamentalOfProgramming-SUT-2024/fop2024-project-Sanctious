@@ -48,6 +48,7 @@ static void processSKeyboard(int key, int x, int y) {
 
 static void onExit(){
     menu.hover_element = -1;
+    resetMenuFields(&menu);
 }
 
 void initscene_login_menu(){

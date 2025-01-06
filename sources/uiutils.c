@@ -115,6 +115,8 @@ UIElement* createInputField(Pos pos, char* text, float fontScale, Scale boxScale
     {
         x, y
     };
+
+    inpConfig->defaultBoxWidth = boxScale.w;
     inpConfig->Acolor = COLOR_GRAY;
     inpConfig->DAcolor = COLOR_CYAN;
     inpConfig->masking = 0;
@@ -182,7 +184,7 @@ UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, 
     };
     carouselConfig->Acolor = COLOR_GRAY;
     carouselConfig->DAcolor = COLOR_CYAN;
-
+    carouselConfig->defaultOption = 0;
     carouselConfig->curOption = 0;
     carouselConfig->num_options = num_options;
     for (int i = 0; i < num_options; i++)
@@ -222,7 +224,9 @@ UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int max
     {
         x, y
     };
+
     sliderConfig->sliderOffset = sliderOffset;
+    sliderConfig->defaultValue = curValue;
     sliderConfig->curValue = curValue;
     sliderConfig->minValue = minValue;
     sliderConfig->maxValue = maxValue;
@@ -422,6 +426,32 @@ void menuBasicHandleSKeyboard(Menu* menu, int key)
                 SliderExtra* extra = (SliderExtra *) menu->uiElements[menu->hover_element]->UIExtra;
                 if (extra->curValue > extra->minValue) extra->curValue -= extra->stepValue;
             }
+        }
+    }
+}
+
+void resetMenuFields(Menu* menu){
+    for (int i = 0; i < menu->num_interactable_elements; i++){
+        // Input field
+        if(menu->uiElements[i]->type == UI_INPUTFIELD)
+        {
+            InputFieldExtra* extra = (InputFieldExtra *) menu->uiElements[i]->UIExtra;
+            strcpy(extra->input, "");
+            extra->boxWidth = extra->defaultBoxWidth;
+
+        }
+        // Carousel
+        else if(menu->uiElements[i]->type == UI_CAROUSEL)
+        {
+            CarouselExtra* extra = (CarouselExtra *) menu->uiElements[i]->UIExtra;
+            extra->curOption = extra->defaultOption;
+        }
+        // Slider
+        else if(menu->uiElements[i]->type == UI_SLIDER)
+        {
+            SliderExtra* extra = (SliderExtra *) menu->uiElements[i]->UIExtra;
+            extra->curValue = extra->defaultValue;
+
         }
     }
 }

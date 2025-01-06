@@ -46,6 +46,7 @@ typedef struct {
     float fontScale;
 
     int boxWidth;
+    int defaultBoxWidth;
     int boxHeight;
     int boxOffset;
 
@@ -64,6 +65,7 @@ typedef struct {
     char label[MAX_STR_SIZE];
     int num_options;
     int curOption;
+    int defaultOption;
     char options[MAX_CAROUSEL_OPTIONS][MAX_STR_SIZE];
     float fontScale;
 
@@ -80,6 +82,7 @@ typedef struct {
     int minValue;
     int maxValue;
     int curValue;
+    int defaultValue;
     int stepValue;
     float fontScale;
     float sliderOffset;
@@ -130,5 +133,6 @@ int calculateTextHeight(const char* text, float fontScale);
 void renderMenu(Menu* menu);
 void menuBasicHandleKeyboard(Menu* menu, unsigned char key);
 void menuBasicHandleSKeyboard(Menu* menu, int key);
+void resetMenuFields(Menu* menu);
 
 #endif
