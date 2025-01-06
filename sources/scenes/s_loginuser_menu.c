@@ -1,7 +1,7 @@
-#include "scene.h"
-#include "renderer.h"
-#include "config.h"
-#include "uiutils.h"
+#include "../scene.h"
+#include "../renderer.h"
+#include "../config.h"
+#include "../uiutils.h"
 
 static Menu menu;
 
@@ -25,12 +25,12 @@ static void processKeyboard(unsigned char key, int x, int y) {
             ButtonExtra* extra = (ButtonExtra *) menu.uiElements[menu.hover_element]->UIExtra;
             // Manually handle button press
             switch(menu.hover_element){
-            // Register
-            case 3:
+            // Login
+            case 2:
 
                 break;
             // Quit
-            case 4:
+            case 3:
                 changeScene(getSceneByID("authentication_menu"));
                 break;
 
@@ -50,34 +50,34 @@ static void onExit(){
     menu.hover_element = -1;
 }
 
-void initscene_register_menu(){
+void initscene_login_menu(){
     // Menu
     menu.num_elements = 5;
-    menu.num_interactable_elements = 5;
+    menu.num_interactable_elements = 4;
     menu.hover_element = -1;
 
-    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Name :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
+    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Email :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
+    ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->maxLength = 30;
 
-    menu.uiElements[1] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 150}, "Email :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
-    ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->maxLength = 30;
+    menu.uiElements[1] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 150}, "Password :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
+    ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->masking = 1;
+    ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
     configureInputFieldColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[2] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 200}, "Password :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
-    ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->masking = 1;
-    ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
-    configureInputFieldColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
+    menu.uiElements[2] = createButton((Pos) {-1, 300}, "Login", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[3] = createButton((Pos) {-1, 300}, "Register", FONTNORMALSCALE);
+    menu.uiElements[3] = createButton((Pos) {-1, 350}, "Back", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_LIME_GREEN);
 
-    menu.uiElements[4] = createButton((Pos) {-1, 350}, "Back", FONTNORMALSCALE);
+    menu.uiElements[4] = createLabel((Pos) {-1, 40}, "Login sigmaboi!", FONTNORMALSCALE*2, COLOR_CRIMSON);
     configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_RUBY);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));
 
-    strcpy(scene->sceneID, "registeruser_menu");
+    strcpy(scene->sceneID, "loginuser_menu");
 
     scene->onEnter = NULL;
     scene->onExit = onExit;

@@ -1,7 +1,7 @@
-#include "scene.h"
-#include "renderer.h"
-#include "config.h"
-#include "uiutils.h"
+#include "../scene.h"
+#include "../renderer.h"
+#include "../config.h"
+#include "../uiutils.h"
 
 static Menu menu;
 
@@ -55,7 +55,7 @@ static void onExit(){
     menu.hover_element = -1;
 }
 
-void initscene_settings_menu(){
+void initscene_profile_menu(){
     // Menu
     menu.num_elements = 8;
     menu.num_interactable_elements = 7;
@@ -86,7 +86,7 @@ void initscene_settings_menu(){
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));
 
-    strcpy(scene->sceneID, "settings_menu");
+    strcpy(scene->sceneID, "profile_menu");
 
     scene->onEnter = NULL;
     scene->onExit = onExit;

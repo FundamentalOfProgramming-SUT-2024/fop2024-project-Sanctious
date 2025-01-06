@@ -1,7 +1,7 @@
-#include "scene.h"
-#include "renderer.h"
-#include "config.h"
-#include "uiutils.h"
+#include "../scene.h"
+#include "../renderer.h"
+#include "../config.h"
+#include "../uiutils.h"
 
 static Menu menu;
 

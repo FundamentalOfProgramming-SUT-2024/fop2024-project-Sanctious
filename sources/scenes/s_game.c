@@ -1,8 +1,8 @@
-#include "scene.h"
-#include "renderlibs.h"
-#include "renderer.h"
-#include "config.h"
-#include "player.h"
+#include "../scene.h"
+#include "../renderlibs.h"
+#include "../renderer.h"
+#include "../config.h"
+#include "../player.h"
 
 float r=1.0f,g=1.0f,b=1.0f;
 
