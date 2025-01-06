@@ -6,8 +6,8 @@
 
 float r=1.0f,g=1.0f,b=1.0f;
 
-static void renderRoomBox(float x, float y, int width, int height, float r, float g, float b) {
-    glColor3f(0.2, 0.2, 1);
+static void renderRoomBox(float x, float y, int width, int height, Color tileColor, Color wallColor) {
+    glColor3f(wallColor.r, wallColor.g, wallColor.b);
 
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
@@ -26,7 +26,7 @@ static void renderRoomBox(float x, float y, int width, int height, float r, floa
     glVertex2f(xpos, ypos + h);
     glEnd();
 
-    glColor3f(r, g, b);
+    glColor3f(tileColor.r, tileColor.g, tileColor.b);
 
     cellWidth = gridCellWidth();
     cellHeight = gridCellHeight();
@@ -106,9 +106,19 @@ static void render() {
     for (int i = 0; i < map->num_rooms; i++) {
         Room* room = map->rooms[i];
 
-        renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH, 0.5, 0.5, 0.5);
-        renderDoors(room);
+        Color wallsColor;
+        if (room->type == REGULAR) wallsColor = (Color) {0.2, 0.2, 1, 1};
+        if (room->type == ENCHANT) wallsColor = COLOR_PURPLE;
+        if (room->type == NIGHTMARE) wallsColor = COLOR_ELECTRIC_BLUE;
+        if (room->type == TREASURE) wallsColor = COLOR_GOLD;
 
+        renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH,
+            (Color) {0.5, 0.5, 0.5, 1}, wallsColor);
+
+        renderDoors(room);
+        for (int j = 0; j < room->num_structures; j++){
+            renderText(room->structures[j]->pos.gridX, room->structures[j]->pos.gridY, "@", COLOR_BROWN);
+        }
         for (int j = 0; j < room->scale.gridW; j++) {
             for (int k = 0; k < room->scale.gridH; k++) {
 //                renderText(room->pos.gridX + j, room->pos.gridY + k, "A", 1.0, 0.0, 0.0, 1.0);

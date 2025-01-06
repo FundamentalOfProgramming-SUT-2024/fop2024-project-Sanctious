@@ -1,17 +1,8 @@
-typedef enum {
-    WINDOW,
-    OBSTACLE,
-    TRAP
-} StructureType;
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
 
+#include "map.h"
 
-typedef struct{
-    int damage;
-} TrapExtra;
+Structure* generateTrap();
 
-typedef struct{
-    char sprite;
-    void* StructureExtra;
-    StructureType type;
-
-} Structure;
+#endif
