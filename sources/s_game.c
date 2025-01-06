@@ -117,7 +117,10 @@ static void render() {
     }
 
     renderPlayer();
-    renderString(0, 20, "Hello World!", FONTNORMALSCALE, COLOR_PURPLE);
+    char message[100];
+    Player* player = getPlayerInstance();
+    sprintf(message, "X= %d Y= %d", player->pos.gridX, player->pos.gridY);
+    renderString(0, 20, message, FONTNORMALSCALE, COLOR_PURPLE);
 
     glFlush();
 }

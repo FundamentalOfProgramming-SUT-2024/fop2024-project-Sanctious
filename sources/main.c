@@ -71,8 +71,9 @@ Game* getGameInstance() {
 
 int main(int argc, char** argv)
 {
-    Log("Game started...", _DEBUG_);
+    validateConfig();
 
+    Log("Game started...", _DEBUG_);
     // Initialize Player and Map
     Map* map = getMapInstance();
     Player* mainPlayer = getPlayerInstance();

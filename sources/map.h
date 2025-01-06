@@ -3,6 +3,7 @@
 
 #include "item.h"
 #include "config.h"
+#include "structures.h"
 
 extern const int qdirs[4][2]; // 4 neighs quad
 extern const int odirs[8][2]; // 8 neighs octa
@@ -23,7 +24,6 @@ typedef enum {
 typedef enum {
     TREASURE,
     NORMAL,
-    TRAP
 } RoomType;
 
 typedef struct {
@@ -57,8 +57,13 @@ struct Room{
     gScale scale;
     gCord rrp; // relative room position in rooms grid
 
+    // Used in map generation
+    char dfsVisited;
+
     RoomType type;
 
+    int num_structures;
+    Structure* structures[MAXSTRUCTURES];
     int num_items;
     Item* items[MAXITEMS];
     int num_doors;
@@ -82,6 +87,7 @@ typedef struct {
 void initializeMap(Map*);
 Map* getMapInstance();
 Room* findRoomByRRP(int, int);
-
+gCord getRandomCordInRoom(Room* room);
+gCord addDirectionToPos(gCord pos, Direction dir);
 
 #endif

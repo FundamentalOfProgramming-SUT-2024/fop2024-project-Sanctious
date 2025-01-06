@@ -27,10 +27,10 @@
 #define MAPDIV              3
 #define MIN_ROOM_WIDTH      4
 #define MIN_ROOM_HEIGHT     4
-#define ROOM_TOPBUFFER      1
-#define ROOM_RIGHTBUFFER    0
-#define ROOM_LEFTBUFFER     1
-#define ROOM_BOTTOMBUFFER   1
+#define ROOM_TOPBUFFER      2 // Below 2 is buggy
+#define ROOM_RIGHTBUFFER    2 // Below 2 is buggy
+#define ROOM_LEFTBUFFER     2 // Below 2 is buggy
+#define ROOM_BOTTOMBUFFER   2 // Below 2 is buggy
 
 // Render
 #define FONTQUALITY         96 // 24 * x
@@ -44,6 +44,7 @@
 #define MAXITEMS                64
 #define MAXDOORS                100
 #define MAXROOMS                100
+#define MAXSTRUCTURES           20
 #define MAXCORRIDORS            50
 #define MAX_CORRIDOR_LENGTH     50
 #define MAX_STR_SIZE            256 // Codewise
@@ -102,7 +103,6 @@
 #define COLOR_AMETHYST      (Color) {0.6f, 0.4f, 0.8f, 1.0f}
 #define COLOR_TOPAZ         (Color) {0.98f, 0.84f, 0.65f, 1.0f}
 
-
-
+void validateConfig();
 
 #endif
