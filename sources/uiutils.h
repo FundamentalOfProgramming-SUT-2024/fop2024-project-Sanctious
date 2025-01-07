@@ -105,6 +105,7 @@ typedef struct{
 
     int popUpActive;
     char popUpMsg[MAX_STR_SIZE*4];
+    Color popUpColor;
 
     int num_interactable_elements;
     int num_elements;
@@ -129,7 +130,7 @@ void renderMenu(Menu* menu);
 void menuBasicHandleKeyboard(Menu* menu, unsigned char key);
 void menuBasicHandleSKeyboard(Menu* menu, int key);
 void resetMenuFields(Menu* menu);
-void activatePopUp(Menu* menu);
+void activatePopUp(Menu* menu, Color color);
 void deactivatePopUp(Menu* menu);
 void addMsgToPopUp(Menu* menu, char* string);
 void resetMsgPopUp(Menu* menu);

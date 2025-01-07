@@ -60,7 +60,11 @@
 #define INPUTBOX_RIGHTMARGIN    5 // Pixel
 #define PASSWORDMASK_CHAR       '*'
 #define PASSWORD_MAXLENGTH      20
-#define PASSWORD_MINLENGTH      20
+#define PASSWORD_MINLENGTH      7
+#define POPUP_BOX_TOPMARGIN     10
+#define POPUP_BOX_LEFTMARGIN    5
+#define POPUP_BOX_RIGHTMARGIN   5
+#define POPUP_BOX_BOTTOMMARGIN  10
 
 #define COLOR_RED           (Color) {1.0f, 0.0f, 0.0f, 1.0f}
 #define COLOR_GREEN         (Color) {0.0f, 1.0f, 0.0f, 1.0f}

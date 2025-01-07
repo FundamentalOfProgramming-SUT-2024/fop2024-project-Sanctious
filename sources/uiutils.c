@@ -399,8 +399,9 @@ void renderMenu(Menu* menu)
     // Display popup
     if (menu->popUpActive){
         int h = calculateTextHeight(menu->popUpMsg, FONTNORMALSCALE);
-        renderQuad((Pos){200 ,RWINDOW_HEIGHT-250}, (Pos){RWINDOW_WIDTH-200, RWINDOW_HEIGHT-250+h}, (Color) {0.5, 0.5, 0.5, 0.5});
-        renderString(210, RWINDOW_HEIGHT-230, menu->popUpMsg, FONTNORMALSCALE, COLOR_LIME_GREEN);
+        renderQuad((Pos){200-POPUP_BOX_LEFTMARGIN ,RWINDOW_HEIGHT-250-POPUP_BOX_TOPMARGIN}
+            , (Pos){RWINDOW_WIDTH-200+POPUP_BOX_RIGHTMARGIN, RWINDOW_HEIGHT-250+h+POPUP_BOX_BOTTOMMARGIN}, (Color) {0.5, 0.5, 0.5, 0.5});
+        renderString(210, RWINDOW_HEIGHT-230, menu->popUpMsg, FONTNORMALSCALE, menu->popUpColor);
     }
 
 
@@ -519,8 +520,9 @@ void resetMenuFields(Menu* menu){
 }
 
 // If it is already active it will be ignored
-void activatePopUp(Menu* menu){
+void activatePopUp(Menu* menu, Color color){
     menu->popUpActive = 1;
+    menu->popUpColor = color;
 }
 
 void deactivatePopUp(Menu* menu){

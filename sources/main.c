@@ -74,6 +74,7 @@ Game* getGameInstance() {
 
 int main(int argc, char** argv)
 {
+    saveUser(NULL);
     validateConfig();
 
     Log("Game started...", _DEBUG_);

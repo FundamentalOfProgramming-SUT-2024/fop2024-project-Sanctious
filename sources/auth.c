@@ -1,5 +1,6 @@
 #include <strings.h>
 #include "auth.h"
+#include "main.h"
 
 User* getUserByName(char* name){
     for (int i = 0; i < 10; i++){
@@ -37,8 +38,32 @@ int isValidPassword(char* password){
 
 }
 
+void loadUsers(){
 
 
+}
+
+
+
+#include "stdlib.h"
+#include "stdio.h"
+void saveUser(User* user){
+    user = (User *) malloc(sizeof(User));
+
+    user->stats.num_games = 255;
+    FILE *file = fopen("test.dat", "wb");
+    fwrite(user, sizeof(User), 1, file);
+    fclose(file);
+
+    file = fopen("test.dat", "rb");
+    if (file == NULL) {
+        perror("Error opening file");
+        return;
+    }
+    fread(user, sizeof(User), 1, file);
+    printf("**%d**", user->stats.num_games);
+    fclose(file);
+}
 
 
 

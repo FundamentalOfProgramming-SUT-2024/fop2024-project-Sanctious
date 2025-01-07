@@ -39,12 +39,12 @@ static void processKeyboard(unsigned char key, int x, int y) {
 //                    flag = 1;
 //                }
                 if (!isValidPassword(password)){
-                    addMsgToPopUp(&menu, "Hello Nigga!\n");
+                    addMsgToPopUp(&menu, "Invalid password format.\n");
                     flag = 1;
                 }
 
                 if (!isValidEmail(email)){
-                    addMsgToPopUp(&menu, "Hello Nigga2!\n");
+                    addMsgToPopUp(&menu, "Invalid email format.\n");
                     flag = 1;
                 }
 
@@ -56,7 +56,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     // Add user to file system
                 }
                 else{
-                    activatePopUp(&menu);
+                    activatePopUp(&menu, COLOR_RUBY);
                 }
 
             }
