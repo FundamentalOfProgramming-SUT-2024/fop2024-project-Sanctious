@@ -45,12 +45,15 @@ static Game* instance = NULL;
 void initializeGame(Game* game){
     game->num_scenes = 0; // It's handled in addScene function
     game->currentScene = NULL;
+    game->curUser = NULL;
 
     for (int i = 0; i < NUM_SCENES; i++){
         (*(SCENES[i]))();
     }
 
-    game->currentScene = getSceneByID("game");
+    // Start the first scene
+    game->currentScene = getSceneByID("registeruser_menu");
+    getSceneByID("registeruser_menu")->onEnter();
 
     Log("Game handler initialized successfully.", _DEBUG_);
 }

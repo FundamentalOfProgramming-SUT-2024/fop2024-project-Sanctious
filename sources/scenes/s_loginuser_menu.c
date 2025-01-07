@@ -47,15 +47,19 @@ static void processSKeyboard(int key, int x, int y) {
 }
 
 static void onExit(){
-    menu.hover_element = -1;
+}
+
+static void onEnter(){
     resetMenuFields(&menu);
+    menu.hover_element = -1;
+    deactivatePopUp(&menu);
+    resetMsgPopUp(&menu);
 }
 
 void initscene_login_menu(){
     // Menu
     menu.num_elements = 5;
     menu.num_interactable_elements = 4;
-    menu.hover_element = -1;
 
     menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Email :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
@@ -80,7 +84,7 @@ void initscene_login_menu(){
 
     strcpy(scene->sceneID, "loginuser_menu");
 
-    scene->onEnter = NULL;
+    scene->onEnter = onEnter;
     scene->onExit = onExit;
     scene->onKeypress = NULL;
     scene->onSpecialKeypress = processSKeyboard;

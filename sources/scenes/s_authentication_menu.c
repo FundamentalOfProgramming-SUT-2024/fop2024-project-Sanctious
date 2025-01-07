@@ -49,14 +49,19 @@ static void processSKeyboard(int key, int x, int y) {
 }
 
 static void onExit(){
+
+}
+
+static void onEnter(){
     menu.hover_element = -1;
+    deactivatePopUp(&menu);
+    resetMsgPopUp(&menu);
 }
 
 void initscene_authentication_menu(){
     // Menu
     menu.num_elements = 3;
     menu.num_interactable_elements = 3;
-    menu.hover_element = -1;
 
     menu.uiElements[0] = createButton((Pos) {-1, 200}, "Register", FONTNORMALSCALE*2);
     configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
@@ -81,7 +86,7 @@ void initscene_authentication_menu(){
 
     strcpy(scene->sceneID, "authentication_menu");
 
-    scene->onEnter = NULL;
+    scene->onEnter = onEnter;
     scene->onExit = onExit;
     scene->onKeypress = NULL;
     scene->onSpecialKeypress = processSKeyboard;

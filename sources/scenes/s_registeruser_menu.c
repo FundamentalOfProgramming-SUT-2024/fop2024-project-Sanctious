@@ -2,6 +2,7 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../uiutils.h"
+#include "../auth.h"
 
 static Menu menu;
 
@@ -24,21 +25,47 @@ static void processKeyboard(unsigned char key, int x, int y) {
         if (menu.uiElements[menu.hover_element]->type == UI_BUTTON){
             ButtonExtra* extra = (ButtonExtra *) menu.uiElements[menu.hover_element]->UIExtra;
             // Manually handle button press
-            switch(menu.hover_element){
             // Register
-            case 3:
+            if (menu.hover_element == 3){
+                resetMsgPopUp(&menu);
+                char* name = ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->input;
+                char* email = ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->input;
+                char* password = ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->input;
 
-                break;
-            // Quit
-            case 4:
-                changeScene(getSceneByID("authentication_menu"));
-                break;
+                int flag = 0;
+
+//                if (getUserByName(name) != NULL){
+//
+//                    flag = 1;
+//                }
+                if (!isValidPassword(password)){
+                    addMsgToPopUp(&menu, "Hello Nigga!\n");
+                    flag = 1;
+                }
+
+                if (!isValidEmail(email)){
+                    addMsgToPopUp(&menu, "Hello Nigga2!\n");
+                    flag = 1;
+                }
+
+                if (flag)
+                if (!flag){
+                    // Create user
+
+
+                    // Add user to file system
+                }
+                else{
+                    activatePopUp(&menu);
+                }
 
             }
-
+            // Back
+            else if(menu.hover_element == 4){
+                changeScene(getSceneByID("authentication_menu"));
+            }
         }
     }
-
 }
 
 static void processSKeyboard(int key, int x, int y) {
@@ -47,7 +74,13 @@ static void processSKeyboard(int key, int x, int y) {
 }
 
 static void onExit(){
+
+}
+
+static void onEnter(){
     menu.hover_element = -1;
+    deactivatePopUp(&menu);
+    resetMsgPopUp(&menu);
     resetMenuFields(&menu);
 }
 
@@ -55,7 +88,6 @@ void initscene_register_menu(){
     // Menu
     menu.num_elements = 5;
     menu.num_interactable_elements = 5;
-    menu.hover_element = -1;
 
     menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Name :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
@@ -80,7 +112,7 @@ void initscene_register_menu(){
 
     strcpy(scene->sceneID, "registeruser_menu");
 
-    scene->onEnter = NULL;
+    scene->onEnter = onEnter;
     scene->onExit = onExit;
     scene->onKeypress = NULL;
     scene->onSpecialKeypress = processSKeyboard;

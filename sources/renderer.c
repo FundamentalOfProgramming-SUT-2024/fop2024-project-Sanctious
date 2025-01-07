@@ -123,7 +123,13 @@ void renderText(int col, int row, const char* text, Color color) {
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 }
-void renderString(int x, int y, char* text, float fontScale, Color color) {
+void renderString(int _x, int _y, char* text, float fontScale, Color color) {
+    int x = _x;
+    int y = _y;
+    //
+    int maxTop = 0;
+    int minBottom = 0;
+    //
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -137,6 +143,15 @@ void renderString(int x, int y, char* text, float fontScale, Color color) {
 
         if (FT_Load_Char(face, charCode, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL)) {
             Log("Failed to load glyph for codepoint %u\n", _ERROR_, charCode);
+            continue;
+        }
+
+        // Handle next line character
+        if (charCode == '\n'){
+            x = _x;
+            y += maxTop - minBottom + LINE_INDENTATION;
+            maxTop = 0;
+            minBottom = 0;
             continue;
         }
 
@@ -164,6 +179,13 @@ void renderString(int x, int y, char* text, float fontScale, Color color) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+        //
+        int top = glyph->bitmap_top * fontScale;
+        int bottom = top - (glyph->bitmap.rows * fontScale);
+        if (top > maxTop) maxTop = top;
+        if (bottom < minBottom) minBottom = bottom;
+        //
+
         float xpos = x + glyph->bitmap_left * fontScale;
         float ypos = y - glyph->bitmap_top * fontScale;
         float w = glyph->bitmap.width * fontScale;
@@ -184,6 +206,18 @@ void renderString(int x, int y, char* text, float fontScale, Color color) {
 
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
+}
+
+void renderQuad(Pos sp, Pos ep, Color color){
+    glColor4f(color.r, color.g, color.b, color.a);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBegin(GL_QUADS);
+        glVertex2f(sp.x, sp.y);
+        glVertex2f(ep.x, sp.y);
+        glVertex2f(ep.x, ep.y);
+        glVertex2f(sp.x, ep.y);
+    glEnd();
 }
 
 void fpsLimit(int value) {

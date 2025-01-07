@@ -7,8 +7,6 @@
 float r=1.0f,g=1.0f,b=1.0f;
 
 static void renderRoomBox(float x, float y, int width, int height, Color tileColor, Color wallColor) {
-    glColor3f(wallColor.r, wallColor.g, wallColor.b);
-
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
@@ -17,16 +15,7 @@ static void renderRoomBox(float x, float y, int width, int height, Color tileCol
     float w = (width+1) * cellWidth;
     float h = (height+1) * cellHeight;
 
-    glDisable(GL_BLEND);
-
-    glBegin(GL_QUADS);
-    glVertex2f(xpos, ypos);
-    glVertex2f(xpos + w, ypos);
-    glVertex2f(xpos + w, ypos + h);
-    glVertex2f(xpos, ypos + h);
-    glEnd();
-
-    glColor3f(tileColor.r, tileColor.g, tileColor.b);
+    renderQuad(( Pos ){xpos, ypos}, ( Pos ){xpos+w, ypos+h}, wallColor);
 
     cellWidth = gridCellWidth();
     cellHeight = gridCellHeight();
@@ -36,14 +25,7 @@ static void renderRoomBox(float x, float y, int width, int height, Color tileCol
     w = width * cellWidth;
     h = height * cellHeight;
 
-    glDisable(GL_BLEND);
-
-    glBegin(GL_QUADS);
-    glVertex2f(xpos, ypos);
-    glVertex2f(xpos + w, ypos);
-    glVertex2f(xpos + w, ypos + h);
-    glVertex2f(xpos, ypos + h);
-    glEnd();
+    renderQuad(( Pos ){xpos, ypos}, ( Pos ){xpos+w, ypos+h}, tileColor);
 
 }
 
@@ -75,7 +57,7 @@ static void processSKeyboard(int key, int x, int y) {
         exit(0);
 	}
 	if (key == GLUT_KEY_F1){
-        changeScene(getSceneByID("main_menu"));
+        changeScene(getSceneByID("registeruser_menu"));
 	}
 }
 

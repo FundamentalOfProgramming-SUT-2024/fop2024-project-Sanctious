@@ -39,7 +39,7 @@
 
 // Game Logic
 
-// its a bad practice but i have now other idea
+// its a bad practice but i have no other idea
 #define MAX_NUM_SCENES          20
 #define MAXITEMS                64
 #define MAXDOORS                100
@@ -53,12 +53,15 @@
 // Credentials & UI
 #define MAX_STRING_INPUT        100
 #define MAX_CAROUSEL_OPTIONS    10
-#define INPUTBOX_TOPMARGIN      2
-#define INPUTBOX_BOTTOMMARGIN   8
-#define INPUTBOX_LEFTMARGIN     5
-#define INPUTBOX_RIGHTMARGIN    5
+#define LINE_INDENTATION        5 // Pixel
+#define INPUTBOX_TOPMARGIN      2 // Pixel
+#define INPUTBOX_BOTTOMMARGIN   8 // Pixel
+#define INPUTBOX_LEFTMARGIN     5 // Pixel
+#define INPUTBOX_RIGHTMARGIN    5 // Pixel
 #define PASSWORDMASK_CHAR       '*'
 #define PASSWORD_MAXLENGTH      20
+#define PASSWORD_MINLENGTH      20
+
 #define COLOR_RED           (Color) {1.0f, 0.0f, 0.0f, 1.0f}
 #define COLOR_GREEN         (Color) {0.0f, 1.0f, 0.0f, 1.0f}
 #define COLOR_BLUE          (Color) {0.0f, 0.0f, 1.0f, 1.0f}

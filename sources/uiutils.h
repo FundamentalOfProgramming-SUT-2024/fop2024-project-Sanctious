@@ -8,14 +8,6 @@
 extern FT_Library ft;
 extern FT_Face face;
 
-typedef struct{
-    float x, y;
-} Pos;
-
-typedef struct{
-    float w, h;
-} Scale;
-
 typedef enum {
     UI_BUTTON,
     UI_INPUTFIELD,
@@ -111,6 +103,9 @@ typedef struct{
 typedef struct{
     int hover_element;
 
+    int popUpActive;
+    char popUpMsg[MAX_STR_SIZE*4];
+
     int num_interactable_elements;
     int num_elements;
     UIElement* uiElements[MAX_MENU_UIELEMENTS];
@@ -134,5 +129,9 @@ void renderMenu(Menu* menu);
 void menuBasicHandleKeyboard(Menu* menu, unsigned char key);
 void menuBasicHandleSKeyboard(Menu* menu, int key);
 void resetMenuFields(Menu* menu);
+void activatePopUp(Menu* menu);
+void deactivatePopUp(Menu* menu);
+void addMsgToPopUp(Menu* menu, char* string);
+void resetMsgPopUp(Menu* menu);
 
 #endif

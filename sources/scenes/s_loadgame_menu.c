@@ -43,14 +43,19 @@ static void processSKeyboard(int key, int x, int y) {
 }
 
 static void onExit(){
+
+}
+
+static void onEnter(){
     menu.hover_element = -1;
+    deactivatePopUp(&menu);
+    resetMsgPopUp(&menu);
 }
 
 void initscene_loadgame_menu(){
     // Menu
     menu.num_elements = 1;
     menu.num_interactable_elements = 1;
-    menu.hover_element = -1;
 
     menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Game", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->maxLength = 20;
@@ -62,7 +67,7 @@ void initscene_loadgame_menu(){
 
     strcpy(scene->sceneID, "loadgame_menu");
 
-    scene->onEnter = NULL;
+    scene->onEnter = onEnter;
     scene->onExit = onExit;
     scene->onKeypress = NULL;
     scene->onSpecialKeypress = processSKeyboard;

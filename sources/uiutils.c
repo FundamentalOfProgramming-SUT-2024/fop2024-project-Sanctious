@@ -27,6 +27,8 @@ int calculateTextHeight(const char* text, float fontScale)
 {
     int maxTop = 0;
     int minBottom = 0;
+    int strHeight = 0;
+
     for (const char* p = text; *p; p++)
     {
         if (FT_Load_Char(face, *p, FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL))
@@ -35,13 +37,24 @@ int calculateTextHeight(const char* text, float fontScale)
         }
         FT_GlyphSlot glyph = face->glyph;
 
+        // Handle next line character
+        if (*p == '\n'){
+            strHeight += maxTop - minBottom + LINE_INDENTATION;
+            maxTop = 0;
+            minBottom = 0;
+            continue;
+        }
+
         int top = glyph->bitmap_top * fontScale;
         int bottom = top - (glyph->bitmap.rows * fontScale);
 
         if (top > maxTop) maxTop = top;
         if (bottom < minBottom) minBottom = bottom;
     }
-    return maxTop - minBottom;
+    //
+    strHeight += maxTop - minBottom;
+
+    return strHeight;
 }
 
 char* maskString(char* text, char* output, char mask)
@@ -246,6 +259,45 @@ void configureSliderColor(UIElement* slider, Color Acolor, Color DAcolor)
     extra->DAcolor = DAcolor;
 }
 
+//static CallbackData cd;
+//typedef struct {
+//    Menu* menu1;
+//    int test;
+//} CallbackData;
+//CallbackData* sussybaka;
+//void close(int value) {
+//    CallbackData* cd = (CallbackData*) (uintptr_t) value;
+//    printf("%p\n", sussybaka);
+//    printf("%p %d\n", sussybaka->test, cd == sussybaka);
+//    printf("%p\n", cd);
+//    printf("%p\n", cd->test);
+//    if (cd == NULL) {
+//        printf("Invalid callback data\n");
+//        return;
+//    }
+//
+//    printf("Test Value: %d\n", cd->test);
+//
+//    Menu* menu = cd->menu;
+//    menu->popUpActive = 0;
+//
+//    // Free the allocated data
+//    free(cd);
+//}
+//
+//void popUp(Menu* menu) {
+//    CallbackData* cd = (CallbackData*) malloc(sizeof(CallbackData));
+//    sussybaka = cd;
+//    menu->popUpActive = 1;
+//    cd->menu1 = menu;
+//    cd->test = 2;
+//    printf("%x\n", cd);
+//    printf("%x\n", cd->test);
+//    // Cast to uintptr_t to avoid truncation
+////    glutTimerFunc(500, close, (int) (uintptr_t) 0xa1111111);
+//    glutTimerFunc(200, close, (int) (uintptr_t) cd);
+////    printf("%x\n", cd->);
+//}
 
 void renderMenu(Menu* menu)
 {
@@ -343,6 +395,16 @@ void renderMenu(Menu* menu)
             renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->color);
         }
     }
+
+    // Display popup
+    if (menu->popUpActive){
+        int h = calculateTextHeight(menu->popUpMsg, FONTNORMALSCALE);
+        renderQuad((Pos){200 ,RWINDOW_HEIGHT-250}, (Pos){RWINDOW_WIDTH-200, RWINDOW_HEIGHT-250+h}, (Color) {0.5, 0.5, 0.5, 0.5});
+        renderString(210, RWINDOW_HEIGHT-230, menu->popUpMsg, FONTNORMALSCALE, COLOR_LIME_GREEN);
+    }
+
+
+
 }
 
 void menuBasicHandleKeyboard(Menu* menu, unsigned char key)
@@ -455,3 +517,21 @@ void resetMenuFields(Menu* menu){
         }
     }
 }
+
+// If it is already active it will be ignored
+void activatePopUp(Menu* menu){
+    menu->popUpActive = 1;
+}
+
+void deactivatePopUp(Menu* menu){
+    menu->popUpActive = 0;
+}
+
+void addMsgToPopUp(Menu* menu, char* string){
+    strcat(menu->popUpMsg, string);
+}
+
+void resetMsgPopUp(Menu* menu){
+    strcpy(menu->popUpMsg, "");
+}
+
