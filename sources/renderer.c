@@ -239,7 +239,7 @@ void initializeRenderer(int argc, char** argv) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, RWINDOW_WIDTH, RWINDOW_HEIGHT, 0);
+    glOrtho(0, RWINDOW_WIDTH, RWINDOW_HEIGHT, 0, -1, 1);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
