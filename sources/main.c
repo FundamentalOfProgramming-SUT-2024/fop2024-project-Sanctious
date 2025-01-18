@@ -25,7 +25,7 @@ extern void initscene_settings_menu();
 extern void initscene_authentication_menu();
 
 const int NUM_SCENES = 10;
-const void (*SCENES[MAX_SCENES])() =
+const void (*SCENES[MAX_NUM_SCENES])() =
     {   &initscene_main_menu,
         &initscene_game,
         &initscene_leaderboard_menu,
@@ -52,8 +52,9 @@ void initializeGame(Game* game){
     }
 
     // Start the first scene
-    game->currentScene = getSceneByID("registeruser_menu");
-    getSceneByID("registeruser_menu")->onEnter();
+    game->currentScene = getSceneByID("game");
+    // REQUIRED FOR MENUS IN THE START
+//    getSceneByID("game")->onEnter();
 
     Log("Game handler initialized successfully.", _DEBUG_);
 }
@@ -74,7 +75,6 @@ Game* getGameInstance() {
 
 int main(int argc, char** argv)
 {
-    saveUser(NULL);
     validateConfig();
 
     Log("Game started...", _DEBUG_);
@@ -88,6 +88,7 @@ int main(int argc, char** argv)
     Game* game = getGameInstance();
 
     Log("Entering game loop...", _DEBUG_);
+//    saveUser(NULL);
     glutMainLoop();
 
     return 0;

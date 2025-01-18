@@ -2,6 +2,7 @@
 #define AUTH_H
 
 #include "config.h"
+#include "map.h"
 
 typedef struct{
     char password[PASSWORD_MAXLENGTH];
@@ -29,7 +30,7 @@ typedef struct{
 User* getUserByName(char* name);
 int isValidPassword(char* password);
 int isValidEmail(char* email);
-void saveUser(User* user);
+Map* saveUser(User* user);
 void loadUsers();
 
 #endif

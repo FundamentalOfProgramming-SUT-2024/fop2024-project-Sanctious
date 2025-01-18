@@ -18,12 +18,10 @@
 #define RWINDOW_WIDTH       (WINDOW_WIDTH+XBUFFER_ZONE+EXTRA_BUFFER)
 #define RWINDOW_HEIGHT      (WINDOW_HEIGHT+YBUFFER_ZONE+EXTRA_BUFFER+LOWER_YBUFFER_ZONE)
 
-#define MAX_SCENES          20
-
 
 // Map
-#define XCELLS              40
-#define YCELLS              30
+#define XCELLS              80
+#define YCELLS              60
 #define MAPDIV              3
 #define MIN_ROOM_WIDTH      4
 #define MIN_ROOM_HEIGHT     4
@@ -42,10 +40,10 @@
 // its a bad practice but i have no other idea
 #define MAX_NUM_SCENES          20
 #define MAXITEMS                64
-#define MAXDOORS                100
+#define MAXDOORS                200
 #define MAXROOMS                100
-#define MAXSTRUCTURES           20
-#define MAXCORRIDORS            50
+#define MAXSTRUCTURES           200
+#define MAXCORRIDORS            100
 #define MAX_CORRIDOR_LENGTH     50
 #define MAX_STR_SIZE            256 // Codewise
 #define MAX_MENU_UIELEMENTS     40

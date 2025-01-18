@@ -340,7 +340,7 @@ void deleteRandomRooms(Map* map){
         map->rooms[randomNum] = room;
 
         if (flag){
-            Log("Deleted AMOGUS: (%d, %d).", _DEBUG_);
+            Log("Deleted room: (%d, %d).", _DEBUG_);
             free(room);
             for (int i = randomNum; i < map->num_rooms-1; i++){
                 map->rooms[i] = map->rooms[i+1];
