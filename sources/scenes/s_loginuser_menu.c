@@ -77,7 +77,6 @@ void initscene_login_menu(){
     configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_LIME_GREEN);
 
     menu.uiElements[4] = createLabel((Pos) {-1, 40}, "Login sigmaboi!", FONTNORMALSCALE*2, COLOR_CRIMSON);
-    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_RUBY);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

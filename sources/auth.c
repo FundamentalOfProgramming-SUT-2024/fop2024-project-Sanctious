@@ -1,4 +1,6 @@
 #include <strings.h>
+#include <string.h>
+#include <stdint.h>
 #include "auth.h"
 #include "main.h"
 #include "map.h"
@@ -358,7 +360,3 @@ Map * saveUser(User* user){
     fclose(file);
     return map;
 }
-
-
-
-

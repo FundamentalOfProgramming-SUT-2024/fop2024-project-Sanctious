@@ -54,7 +54,7 @@ void initializeGame(Game* game){
     // Start the first scene
     game->currentScene = getSceneByID("game");
     // REQUIRED FOR MENUS IN THE START
-//    getSceneByID("game")->onEnter();
+   // getSceneByID("main_menu")->onEnter();
 
     Log("Game handler initialized successfully.", _DEBUG_);
 }
@@ -88,9 +88,8 @@ int main(int argc, char** argv)
     Game* game = getGameInstance();
 
     Log("Entering game loop...", _DEBUG_);
-//    saveUser(NULL);
+    // saveUser(NULL);
     glutMainLoop();
 
     return 0;
 }
-
