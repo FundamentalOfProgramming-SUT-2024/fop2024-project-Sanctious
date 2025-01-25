@@ -34,10 +34,11 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
                 int flag = 0;
 
-//                if (getUserByName(name) != NULL){
-//
-//                    flag = 1;
-//                }
+                if (userExists(name)){
+                    addMsgToPopUp(&menu, "Username unavailable.\n");
+                    flag = 1;
+                }
+
                 if (!isValidPassword(password)){
                     addMsgToPopUp(&menu, "Invalid password format.\n");
                     flag = 1;
@@ -48,9 +49,11 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     flag = 1;
                 }
 
-                if (flag)
                 if (!flag){
                     // Create user
+                    setCurrentUser(createUser(name, email, password));
+                    changeScene(getSceneByID("main_menu"));
+
 
 
                     // Add user to file system

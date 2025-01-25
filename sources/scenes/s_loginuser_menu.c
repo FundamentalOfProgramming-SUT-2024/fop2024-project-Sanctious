@@ -2,6 +2,7 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../uiutils.h"
+#include "../auth.h"
 
 static Menu menu;
 
@@ -27,7 +28,21 @@ static void processKeyboard(unsigned char key, int x, int y) {
             switch(menu.hover_element){
             // Login
             case 2:
+                resetMsgPopUp(&menu);
+                char* name = ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->input;
+                char* password = ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->input;
 
+                User* user = loadUser(name, password);
+
+                if (user == NULL){
+                    addMsgToPopUp(&menu, "User/Password incorrect.");
+                }
+                else{
+                    setCurrentUser(user);
+                    changeScene(getSceneByID("main_menu"));
+                }
+
+                activatePopUp(&menu, COLOR_RUBY);
                 break;
             // Quit
             case 3:
@@ -35,6 +50,8 @@ static void processKeyboard(unsigned char key, int x, int y) {
                 break;
 
             }
+
+
 
         }
     }
@@ -61,7 +78,7 @@ void initscene_login_menu(){
     menu.num_elements = 5;
     menu.num_interactable_elements = 4;
 
-    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Email :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
+    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Name :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
     ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->maxLength = 30;
 

@@ -36,8 +36,7 @@
 #define CELLSIZE            (float) (WINDOW_WIDTH/XCELLS)
 
 // Game Logic
-
-// its a bad practice but i have no other idea
+#define MAX_INVENTORY_SIZE      16
 #define MAX_NUM_SCENES          20
 #define MAXITEMS                64
 #define MAXDOORS                200

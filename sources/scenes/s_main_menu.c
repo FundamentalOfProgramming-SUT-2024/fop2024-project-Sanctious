@@ -2,6 +2,7 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../uiutils.h"
+#include "../auth.h"
 
 static Menu menu;
 
@@ -71,6 +72,19 @@ static void onExit(){
 }
 
 static void onEnter(){
+    // Authentication
+    LabelExtra* extra = (LabelExtra *) menu.uiElements[8]->UIExtra;
+    if (getCurrentUser() == NULL){
+        strcpy(extra->label, "Not Logged in!");
+        extra->color = COLOR_CRIMSON;
+    }
+    else{
+        char temp[MAX_STR_SIZE];
+        sprintf(temp, "Logged in as %s", getCurrentUser()->creds.name);
+        strcpy(extra->label, temp);
+        extra->color = COLOR_LIME_GREEN;
+    }
+
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);
@@ -78,7 +92,7 @@ static void onEnter(){
 
 void initscene_main_menu(){
     // Menu
-    menu.num_elements = 8;
+    menu.num_elements = 9;
     menu.num_interactable_elements = 7;
 
     menu.uiElements[0] = createButton((Pos) {-1, 100}, "Authentication", FONTNORMALSCALE);
@@ -103,6 +117,8 @@ void initscene_main_menu(){
     configureButtonColor(menu.uiElements[6], COLOR_GRAY, COLOR_RUBY);
 
     menu.uiElements[7] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, COLOR_CRIMSON);
+
+    menu.uiElements[8] = createLabel((Pos) {10, RWINDOW_HEIGHT-10}, "Not logged in!", FONTNORMALSCALE*0.75, COLOR_CRIMSON);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

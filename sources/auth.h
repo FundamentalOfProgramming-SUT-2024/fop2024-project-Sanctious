@@ -15,7 +15,6 @@ typedef struct{
     long long playTime; // In seconds
     long long sumScores;
     long long sumGold;
-    int test;
     int exp;
     int num_games;
 } Stats;
@@ -26,11 +25,12 @@ typedef struct{
     Stats stats;
 } User;
 
-
-User* getUserByName(char* name);
+User* getCurrentUser();
+void setCurrentUser(User* user);
 int isValidPassword(char* password);
 int isValidEmail(char* email);
-Map* saveUser(User* user);
-void loadUsers();
+int userExists(char* name);
+User* createUser(char* name, char* password, char* email);
+User* loadUser(char* name, char* password);
 
 #endif

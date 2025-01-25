@@ -8,6 +8,7 @@
 #include "item.h"
 #include "config.h"
 #include "structures.h"
+#include "savesystem.h"
 
 #define RANDOM(min, max) ((rand() % ((max) - (min) + 1)) + (min)) // Inclusive
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
@@ -44,6 +45,7 @@ Map* getMapInstance() {
             exit(1);
         }
         initializeMap(instance);
+//        saveUser(NULL);
     }
     return instance;
 }
@@ -84,7 +86,7 @@ Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
     _room->scale.gridW = gw;
     _room->scale.gridH = gh;
 
-    Log("Room number %d created with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, map->num_rooms,
+    Log("Room number %d generated with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, map->num_rooms,
         _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
 
     return _room;

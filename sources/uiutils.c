@@ -259,6 +259,11 @@ void configureSliderColor(UIElement* slider, Color Acolor, Color DAcolor)
     extra->DAcolor = DAcolor;
 }
 
+//UIElement* createRankEntry(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
+//UIElement* createSaveEntry(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
+//void configureRankEntryColor(UIElement* slider, Color Acolor, Color DAcolor);
+//void configureSaveEntryColor(UIElement* slider, Color Acolor, Color DAcolor);
+
 //static CallbackData cd;
 //typedef struct {
 //    Menu* menu1;
