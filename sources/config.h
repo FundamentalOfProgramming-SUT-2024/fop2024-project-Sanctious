@@ -36,6 +36,7 @@
 #define CELLSIZE            (float) (WINDOW_WIDTH/XCELLS)
 
 // Game Logic
+#define MAX_FLOORS              5
 #define MAX_INVENTORY_SIZE      16
 #define MAX_NUM_SCENES          20
 #define MAXITEMS                64
@@ -48,6 +49,7 @@
 #define MAX_MENU_UIELEMENTS     40
 
 // Credentials & UI
+#define MAX_SAVES_PU            5 // max saves per user
 #define MAX_STRING_INPUT        100
 #define MAX_CAROUSEL_OPTIONS    10
 #define LINE_INDENTATION        5 // Pixel

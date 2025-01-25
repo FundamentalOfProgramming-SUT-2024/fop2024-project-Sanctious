@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef SAVESYSTEM_H
+#define SAVESYSTEM_H
 
 #include "map.h"
 
@@ -16,5 +16,10 @@ typedef struct{
 
 SaveInfo* getCurrentSave();
 void setCurrentSave(SaveInfo* saveinfo);
+
+
+void createSave(SaveInfo* saveinfo);
+void loadGame(char* name);
+void saveGame();
 
 #endif

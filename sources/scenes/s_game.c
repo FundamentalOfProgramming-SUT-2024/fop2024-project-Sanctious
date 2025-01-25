@@ -3,6 +3,8 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../player.h"
+#include "../map.h"
+#include "../savesystem.h"
 
 float r=1.0f,g=1.0f,b=1.0f;
 
@@ -48,6 +50,15 @@ static void processKeyboard(unsigned char key, int x, int y) {
     if (key == 'a')
         if (isValidPos(player->pos.gridX-1, player->pos.gridY))
             player->pos.gridX -= 1;
+    // Escape key
+    if (key == 27){
+        saveGame();
+        changeScene(getSceneByID("main_menu"));
+    }
+
+    if (key == 'g'){
+    changeFloor(getCurFloor()+1);
+    }
 }
 
 static void processSKeyboard(int key, int x, int y) {
@@ -82,7 +93,7 @@ static void renderCorridors(Map* map){
 static void render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    Map* map = getMapInstance();
+    Map* map = getFloor(getCurFloor());
     renderCorridors(map);
 
     for (int i = 0; i < map->num_rooms; i++) {
@@ -111,7 +122,7 @@ static void render() {
     renderPlayer();
     char message[100];
     Player* player = getPlayerInstance();
-    sprintf(message, "X= %d Y= %d", player->pos.gridX, player->pos.gridY);
+    sprintf(message, "X= %d Y= %d\nFloor= %d", player->pos.gridX, player->pos.gridY, getCurFloor());
     renderString(0, 20, message, FONTNORMALSCALE, COLOR_PURPLE);
 
     glFlush();

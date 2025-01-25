@@ -2,6 +2,9 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../uiutils.h"
+#include "../savesystem.h"
+#include "../auth.h"
+#include "../logger.h"
 
 static Menu menu;
 
@@ -27,6 +30,15 @@ static void processKeyboard(unsigned char key, int x, int y) {
             switch(menu.hover_element){
             // New game
             case 4:
+                if (getCurrentUser() == NULL){
+                    Log("User not signed in", _DEBUG_);
+                    break;
+                }
+
+                SaveInfo* saveinfo = (SaveInfo *) malloc(1 * sizeof(SaveInfo));
+                InputFieldExtra* extra = (InputFieldExtra *) menu.uiElements[0]->UIExtra;
+                strcpy(saveinfo->savename, extra->input);
+                createSave(saveinfo);
 
                 break;
             // Back

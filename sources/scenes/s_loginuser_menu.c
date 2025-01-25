@@ -28,6 +28,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
             switch(menu.hover_element){
             // Login
             case 2:
+
                 resetMsgPopUp(&menu);
                 char* name = ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->input;
                 char* password = ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->input;

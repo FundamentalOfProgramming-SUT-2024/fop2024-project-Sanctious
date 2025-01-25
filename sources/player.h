@@ -21,6 +21,7 @@ typedef struct {
 
 void initializePlayer(Player*);
 Player* getPlayerInstance();
+void setPlayerInstance(Player* player);
 Room* findPlayerRoom();
 char isValidPos(int , int);
 

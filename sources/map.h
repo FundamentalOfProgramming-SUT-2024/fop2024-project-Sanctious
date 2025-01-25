@@ -111,6 +111,7 @@ struct Room{
 
 
 typedef struct {
+    int id;
     gScale scale;
 
     // valid cords maybe ?
@@ -122,9 +123,20 @@ typedef struct {
     Corridor* corridors[MAXCORRIDORS];
 } Map;
 
-void initializeMap(Map*);
+void generateMap(Map*);
 Map* getMapInstance();
-Room* findRoomByRRP(int, int);
+
+
+
+Map* getFloor(int floor);
+void changeFloor(int a);
+int getCurFloor();
+void generateFloors();
+void setFloor(int floor, Map* map);
+int getNumFloors();
+void setCurFloor(int floor);
+
+Room* findRoomByRRP(Map*, int, int);
 gCord getRandomCordInRoom(Room* room);
 gCord addDirectionToPos(gCord pos, Direction dir);
 Room* getRandomRoom(Map* map);

@@ -9,6 +9,9 @@ void initializePlayer();
 static Player* instance = NULL;
 
 // Singleton design
+void setPlayerInstance(Player* player){
+    instance = player;
+}
 
 Player* getPlayerInstance() {
     // First call
@@ -27,15 +30,15 @@ Player* getPlayerInstance() {
 void initializePlayer(Player* player){
     player->gold = 2;
 
-    player->pos.gridX = getMapInstance()->rooms[0]->pos.gridX + 1;
-    player->pos.gridY = getMapInstance()->rooms[0]->pos.gridY + 1;
+    player->pos.gridX = getFloor(getCurFloor())->rooms[0]->pos.gridX + 1;
+    player->pos.gridY = getFloor(getCurFloor())->rooms[0]->pos.gridY + 1;
 
     Log("Player initialized successfully.", _DEBUG_);
     Log("Player GOLD: %d", _DEBUG_, player->gold);
 }
 
 Room* findPlayerRoom(){
-    Map* map = getMapInstance();
+    Map* map = getFloor(getCurFloor());
     Player* player = getPlayerInstance();
 
     for (int i = 0; i < map->num_rooms; i++){
@@ -52,7 +55,7 @@ Room* findPlayerRoom(){
 char isValidPos(int gridXP, int gridYP){
     // A bad implementation
     // Only calculate this once and you are good to go
-    Map* map = getMapInstance();
+    Map* map = getFloor(getCurFloor());
     for (int i = 0; i < map->num_corridors; i++){
         Corridor* cor = map->corridors[i];
         for (int j = 0; j < cor->path_length; j++){

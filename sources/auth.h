@@ -23,6 +23,7 @@ typedef struct{
 typedef struct{
     Credentials creds;
     Stats stats;
+    char saves[MAX_SAVES_PU][MAX_STR_SIZE];
 } User;
 
 User* getCurrentUser();

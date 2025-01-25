@@ -111,21 +111,31 @@ void hashmap_free(HashMap *map) {
 
 
 void saveGame(){
-    HashMap *hashmap = hashmap_init(NULL, NULL);
-
-    FILE *file;
-    Map* map;
-    //  = fopen("test.dat", "wb")
-    /*
-    user = (User *) malloc(sizeof(User));
-    printf("\nAddress : %p\n", user);
-    user->stats.num_games = 255;
+    char temp[MAX_STR_SIZE];
+    sprintf(temp, "saves/%s/%s.dat", getCurrentUser()->creds.name, getCurrentSave()->savename);
+    FILE* file = fopen(temp, "wb");
 //    fwrite(&user, sizeof(User *), 1, file);
 //    fwrite(user, sizeof(User), 1, file);
+    fwrite(getCurrentSave(), sizeof(SaveInfo), 1, file);
 
-    Map* map = getMapInstance();
+//    fwrite(&getPlayerInstance(), sizeof(Player *), 1, file);
+    fwrite(getPlayerInstance(), sizeof(Player), 1, file);
 
-    fwrite(&map, sizeof(Map *), 1, file);
+    int curFloor = getCurFloor();
+    fwrite(&curFloor, sizeof(int), 1, file);
+
+    int numFloors = getNumFloors();
+    printf("Numfloors : %d*B\n", numFloors);
+    printf("Golds : %d*B\n", getCurrentSave()->gold);
+    fwrite(&numFloors, sizeof(int), 1, file);
+
+    for (int i = 0; i < numFloors; i++){
+
+    Map* map = getFloor(i);
+
+
+
+//    fwrite(&map, sizeof(Map *), 1, file);
     fwrite(map, sizeof(Map), 1, file);
 
     for (int i = 0; i < map->num_corridors; i++){
@@ -198,23 +208,50 @@ void saveGame(){
 
 
     }
+    }
+
+//    updateUserData();
 
     fclose(file);
-    */
 }
-void loadGame(){
+void loadGame(char* name){
     HashMap *hashmap = hashmap_init(NULL, NULL);
-    FILE* file = fopen("test.dat", "rb");
+    //    Save{
+//        saveinfo -> use the name here to save the file and the user
+//        player
+//        numfloors
+//        floors
+//        update userdata file ( change it and save it )
+//    }
+    char temp[MAX_STR_SIZE];
+    sprintf(temp, "saves/%s/%s.dat", getCurrentUser()->creds.name, name);
+    FILE* file = fopen(temp, "rb");
     if (file == NULL) {
         perror("Error opening file");
         return;
     }
 
+    SaveInfo* saveinfo = (SaveInfo *) malloc(1 * sizeof(SaveInfo));
+    fread(saveinfo, sizeof(SaveInfo), 1, file);
+    setCurrentSave(saveinfo);
+
+    Player* player = (Player *) malloc(1 * sizeof(Player));
+    fread(player, sizeof(Player), 1, file);
+    setPlayerInstance(player);
+
+    int curFloor;
+    fread(&curFloor, sizeof(int), 1, file);
+    setCurFloor(curFloor);
+
+    int numFloors;
+    fread(&numFloors, sizeof(int), 1, file);
+    printf("Numfloors : %d\n", numFloors);
+for (int i = 0; i < numFloors; i ++){
 
     Map* map = (Map *) malloc(1 * sizeof(Map));
     void* temp;
 
-    fread(&temp, sizeof(Map *), 1, file);
+//    fread(&temp, sizeof(Map *), 1, file);
     fread(map, sizeof(Map), 1, file);
 
     for (int i = 0; i < map->num_corridors; i++){
@@ -326,11 +363,52 @@ void loadGame(){
         map->corridors[i] = (Corridor *) hashmap_get(hashmap, map->corridors[i]);
 
     }
+    setFloor(i, map);
 //    void* test;
 //    fread(&test, sizeof(User *), 1, file);
 //    fread(user, sizeof(User), 1, file);
 //    printf("**%d %p**", map->num_rooms );
+    }
     fclose(file);
 
 //    return map;
 }
+
+void createSave(SaveInfo* saveinfo){
+    generateFloors();
+    getPlayerInstance();
+    saveinfo->gold = 10;
+    saveinfo->playtime = 0;
+
+    setCurrentSave(saveinfo);
+    saveGame();
+}
+//    load{
+//        saveinfo
+//        player
+//        floor
+//    }
+//    Save{
+//        saveinfo -> use the name here to save the file and the user
+//        player
+//        numfloors
+//        floors
+//        update userdata file ( change it and save it )
+//    }
+//    then load them back ( using load function )
+//}
+//
+//Userdata{
+//    Userdata
+//        Creds
+//        Stats
+//        savenames[]
+//
+//}
+//
+//Save{
+//    saveinfo
+//    player
+//    floor
+//}
+

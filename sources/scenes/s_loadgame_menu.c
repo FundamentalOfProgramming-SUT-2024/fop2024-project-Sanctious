@@ -2,6 +2,9 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../uiutils.h"
+#include "../auth.h"
+#include "../savesystem.h"
+#include "../logger.h"
 
 static Menu menu;
 
@@ -26,16 +29,27 @@ static void processKeyboard(unsigned char key, int x, int y) {
             // Manually handle button press
             switch(menu.hover_element){
             // Load games
-            case 0:
+            case 1:
+                if (getCurrentUser() == NULL){
+                    Log("User not signed in", _DEBUG_);
+                    break;
+                }
+
+                InputFieldExtra* extra = (InputFieldExtra *) menu.uiElements[0]->UIExtra;
+                loadGame(extra->input);
                 changeScene(getSceneByID("game"));
+
+                break;
+            // Back
+            case 2:
+                changeScene(getSceneByID("main_menu"));
                 break;
 
             }
-
+            }
         }
-    }
-
 }
+
 
 static void processSKeyboard(int key, int x, int y) {
     // Basic menu keyboard handling is done by UIutils
@@ -47,6 +61,8 @@ static void onExit(){
 }
 
 static void onEnter(){
+    setCurrentUser(loadUser("test", NULL));
+
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);
@@ -54,12 +70,18 @@ static void onEnter(){
 
 void initscene_loadgame_menu(){
     // Menu
-    menu.num_elements = 1;
-    menu.num_interactable_elements = 1;
+    menu.num_elements = 3;
+    menu.num_interactable_elements = 3;
 
     menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Game", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->maxLength = 20;
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
+
+    menu.uiElements[1] = createButton((Pos) {-1, 150}, "Load", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[1], COLOR_GRAY, COLOR_LIME_GREEN);
+
+    menu.uiElements[2] = createButton((Pos) {-1, 200}, "Back", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_RUBY);
 
 
     // Scene

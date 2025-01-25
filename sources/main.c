@@ -52,9 +52,9 @@ void initializeGame(Game* game){
     }
 
     // Start the first scene
-    game->currentScene = getSceneByID("main_menu");
+    game->currentScene = getSceneByID("loadgame_menu");
     // REQUIRED FOR MENUS IN THE START
-    getSceneByID("main_menu")->onEnter();
+    getSceneByID("loadgame_menu")->onEnter();
 
     Log("Game handler initialized successfully.", _DEBUG_);
 }
@@ -80,7 +80,7 @@ int main(int argc, char** argv)
     Log("Game started...", _DEBUG_);
     // Initialize Player and Map
     Map* map = getMapInstance();
-    Player* mainPlayer = getPlayerInstance();
+//    Player* mainPlayer = getPlayerInstance();
 
     initializeRenderer(argc, argv);
 
