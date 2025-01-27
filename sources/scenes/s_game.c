@@ -112,6 +112,15 @@ static void render() {
         for (int j = 0; j < room->num_structures; j++){
             renderText(room->structures[j]->pos.gridX, room->structures[j]->pos.gridY, "@", COLOR_BROWN);
         }
+
+        for (int j = 0; j < room->num_items; j++){
+            Item* baseItem = room->items[j];
+            char temp[5];
+            sprintf(temp, "%c", baseItem->sprite);
+            renderText(baseItem->pos.gridX, baseItem->pos.gridY, temp, COLOR_GREEN);
+
+
+        }
         for (int j = 0; j < room->scale.gridW; j++) {
             for (int k = 0; k < room->scale.gridH; k++) {
 //                renderText(room->pos.gridX + j, room->pos.gridY + k, "A", 1.0, 0.0, 0.0, 1.0);

@@ -6,6 +6,7 @@
 #include "logger.h"
 #include "map.h"
 #include "item.h"
+#include "allitems.h"
 #include "config.h"
 #include "structures.h"
 #include "savesystem.h"
@@ -422,6 +423,11 @@ void generateStructures(Map* map){
 
 void generateItems(Map* map){
     // Implement later
+    for (int i = 0; i < 10; i++){
+        Room* room = getRandomRoom(map);
+        Item* baseItem = createBaseItem("test", getRandomCordInRoom(room), 'f', 2);
+        room->items[room->num_items++] = createMeleeWeapon(baseItem, MELEEWEAPON_SWORD, 2);
+    }
 }
 
 void generateMap(Map* map){

@@ -3,6 +3,8 @@
 
 #include "item.h"
 #include "config.h"
+#include "structures.h"
+#include "gc.h"
 
 extern const int qdirs[4][2]; // 4 neighs quad
 extern const int odirs[8][2]; // 8 neighs octa
@@ -42,36 +44,10 @@ typedef enum {
 } MapSize;
 
 typedef struct {
-    int gridX;
-    int gridY;
-
-} gCord;
-
-typedef struct {
     int gridW;
     int gridH;
 
 } gScale;
-////
-// Structures
-typedef enum {
-    WINDOW,
-    OBSTACLE,
-    TRAP
-} StructureType;
-
-
-typedef struct{
-    int damage;
-} TrapExtra;
-
-typedef struct{
-    gCord pos;
-    char sprite;
-    void* StructureExtra;
-    StructureType type;
-
-} Structure;
 
 typedef struct {
     int path_length;

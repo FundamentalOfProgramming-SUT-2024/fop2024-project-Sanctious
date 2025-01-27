@@ -6,7 +6,7 @@
 Structure* generateTrap(){
     Structure* trap = (Structure *) malloc(1 * sizeof(Structure));
     trap->sprite = '@';
-    trap->type = TRAP;
+    trap->type = ST_TRAP;
 
     TrapExtra* extra = (TrapExtra *) malloc(1 * sizeof(TrapExtra));
 

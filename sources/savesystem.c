@@ -8,6 +8,7 @@
 #include "player.h"
 #include "main.h"
 #include "map.h"
+#include "allitems.h"
 
 
 static SaveInfo* currentSave = NULL;
@@ -157,6 +158,7 @@ void saveGame(){
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
 
+        // Save doors
         for (int j = 0; j < room->num_doors; j++){
             Door* door = room->doors[j];
 
@@ -164,11 +166,7 @@ void saveGame(){
             fwrite(door, sizeof(Door), 1, file);
         }
 
-    }
-
-    for (int i = 0; i < map->num_rooms; i++){
-        Room* room = map->rooms[i];
-
+        // Save structures
         for (int j = 0; j < room->num_structures; j++){
             Structure* structure = room->structures[j];
 
@@ -176,6 +174,13 @@ void saveGame(){
             fwrite(structure, sizeof(Structure), 1, file);
         }
 
+        // Save items
+        for (int j = 0; j < room->num_items; j++){
+            Item* item = room->items[j];
+
+            fwrite(&item, sizeof(Item *), 1, file);
+            fwrite(item, sizeof(Item), 1, file);
+        }
 
 
     }
@@ -183,28 +188,48 @@ void saveGame(){
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
 
+        // Save structures extras
         for (int j = 0; j < room->num_structures; j++){
             Structure* structure = room->structures[j];
-//            WINDOW
-//            OBSTACLE
-//            TRAP
             switch(structure->type){
-            case TRAP:
+            case ST_TRAP:
                 // what if we dont put it there
                 fwrite(&(structure->StructureExtra), sizeof(TrapExtra *), 1, file);
                 fwrite((TrapExtra *) structure->StructureExtra, sizeof(TrapExtra), 1, file);
                 break;
-            case OBSTACLE:
+            case ST_OBSTACLE:
 
 
                 break;
-            case WINDOW:
+            case ST_WINDOW:
 
 
                 break;
             }
         }
 
+        // Save items extras
+        for (int j = 0; j < room->num_items; j++){
+            Item* item = room->items[j];
+            switch(item->itemclass){
+            case IC_FOOD:
+                fwrite(&(item->ItemExtra), sizeof(FoodExtra *), 1, file);
+                fwrite((FoodExtra *) item->ItemExtra, sizeof(FoodExtra), 1, file);
+                break;
+            case IC_POTION:
+                fwrite(&(item->ItemExtra), sizeof(PotionExtra *), 1, file);
+                fwrite((PotionExtra *) item->ItemExtra, sizeof(PotionExtra), 1, file);
+                break;
+            case IC_MELEEWEAPON:
+                fwrite(&(item->ItemExtra), sizeof(MeleeWeaponExtra *), 1, file);
+                fwrite((MeleeWeaponExtra *) item->ItemExtra, sizeof(MeleeWeaponExtra), 1, file);
+                break;
+            case IC_RANGEDWEAPON:
+                fwrite(&(item->ItemExtra), sizeof(RangedWeaponExtra *), 1, file);
+                fwrite((RangedWeaponExtra *) item->ItemExtra, sizeof(RangedWeaponExtra), 1, file);
+                break;
+            }
+        }
 
 
     }
@@ -280,6 +305,7 @@ for (int i = 0; i < numFloors; i ++){
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
 
+        // Load doors
         for (int j = 0; j < room->num_doors; j++){
             Door* door = (Door *) malloc(1 * sizeof(Door));
 
@@ -288,11 +314,7 @@ for (int i = 0; i < numFloors; i ++){
             fread(door, sizeof(Door), 1, file);
         }
 
-    }
-
-    for (int i = 0; i < map->num_rooms; i++){
-        Room* room = map->rooms[i];
-
+        // Load structures
         for (int j = 0; j < room->num_structures; j++){
             Structure* structure = (Structure *) malloc(1 * sizeof(Structure));
 
@@ -301,47 +323,100 @@ for (int i = 0; i < numFloors; i ++){
             fread(structure, sizeof(Structure), 1, file);
         }
 
+        // Load items
+        for (int j = 0; j < room->num_items; j++){
+            Item* item = (Item *) malloc(1 * sizeof(Item));
+
+            fread(&temp, sizeof(Item *), 1, file);
+            hashmap_add(hashmap, temp, item);
+            fread(item, sizeof(Item), 1, file);
+        }
+
 
 
     }
-    // Link room and doors
+
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
 
-        for (int j = 0; j < room->num_structures; j++){
-            room->structures[j] = (Structure *) hashmap_get(hashmap, room->structures[j]);
-        }
+        // Link doors
         for (int j = 0; j < room->num_doors; j++){
             room->doors[j] = (Door *) hashmap_get(hashmap, room->doors[j]);
             room->doors[j]->connectedd = (Door *) hashmap_get(hashmap, room->doors[j]->connectedd);
             room->doors[j]->parentr = (Room *) hashmap_get(hashmap, room->doors[j]->parentr);
             room->doors[j]->corridor = (Corridor *) hashmap_get(hashmap, room->doors[j]->corridor);
         }
-//        room->items
+
+        // Link structures
+        for (int j = 0; j < room->num_structures; j++){
+            room->structures[j] = (Structure *) hashmap_get(hashmap, room->structures[j]);
+        }
+
+        // Link items
+        for (int j = 0; j < room->num_items; j++){
+            room->items[j] = (Item *) hashmap_get(hashmap, room->items[j]);
+        }
 
     }
 
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
 
+        // Load structures extras
         for (int j = 0; j < room->num_structures; j++){
             Structure* structure = room->structures[j];
-//            WINDOW
-//            OBSTACLE
-//            TRAP
-            if (structure->type == TRAP){
-                // what if we dont put it there
-                TrapExtra * extra = (TrapExtra *) malloc(1 * sizeof(TrapExtra));
+            switch(structure->type){
+            case ST_TRAP:{
+                // SWITCH CASE FAULT
+                TrapExtra* extra = (TrapExtra *) malloc(1 * sizeof(TrapExtra));
                 fread(&temp, sizeof(TrapExtra *), 1, file);
                 hashmap_add(hashmap, temp, extra);
                 fread(extra, sizeof(TrapExtra), 1, file);
+                break;
             }
-            else if (structure->type == OBSTACLE){
+            case ST_OBSTACLE:{
 
-
+                break;
             }
-            else if (structure->type == WINDOW){
+            case ST_WINDOW:{
 
+                break;
+            }
+            }
+        }
+
+        // Load items extras
+        for (int j = 0; j < room->num_items; j++){
+            Item* item = room->items[j];
+            switch(item->itemclass){
+            case IC_FOOD:{
+                FoodExtra* extra = (FoodExtra *) malloc(1 * sizeof(FoodExtra));
+                fread(&temp, sizeof(FoodExtra *), 1, file);
+                hashmap_add(hashmap, temp, extra);
+                fread(extra, sizeof(FoodExtra), 1, file);
+                break;
+            }
+            case IC_POTION:{
+                PotionExtra* extra = (PotionExtra *) malloc(1 * sizeof(PotionExtra));
+                fread(&temp, sizeof(PotionExtra *), 1, file);
+                hashmap_add(hashmap, temp, extra);
+                fread(extra, sizeof(PotionExtra), 1, file);
+                break;
+            }
+            case IC_MELEEWEAPON:{
+                MeleeWeaponExtra* extra = (MeleeWeaponExtra *) malloc(1 * sizeof(MeleeWeaponExtra));
+                fread(&temp, sizeof(MeleeWeaponExtra *), 1, file);
+                hashmap_add(hashmap, temp, extra);
+                fread(extra, sizeof(MeleeWeaponExtra), 1, file);
+                break;
+            }
+            case IC_RANGEDWEAPON:{
+                RangedWeaponExtra* extra = (RangedWeaponExtra *) malloc(1 * sizeof(RangedWeaponExtra));
+                fread(&temp, sizeof(RangedWeaponExtra *), 1, file);
+                hashmap_add(hashmap, temp, extra);
+                fread(extra, sizeof(RangedWeaponExtra), 1, file);
+                break;
+            }
             }
         }
 
@@ -349,13 +424,16 @@ for (int i = 0; i < numFloors; i ++){
 
     }
 
-    // Link structures extra
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
+        // Link structures extras
         for (int j = 0; j < room->num_structures; j++){
             room->structures[j]->StructureExtra = (void *) hashmap_get(hashmap, room->structures[j]->StructureExtra);
         }
-
+        // Link items extras
+        for (int j = 0; j < room->num_items; j++){
+            room->items[j]->ItemExtra = (void *) hashmap_get(hashmap, room->items[j]->ItemExtra);
+        }
     }
 
     // Link map corridors
