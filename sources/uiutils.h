@@ -125,6 +125,7 @@ typedef struct{
 } UIElement;
 
 typedef struct{
+    int enabled;
     int hover_element;
 
     int popUpActive;

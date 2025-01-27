@@ -23,24 +23,24 @@ typedef enum {
 } Direction;
 
 typedef enum {
-    TREASURE,
-    REGULAR,
-    ENCHANT,
-    NIGHTMARE
+    RT_TREASURE,
+    RT_REGULAR,
+    RT_ENCHANT,
+    RT_NIGHTMARE
 } RoomType;
 
 typedef enum {
-    LOSER_DIFFICULTY,
-    MID_DIFFICULTY,
-    NERD_DIFFICULTY,
-    GAMER_DIFFICULTY
+    DIFFICULTY_LOSER,
+    DIFFICULTY_MID,
+    DIFFICULTY_NERD,
+    DIFFICULTY_GAMER
 } Difficulty;
 
 typedef enum {
-    NORMAL_SIZE,
-    LARGE_SIZE,
-    GAMER_SIZE,
-    SIGMABOI_SIZE
+    MS_NORMAL,
+    MS_LARGE,
+    MS_GAMER,
+    MS_SIGMABOI
 } MapSize;
 
 typedef struct {

@@ -46,9 +46,9 @@
 #define MAXCORRIDORS            100
 #define MAX_CORRIDOR_LENGTH     50
 #define MAX_STR_SIZE            256 // Codewise
-#define MAX_MENU_UIELEMENTS     40
 
 // Credentials & UI
+#define MAX_MENU_UIELEMENTS     40
 #define MAX_SAVES_PU            5 // max saves per user
 #define MAX_STRING_INPUT        100
 #define MAX_CAROUSEL_OPTIONS    10

@@ -20,7 +20,7 @@ void setCurrentSave(SaveInfo* saveinfo){
     currentSave = saveinfo;
 }
 
-#define HASHMAP_SIZE 128
+#define HASHMAP_SIZE 256
 
 typedef struct KeyValue {
     void *key;
@@ -109,7 +109,102 @@ void hashmap_free(HashMap *map) {
 //    return 0;
 //}
 
+void saveItemExtra(FILE* file, Item* item){
+    switch(item->itemclass){
+    case IC_FOOD:
+        fwrite(&(item->ItemExtra), sizeof(FoodExtra *), 1, file);
+        fwrite((FoodExtra *) item->ItemExtra, sizeof(FoodExtra), 1, file);
+        break;
+    case IC_POTION:
+        fwrite(&(item->ItemExtra), sizeof(PotionExtra *), 1, file);
+        fwrite((PotionExtra *) item->ItemExtra, sizeof(PotionExtra), 1, file);
+        break;
+    case IC_MELEEWEAPON:
+        fwrite(&(item->ItemExtra), sizeof(MeleeWeaponExtra *), 1, file);
+        fwrite((MeleeWeaponExtra *) item->ItemExtra, sizeof(MeleeWeaponExtra), 1, file);
+        break;
+    case IC_RANGEDWEAPON:
+        fwrite(&(item->ItemExtra), sizeof(RangedWeaponExtra *), 1, file);
+        fwrite((RangedWeaponExtra *) item->ItemExtra, sizeof(RangedWeaponExtra), 1, file);
+        break;
+    }
+}
 
+void loadItemExtra(FILE* file, Item* item, HashMap* hashmap){
+    void* temp;
+
+    switch(item->itemclass){
+    case IC_FOOD:{
+        FoodExtra* extra = (FoodExtra *) malloc(1 * sizeof(FoodExtra));
+        fread(&temp, sizeof(FoodExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(FoodExtra), 1, file);
+        break;
+    }
+    case IC_POTION:{
+        PotionExtra* extra = (PotionExtra *) malloc(1 * sizeof(PotionExtra));
+        fread(&temp, sizeof(PotionExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(PotionExtra), 1, file);
+        break;
+    }
+    case IC_MELEEWEAPON:{
+        MeleeWeaponExtra* extra = (MeleeWeaponExtra *) malloc(1 * sizeof(MeleeWeaponExtra));
+        fread(&temp, sizeof(MeleeWeaponExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(MeleeWeaponExtra), 1, file);
+        break;
+    }
+    case IC_RANGEDWEAPON:{
+        RangedWeaponExtra* extra = (RangedWeaponExtra *) malloc(1 * sizeof(RangedWeaponExtra));
+        fread(&temp, sizeof(RangedWeaponExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(RangedWeaponExtra), 1, file);
+        break;
+    }
+    }
+}
+
+void saveStructureExtra(FILE* file, Structure* structure){
+    switch(structure->type){
+    case ST_TRAP:
+        fwrite(&(structure->StructureExtra), sizeof(TrapExtra *), 1, file);
+        fwrite((TrapExtra *) structure->StructureExtra, sizeof(TrapExtra), 1, file);
+        break;
+    case ST_OBSTACLE:
+//        fwrite(&(structure->StructureExtra), sizeof(Obsta *), 1, file);
+//        fwrite((TrapExtra *) structure->StructureExtra, sizeof(TrapExtra), 1, file);
+        break;
+    case ST_WINDOW:
+//        fwrite(&(structure->StructureExtra), sizeof(TrapExtra *), 1, file);
+//        fwrite((TrapExtra *) structure->StructureExtra, sizeof(TrapExtra), 1, file);
+        break;
+    }
+
+}
+
+void loadStructureExtra(FILE* file, Structure* structure, HashMap* hashmap){
+    void* temp;
+    switch(structure->type){
+    case ST_TRAP:{
+        // SWITCH CASE FAULT
+        TrapExtra* extra = (TrapExtra *) malloc(1 * sizeof(TrapExtra));
+        fread(&temp, sizeof(TrapExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(TrapExtra), 1, file);
+        break;
+    }
+    case ST_OBSTACLE:{
+
+        break;
+    }
+    case ST_WINDOW:{
+
+        break;
+    }
+    }
+
+}
 
 void saveGame(){
     char temp[MAX_STR_SIZE];
@@ -119,16 +214,23 @@ void saveGame(){
 //    fwrite(user, sizeof(User), 1, file);
     fwrite(getCurrentSave(), sizeof(SaveInfo), 1, file);
 
-//    fwrite(&getPlayerInstance(), sizeof(Player *), 1, file);
-    fwrite(getPlayerInstance(), sizeof(Player), 1, file);
 
     int curFloor = getCurFloor();
     fwrite(&curFloor, sizeof(int), 1, file);
 
     int numFloors = getNumFloors();
-    printf("Numfloors : %d*B\n", numFloors);
-    printf("Golds : %d*B\n", getCurrentSave()->gold);
     fwrite(&numFloors, sizeof(int), 1, file);
+
+    Player* player = getPlayerInstance();
+//    fwrite(&getPlayerInstance(), sizeof(Player *), 1, file);
+    fwrite(player, sizeof(Player), 1, file);
+    for (int i = 0; i < player->inventory_size; i++){
+        Item* item = player->inventory[i];
+        fwrite(&item, sizeof(Item *), 1, file);
+        fwrite(item, sizeof(Item), 1, file);
+
+        saveItemExtra(file, item);
+    }
 
     for (int i = 0; i < numFloors; i++){
 
@@ -190,45 +292,12 @@ void saveGame(){
 
         // Save structures extras
         for (int j = 0; j < room->num_structures; j++){
-            Structure* structure = room->structures[j];
-            switch(structure->type){
-            case ST_TRAP:
-                // what if we dont put it there
-                fwrite(&(structure->StructureExtra), sizeof(TrapExtra *), 1, file);
-                fwrite((TrapExtra *) structure->StructureExtra, sizeof(TrapExtra), 1, file);
-                break;
-            case ST_OBSTACLE:
-
-
-                break;
-            case ST_WINDOW:
-
-
-                break;
-            }
+            saveStructureExtra(file, room->structures[j]);
         }
 
         // Save items extras
         for (int j = 0; j < room->num_items; j++){
-            Item* item = room->items[j];
-            switch(item->itemclass){
-            case IC_FOOD:
-                fwrite(&(item->ItemExtra), sizeof(FoodExtra *), 1, file);
-                fwrite((FoodExtra *) item->ItemExtra, sizeof(FoodExtra), 1, file);
-                break;
-            case IC_POTION:
-                fwrite(&(item->ItemExtra), sizeof(PotionExtra *), 1, file);
-                fwrite((PotionExtra *) item->ItemExtra, sizeof(PotionExtra), 1, file);
-                break;
-            case IC_MELEEWEAPON:
-                fwrite(&(item->ItemExtra), sizeof(MeleeWeaponExtra *), 1, file);
-                fwrite((MeleeWeaponExtra *) item->ItemExtra, sizeof(MeleeWeaponExtra), 1, file);
-                break;
-            case IC_RANGEDWEAPON:
-                fwrite(&(item->ItemExtra), sizeof(RangedWeaponExtra *), 1, file);
-                fwrite((RangedWeaponExtra *) item->ItemExtra, sizeof(RangedWeaponExtra), 1, file);
-                break;
-            }
+            saveItemExtra(file, room->items[j]);
         }
 
 
@@ -260,17 +329,35 @@ void loadGame(char* name){
     fread(saveinfo, sizeof(SaveInfo), 1, file);
     setCurrentSave(saveinfo);
 
-    Player* player = (Player *) malloc(1 * sizeof(Player));
-    fread(player, sizeof(Player), 1, file);
-    setPlayerInstance(player);
-
     int curFloor;
     fread(&curFloor, sizeof(int), 1, file);
     setCurFloor(curFloor);
 
     int numFloors;
     fread(&numFloors, sizeof(int), 1, file);
-    printf("Numfloors : %d\n", numFloors);
+
+    Player* player = (Player *) malloc(1 * sizeof(Player));
+    fread(player, sizeof(Player), 1, file);
+    setPlayerInstance(player);
+    for (int i = 0; i < player->inventory_size; i++){
+        void* temp;
+        Item* item = (Item *) malloc(1 * sizeof(Item));
+
+        fread(&temp, sizeof(Item *), 1, file);
+        hashmap_add(hashmap, temp, item);
+        fread(item, sizeof(Item), 1, file);
+
+        loadItemExtra(file, item, hashmap);
+
+    }
+    // Link inventory items
+    for (int i = 0; i < player->inventory_size; i++){
+        player->inventory[i] = (Item *) hashmap_get(hashmap, player->inventory[i]);
+    }
+    // Link inventory items extras
+    for (int i = 0; i < player->inventory_size; i++){
+        player->inventory[i]->ItemExtra = (void *) hashmap_get(hashmap, player->inventory[i]->ItemExtra);
+    }
 for (int i = 0; i < numFloors; i ++){
 
     Map* map = (Map *) malloc(1 * sizeof(Map));
@@ -364,60 +451,12 @@ for (int i = 0; i < numFloors; i ++){
 
         // Load structures extras
         for (int j = 0; j < room->num_structures; j++){
-            Structure* structure = room->structures[j];
-            switch(structure->type){
-            case ST_TRAP:{
-                // SWITCH CASE FAULT
-                TrapExtra* extra = (TrapExtra *) malloc(1 * sizeof(TrapExtra));
-                fread(&temp, sizeof(TrapExtra *), 1, file);
-                hashmap_add(hashmap, temp, extra);
-                fread(extra, sizeof(TrapExtra), 1, file);
-                break;
-            }
-            case ST_OBSTACLE:{
-
-                break;
-            }
-            case ST_WINDOW:{
-
-                break;
-            }
-            }
+            loadStructureExtra(file, room->structures[j], hashmap);
         }
 
         // Load items extras
         for (int j = 0; j < room->num_items; j++){
-            Item* item = room->items[j];
-            switch(item->itemclass){
-            case IC_FOOD:{
-                FoodExtra* extra = (FoodExtra *) malloc(1 * sizeof(FoodExtra));
-                fread(&temp, sizeof(FoodExtra *), 1, file);
-                hashmap_add(hashmap, temp, extra);
-                fread(extra, sizeof(FoodExtra), 1, file);
-                break;
-            }
-            case IC_POTION:{
-                PotionExtra* extra = (PotionExtra *) malloc(1 * sizeof(PotionExtra));
-                fread(&temp, sizeof(PotionExtra *), 1, file);
-                hashmap_add(hashmap, temp, extra);
-                fread(extra, sizeof(PotionExtra), 1, file);
-                break;
-            }
-            case IC_MELEEWEAPON:{
-                MeleeWeaponExtra* extra = (MeleeWeaponExtra *) malloc(1 * sizeof(MeleeWeaponExtra));
-                fread(&temp, sizeof(MeleeWeaponExtra *), 1, file);
-                hashmap_add(hashmap, temp, extra);
-                fread(extra, sizeof(MeleeWeaponExtra), 1, file);
-                break;
-            }
-            case IC_RANGEDWEAPON:{
-                RangedWeaponExtra* extra = (RangedWeaponExtra *) malloc(1 * sizeof(RangedWeaponExtra));
-                fread(&temp, sizeof(RangedWeaponExtra *), 1, file);
-                hashmap_add(hashmap, temp, extra);
-                fread(extra, sizeof(RangedWeaponExtra), 1, file);
-                break;
-            }
-            }
+            loadItemExtra(file, room->items[j], hashmap);
         }
 
 

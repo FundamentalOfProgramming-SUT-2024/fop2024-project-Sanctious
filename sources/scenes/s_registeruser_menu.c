@@ -89,6 +89,7 @@ static void onEnter(){
 
 void initscene_register_menu(){
     // Menu
+    menu.enabled = 1;
     menu.num_elements = 5;
     menu.num_interactable_elements = 5;
 

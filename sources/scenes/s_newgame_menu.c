@@ -70,6 +70,7 @@ static void onEnter(){
 
 void initscene_newgame_menu(){
     // Menu
+    menu.enabled = 1;
     menu.num_elements = 7;
     menu.num_interactable_elements = 6;
 

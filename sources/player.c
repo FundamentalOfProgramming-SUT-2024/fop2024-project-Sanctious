@@ -29,6 +29,7 @@ Player* getPlayerInstance() {
 
 void initializePlayer(Player* player){
     player->gold = 2;
+    player->inventory_size = 0;
 
     player->pos.gridX = getFloor(getCurFloor())->rooms[0]->pos.gridX + 1;
     player->pos.gridY = getFloor(getCurFloor())->rooms[0]->pos.gridY + 1;

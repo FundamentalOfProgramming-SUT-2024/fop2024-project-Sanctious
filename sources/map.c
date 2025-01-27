@@ -130,8 +130,8 @@ Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
     _room->scale.gridW = gw;
     _room->scale.gridH = gh;
 
-    Log("Room number %d generated with gx:%d gy:%d gsx:%d gsy:%d.", _DEBUG_, map->num_rooms,
-        _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH);
+    Log("Room number %d generated with \tpos: (%d, %d) \tsize: (%d, %d) \ttype: %d.", _DEBUG_, map->num_rooms,
+        _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH, _room->type);
 
     return _room;
 }
@@ -161,7 +161,7 @@ void generateRooms(Map* map){
             Room* _room =generateRoom(map, _x, _y,
                 RANDOM(MIN_ROOM_WIDTH, _higherXpos - _x + MIN_ROOM_WIDTH),
                 RANDOM(MIN_ROOM_HEIGHT, _higherYpos - _y + MIN_ROOM_HEIGHT),
-                REGULAR);
+                (RoomType) RANDOM(0,3));
 
             _room->rrp.gridX = i;
             _room->rrp.gridY = j;
@@ -425,7 +425,9 @@ void generateItems(Map* map){
     // Implement later
     for (int i = 0; i < 10; i++){
         Room* room = getRandomRoom(map);
-        Item* baseItem = createBaseItem("test", getRandomCordInRoom(room), 'f', 2);
+        char temp[100];
+        sprintf(temp, "item%d", i);
+        Item* baseItem = createBaseItem(temp, getRandomCordInRoom(room), 'f', 2);
         room->items[room->num_items++] = createMeleeWeapon(baseItem, MELEEWEAPON_SWORD, 2);
     }
 }
@@ -445,6 +447,6 @@ void generateMap(Map* map){
     generateItems(map);
     checkIntegrityOfMap(map);
 
-    Log("Map{%d} initialized successfully.", _DEBUG_, map->id);
+    Log("Floor-%d initialized successfully.", _DEBUG_, map->id);
 
 }

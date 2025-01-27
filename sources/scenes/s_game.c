@@ -5,6 +5,10 @@
 #include "../player.h"
 #include "../map.h"
 #include "../savesystem.h"
+#include "../uiutils.h"
+
+static Menu inventoryMenu;
+static Menu pauseMenu;
 
 float r=1.0f,g=1.0f,b=1.0f;
 
@@ -37,6 +41,8 @@ static void renderPlayer(){
 }
 
 static void processKeyboard(unsigned char key, int x, int y) {
+    if (inventoryMenu.enabled)
+        menuBasicHandleKeyboard(&inventoryMenu, key);
     Player* player = getPlayerInstance();
 	if (key == 'w')
         if (isValidPos(player->pos.gridX, player->pos.gridY-1))
@@ -50,6 +56,8 @@ static void processKeyboard(unsigned char key, int x, int y) {
     if (key == 'a')
         if (isValidPos(player->pos.gridX-1, player->pos.gridY))
             player->pos.gridX -= 1;
+    if (key == 'i')
+        inventoryMenu.enabled = inventoryMenu.enabled^1;
     // Escape key
     if (key == 27){
         saveGame();
@@ -57,11 +65,13 @@ static void processKeyboard(unsigned char key, int x, int y) {
     }
 
     if (key == 'g'){
-    changeFloor(getCurFloor()+1);
+        changeFloor(getCurFloor()+1);
     }
 }
 
 static void processSKeyboard(int key, int x, int y) {
+    if (inventoryMenu.enabled)
+        menuBasicHandleSKeyboard(&inventoryMenu, key);
 
 	if (key == GLUT_KEY_F5){
         glutLeaveGameMode();
@@ -90,20 +100,64 @@ static void renderCorridors(Map* map){
     }
 }
 
+static void updateInventoryMenu(){
+    Player* player = getPlayerInstance();
+
+    for (int i = 0; i < player->inventory_size; i++){
+        inventoryMenu.uiElements[i] = createButton((Pos) {50, 100+i*35}, player->inventory[i]->name, FONTNORMALSCALE);
+//        ((InputFieldExtra *) inventoryMenu.uiElements[0]->UIExtra)->maxLength = 20;
+//        configureInputFieldColor(inventoryMenu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
+        configureButtonColor(inventoryMenu.uiElements[i], COLOR_GRAY, COLOR_CYAN);
+
+    }
+
+    inventoryMenu.num_elements = player->inventory_size;
+    inventoryMenu.num_interactable_elements = player->inventory_size;
+
+
+}
+
+void removeItem(Room* room, int a){
+    for (int i = a; i < room->num_items-1; i++){
+        room->items[i] = room->items[i+1];
+    }
+    room->num_items--;
+
+}
+
+void pickUpItems(){
+    Map* floor = getFloor(getCurFloor());
+    Player* player = getPlayerInstance();
+    for (int i = 0; i < floor->num_rooms; i++){
+        Room* room = floor->rooms[i];
+
+        for (int j = 0; j < room->num_items; j++){
+            Item* item = room->items[j];
+
+            if (item->pos.gridX == player->pos.gridX &&
+                item->pos.gridY == player->pos.gridY){
+                player->inventory[player->inventory_size++] = item;
+                removeItem(room, j);
+            }
+        }
+    }
+}
+
 static void render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     Map* map = getFloor(getCurFloor());
     renderCorridors(map);
+    pickUpItems();
 
     for (int i = 0; i < map->num_rooms; i++) {
         Room* room = map->rooms[i];
 
         Color wallsColor;
-        if (room->type == REGULAR) wallsColor = (Color) {0.2, 0.2, 1, 1};
-        if (room->type == ENCHANT) wallsColor = COLOR_PURPLE;
-        if (room->type == NIGHTMARE) wallsColor = COLOR_ELECTRIC_BLUE;
-        if (room->type == TREASURE) wallsColor = COLOR_GOLD;
+        if (room->type == RT_REGULAR) wallsColor = (Color) {0.2, 0.2, 1, 1};
+        if (room->type == RT_ENCHANT) wallsColor = COLOR_PURPLE;
+        if (room->type == RT_NIGHTMARE) wallsColor = COLOR_ELECTRIC_BLUE;
+        if (room->type == RT_TREASURE) wallsColor = COLOR_GOLD;
 
         renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH,
             (Color) {0.5, 0.5, 0.5, 1}, wallsColor);
@@ -129,10 +183,20 @@ static void render() {
     }
 
     renderPlayer();
+
+
     char message[100];
     Player* player = getPlayerInstance();
     sprintf(message, "X= %d Y= %d\nFloor= %d", player->pos.gridX, player->pos.gridY, getCurFloor());
     renderString(0, 20, message, FONTNORMALSCALE, COLOR_PURPLE);
+
+    if (inventoryMenu.enabled){
+//        glClearColor(1, 1, 1, 1);
+//        glClear(GL_COLOR_BUFFER_BIT);
+        updateInventoryMenu();
+        renderQuad(( Pos ){50, 50}, ( Pos ){RWINDOW_WIDTH-50, RWINDOW_HEIGHT-50}, (Color) {0.5f, 0.5f, 0.5f, 0.98f} );
+        renderMenu(&inventoryMenu);
+    }
 
     glFlush();
 }
@@ -153,6 +217,11 @@ static void playerChangeColor(int c){
 
 
 void initscene_game(){
+    // Inventory
+    inventoryMenu.enabled = 0;
+    inventoryMenu.num_elements = 0;
+    inventoryMenu.num_interactable_elements = 0;
+
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));
 
     strcpy(scene->sceneID, "game");

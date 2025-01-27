@@ -306,6 +306,8 @@ void configureSliderColor(UIElement* slider, Color Acolor, Color DAcolor)
 
 void renderMenu(Menu* menu)
 {
+    if (!menu->enabled) return;
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_LINE_SMOOTH);
@@ -415,6 +417,8 @@ void renderMenu(Menu* menu)
 
 void menuBasicHandleKeyboard(Menu* menu, unsigned char key)
 {
+    if (!menu->enabled) return;
+
     // key == 8 -> backspace
     if (isprint(key) || key == 8)
     {
@@ -451,6 +455,8 @@ void menuBasicHandleKeyboard(Menu* menu, unsigned char key)
 
 void menuBasicHandleSKeyboard(Menu* menu, int key)
 {
+    if (!menu->enabled) return;
+
     if (key == GLUT_KEY_DOWN)
     {
         if (menu->hover_element < menu->num_interactable_elements-1) menu->hover_element += 1;

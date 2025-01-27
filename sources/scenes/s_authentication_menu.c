@@ -60,6 +60,7 @@ static void onEnter(){
 
 void initscene_authentication_menu(){
     // Menu
+    menu.enabled = 1;
     menu.num_elements = 3;
     menu.num_interactable_elements = 3;
 
