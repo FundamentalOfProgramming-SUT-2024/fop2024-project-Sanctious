@@ -4,6 +4,7 @@
 #include "item.h"
 #include "config.h"
 #include "structures.h"
+#include "entities.h"
 #include "gc.h"
 
 extern const int qdirs[4][2]; // 4 neighs quad
@@ -92,7 +93,8 @@ typedef struct {
 
     // valid cords maybe ?
     // gCord validlocs[];
-
+    int num_entities;
+    Entity* entities[MAXENTITIES];
     int num_rooms;
     Room* rooms[MAXROOMS];
     int num_corridors;

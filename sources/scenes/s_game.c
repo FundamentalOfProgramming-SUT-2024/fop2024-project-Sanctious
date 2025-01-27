@@ -107,7 +107,7 @@ static void updateInventoryMenu(){
         inventoryMenu.uiElements[i] = createButton((Pos) {50, 100+i*35}, player->inventory[i]->name, FONTNORMALSCALE);
 //        ((InputFieldExtra *) inventoryMenu.uiElements[0]->UIExtra)->maxLength = 20;
 //        configureInputFieldColor(inventoryMenu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
-        configureButtonColor(inventoryMenu.uiElements[i], COLOR_GRAY, COLOR_CYAN);
+        configureButtonColor(inventoryMenu.uiElements[i], COLOR_AMBER, COLOR_CYAN);
 
     }
 
@@ -168,12 +168,10 @@ static void render() {
         }
 
         for (int j = 0; j < room->num_items; j++){
-            Item* baseItem = room->items[j];
+            Item* item = room->items[j];
             char temp[5];
-            sprintf(temp, "%c", baseItem->sprite);
-            renderText(baseItem->pos.gridX, baseItem->pos.gridY, temp, COLOR_GREEN);
-
-
+            sprintf(temp, "%c", item->sprite);
+            renderText(item->pos.gridX, item->pos.gridY, temp, COLOR_GREEN);
         }
         for (int j = 0; j < room->scale.gridW; j++) {
             for (int k = 0; k < room->scale.gridH; k++) {
@@ -182,6 +180,12 @@ static void render() {
         }
     }
 
+    for (int i = 0; i < map->num_entities; i++){
+        Entity* entity = map->entities[i];
+        char temp[5];
+        sprintf(temp, "%c", entity->sprite);
+        renderText(entity->pos.gridX, entity->pos.gridY, temp, COLOR_LAVENDER);
+    }
     renderPlayer();
 
 
@@ -194,7 +198,7 @@ static void render() {
 //        glClearColor(1, 1, 1, 1);
 //        glClear(GL_COLOR_BUFFER_BIT);
         updateInventoryMenu();
-        renderQuad(( Pos ){50, 50}, ( Pos ){RWINDOW_WIDTH-50, RWINDOW_HEIGHT-50}, (Color) {0.5f, 0.5f, 0.5f, 0.98f} );
+        renderQuad(( Pos ){50, 50}, ( Pos ){RWINDOW_WIDTH-50, RWINDOW_HEIGHT-50}, (Color) {0.5f, 0.5f, 0.5f, 0.9f} );
         renderMenu(&inventoryMenu);
     }
 

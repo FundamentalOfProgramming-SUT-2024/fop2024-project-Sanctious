@@ -41,6 +41,7 @@
 #define MAX_NUM_SCENES          20
 #define MAXITEMS                64
 #define MAXDOORS                200
+#define MAXENTITIES             200
 #define MAXROOMS                100
 #define MAXSTRUCTURES           200
 #define MAXCORRIDORS            100

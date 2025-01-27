@@ -422,19 +422,29 @@ void generateStructures(Map* map){
 }
 
 void generateItems(Map* map){
-    // Implement later
     for (int i = 0; i < 10; i++){
         Room* room = getRandomRoom(map);
         char temp[100];
         sprintf(temp, "item%d", i);
-        Item* baseItem = createBaseItem(temp, getRandomCordInRoom(room), 'f', 2);
-        room->items[room->num_items++] = createMeleeWeapon(baseItem, MELEEWEAPON_SWORD, 2);
+        Item* item = createBaseItem(temp, getRandomCordInRoom(room), 'f', 2);
+        room->items[room->num_items++] = createMeleeWeapon(item, MELEEWEAPON_SWORD, 2);
+    }
+}
+
+void generateEntities(Map* map){
+    for (int i = 0; i < 10; i++){
+        Room* room = getRandomRoom(map);
+        char temp[100];
+        sprintf(temp, "entity%d", i);
+        Entity* entity = createEntity(temp, getRandomCordInRoom(room), 'P');
+        map->entities[map->num_entities++] = createDemon(entity);
     }
 }
 
 void generateMap(Map* map){
 
     map->num_rooms = 0;
+    map->num_entities = 0;
     map->num_corridors = 0;
     map->scale.gridW = XCELLS;
     map->scale.gridH = YCELLS;
@@ -445,6 +455,7 @@ void generateMap(Map* map){
     generateCorridors(map);
     generateStructures(map);
     generateItems(map);
+    generateEntities(map);
     checkIntegrityOfMap(map);
 
     Log("Floor-%d initialized successfully.", _DEBUG_, map->id);

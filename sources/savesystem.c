@@ -206,6 +206,73 @@ void loadStructureExtra(FILE* file, Structure* structure, HashMap* hashmap){
 
 }
 
+void saveEntityExtra(FILE* file, Entity* entity){
+    switch(entity->entityclass){
+    case EC_DEMON:
+        fwrite(&(entity->EntityExtra), sizeof(DemonExtra *), 1, file);
+        fwrite((DemonExtra *) entity->EntityExtra, sizeof(DemonExtra), 1, file);
+        break;
+    case EC_DRAGON:
+        fwrite(&(entity->EntityExtra), sizeof(DragonExtra *), 1, file);
+        fwrite((DragonExtra *) entity->EntityExtra, sizeof(DragonExtra), 1, file);
+        break;
+    case EC_GIANT:
+        fwrite(&(entity->EntityExtra), sizeof(GiantExtra *), 1, file);
+        fwrite((GiantExtra *) entity->EntityExtra, sizeof(GiantExtra), 1, file);
+        break;
+    case EC_SNAKE:
+        fwrite(&(entity->EntityExtra), sizeof(SnakeExtra *), 1, file);
+        fwrite((SnakeExtra *) entity->EntityExtra, sizeof(SnakeExtra), 1, file);
+        break;
+    case EC_UNDEED:
+        fwrite(&(entity->EntityExtra), sizeof(UndeedExtra *), 1, file);
+        fwrite((UndeedExtra *) entity->EntityExtra, sizeof(UndeedExtra), 1, file);
+        break;
+    }
+}
+
+void loadEntityExtra(FILE* file, Entity* entity, HashMap* hashmap){
+    void* temp;
+    switch(entity->entityclass){
+    case EC_DEMON:{
+        DemonExtra* extra = (DemonExtra *) malloc(1 * sizeof(DemonExtra));
+        fread(&temp, sizeof(DemonExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(DemonExtra), 1, file);
+        break;
+    }
+    case EC_DRAGON:{
+        DragonExtra* extra = (DragonExtra *) malloc(1 * sizeof(DragonExtra));
+        fread(&temp, sizeof(DragonExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(DragonExtra), 1, file);
+        break;
+    }
+    case EC_GIANT:{
+        GiantExtra* extra = (GiantExtra *) malloc(1 * sizeof(GiantExtra));
+        fread(&temp, sizeof(GiantExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(GiantExtra), 1, file);
+        break;
+    }
+    case EC_SNAKE:{
+        SnakeExtra* extra = (SnakeExtra *) malloc(1 * sizeof(SnakeExtra));
+        fread(&temp, sizeof(SnakeExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(SnakeExtra), 1, file);
+        break;
+    }
+    case EC_UNDEED:{
+        UndeedExtra* extra = (UndeedExtra *) malloc(1 * sizeof(UndeedExtra));
+        fread(&temp, sizeof(UndeedExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(UndeedExtra), 1, file);
+        break;
+    }
+    }
+
+
+}
 void saveGame(){
     char temp[MAX_STR_SIZE];
     sprintf(temp, "saves/%s/%s.dat", getCurrentUser()->creds.name, getCurrentSave()->savename);
@@ -240,6 +307,15 @@ void saveGame(){
 
 //    fwrite(&map, sizeof(Map *), 1, file);
     fwrite(map, sizeof(Map), 1, file);
+
+    for (int i = 0; i < map->num_entities; i++){
+        Entity* entity = map->entities[i];
+
+        fwrite(&entity, sizeof(Entity *), 1, file);
+        fwrite(entity, sizeof(Entity), 1, file);
+
+        saveEntityExtra(file, entity);
+    }
 
     for (int i = 0; i < map->num_corridors; i++){
         Corridor* corridor = map->corridors[i];
@@ -299,7 +375,6 @@ void saveGame(){
         for (int j = 0; j < room->num_items; j++){
             saveItemExtra(file, room->items[j]);
         }
-
 
     }
     }
@@ -366,12 +441,29 @@ for (int i = 0; i < numFloors; i ++){
 //    fread(&temp, sizeof(Map *), 1, file);
     fread(map, sizeof(Map), 1, file);
 
+    for (int i = 0; i < map->num_entities; i++){
+        Entity* entity = (Entity *) malloc(1 * sizeof(Entity));
+
+        fread(&temp, sizeof(Entity *), 1, file);
+        hashmap_add(hashmap, temp, entity);
+        fread(entity, sizeof(Entity), 1, file);
+
+        loadEntityExtra(file, entity, hashmap);
+    }
+    // Link floor entities
+    for (int i = 0; i < map->num_entities; i++){
+        map->entities[i] = (Entity *) hashmap_get(hashmap, map->entities[i]);
+    }
+    // Link floor entities extras
+    for (int i = 0; i < map->num_entities; i++){
+        map->entities[i]->EntityExtra = (void *) hashmap_get(hashmap, map->entities[i]->EntityExtra);
+    }
+
     for (int i = 0; i < map->num_corridors; i++){
         Corridor* corridor = (Corridor *) malloc(1 * sizeof(Corridor));
 
         fread(&temp, sizeof(Corridor *), 1, file);
         hashmap_add(hashmap, temp, corridor);
-//        printf("%p %p %p\n", temp, map->corridors[i], hashmap_get(hashmap, temp));
         fread(corridor, sizeof(Corridor), 1, file);
 
     }
