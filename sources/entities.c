@@ -5,11 +5,11 @@
 #include "renderer.h"
 
 
-Entity* createEntity(char* name, gCord pos, char sprite, Color spriteColor){
+Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor){
     Entity* entity = (Entity *) malloc(1 * sizeof(Entity));
 
     strcpy(entity->name, name);
-    entity->sprite = sprite;
+    strcpy(entity->sprite, sprite);
     entity->spriteColor = spriteColor;
     entity->pos = pos;
 

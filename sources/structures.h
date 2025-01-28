@@ -17,7 +17,7 @@ typedef struct{
 
 typedef struct{
     gCord pos;
-    char sprite;
+    char sprite[5]; // Custom sprite support
     Color spriteColor;
 
     StructureType type;
@@ -25,7 +25,7 @@ typedef struct{
 
 } Structure;
 
-Structure* generateBaseStructure(char sprite, Color spriteColor, gCord pos);
+Structure* generateBaseStructure(char sprite[5], Color spriteColor, gCord pos);
 Structure* generateTrap(Structure* trap, int damage);
 
 #endif

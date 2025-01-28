@@ -431,7 +431,7 @@ void generateStructures(Map* map){
         // check item and structure overlapping each other
         Room* room = getRandomRoom(map);
 
-        Structure* structure = generateBaseStructure('O', COLOR_BROWN, getRandomCordInRoom(room));
+        Structure* structure = generateBaseStructure("", COLOR_BROWN, getRandomCordInRoom(room));
         room->structures[room->num_structures++] = generateTrap(structure, 2);
     }
 }
@@ -442,7 +442,7 @@ void generateItems(Map* map){
 
         char temp[100];
         sprintf(temp, "item%d", i);
-        Item* item = createBaseItem(temp, getRandomCordInRoom(room), 'F', COLOR_LIME_GREEN, 2);
+        Item* item = createBaseItem(temp, getRandomCordInRoom(room), "F", COLOR_LIME_GREEN, 2);
         room->items[room->num_items++] = createMeleeWeapon(item, MELEEWEAPON_SWORD, 2);
     }
 }
@@ -453,7 +453,7 @@ void generateEntities(Map* map){
 
         char temp[100];
         sprintf(temp, "entity%d", i);
-        Entity* entity = createEntity(temp, getRandomCordInRoom(room), 'S', COLOR_LAVENDER);
+        Entity* entity = createEntity(temp, getRandomCordInRoom(room), "S", COLOR_LAVENDER);
         map->entities[map->num_entities++] = createDemon(entity);
     }
 }

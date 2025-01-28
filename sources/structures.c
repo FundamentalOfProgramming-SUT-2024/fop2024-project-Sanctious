@@ -1,11 +1,12 @@
 #include "map.h"
 #include "structures.h"
 #include "logger.h"
+#include "strings.h"
 #include <stdlib.h>
 
-Structure* generateBaseStructure(char sprite, Color spriteColor, gCord pos){
+Structure* generateBaseStructure(char sprite[5], Color spriteColor, gCord pos){
     Structure* structure = (Structure *) malloc(1 * sizeof(Structure));
-    structure->sprite = sprite;
+    strcpy(structure->sprite, sprite);
     structure->spriteColor = spriteColor;
     structure->pos = pos;
 

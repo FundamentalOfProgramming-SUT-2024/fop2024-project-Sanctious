@@ -23,7 +23,7 @@ typedef enum {
 
 typedef struct {
     char name[MAX_STR_SIZE];
-    char sprite;
+    char sprite[5]; // Custom sprite support
     Color spriteColor;
     gCord pos;
     int count;
@@ -33,6 +33,6 @@ typedef struct {
     void* ItemExtra;
 } Item;
 
-Item* createBaseItem(char* name, gCord pos, char sprite, Color spriteColor, int count);
+Item* createBaseItem(char* name, gCord pos, char sprite[5], Color spriteColor, int count);
 
 #endif

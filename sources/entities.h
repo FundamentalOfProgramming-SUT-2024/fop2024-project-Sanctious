@@ -36,7 +36,7 @@ typedef struct{
 
 typedef struct {
     char name[MAX_STR_SIZE];
-    char sprite;
+    char sprite[5]; // Custom sprite support
     Color spriteColor;
     gCord pos;
 
@@ -49,7 +49,7 @@ typedef struct {
 
 } Entity;
 
-Entity* createEntity(char* name, gCord pos, char sprite, Color spriteColor);
+Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor);
 Entity* createDemon(Entity* entity);
 
 #endif

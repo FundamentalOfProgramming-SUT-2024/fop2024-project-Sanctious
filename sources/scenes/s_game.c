@@ -175,27 +175,21 @@ static void renderCorridors(Map* map){
 static void renderRoomItems(Room* room){
     for (int j = 0; j < room->num_items; j++){
         Item* item = room->items[j];
-        char temp[2];
-        sprintf(temp, "%c", item->sprite);
-        renderCell(item->pos.gridX, item->pos.gridY, temp, item->spriteColor, 0);
+        renderCell(item->pos.gridX, item->pos.gridY, item->sprite, item->spriteColor, 0);
     }
 }
 
 static void renderRoomStructures(Room* room){
     for (int j = 0; j < room->num_structures; j++){
         Structure* structure = room->structures[j];
-        char temp[2];
-        sprintf(temp, "%c", structure->sprite);
-        renderCell(structure->pos.gridX, structure->pos.gridY, temp, structure->spriteColor, 1);
+        renderCell(structure->pos.gridX, structure->pos.gridY, structure->sprite, structure->spriteColor, 1);
     }
 }
 
 static void renderEntities(Map* map){
     for (int i = 0; i < map->num_entities; i++){
         Entity* entity = map->entities[i];
-        char temp[2];
-        sprintf(temp, "%c", entity->sprite);
-        renderCell(entity->pos.gridX, entity->pos.gridY, temp, entity->spriteColor, 0);
+        renderCell(entity->pos.gridX, entity->pos.gridY, entity->sprite, entity->spriteColor, 0);
     }
 }
 
