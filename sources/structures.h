@@ -1,8 +1,8 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-#include "map.h"
 #include "gc.h"
+#include "renderer.h"
 
 typedef enum {
     ST_WINDOW,
@@ -18,11 +18,14 @@ typedef struct{
 typedef struct{
     gCord pos;
     char sprite;
-    void* StructureExtra;
+    Color spriteColor;
+
     StructureType type;
+    void* StructureExtra;
 
 } Structure;
 
-Structure* generateTrap();
+Structure* generateBaseStructure(char sprite, Color spriteColor, gCord pos);
+Structure* generateTrap(Structure* trap, int damage);
 
 #endif

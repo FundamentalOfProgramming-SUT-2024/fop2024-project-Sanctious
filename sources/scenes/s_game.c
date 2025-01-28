@@ -35,14 +35,21 @@ static void renderRoomBox(float x, float y, int width, int height, Color tileCol
 
 }
 
-static void renderPlayer(){
-    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "O", COLOR_HOT_PINK);
-    renderText(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", COLOR_HOT_PINK);
-}
-
 static void processKeyboard(unsigned char key, int x, int y) {
-    if (inventoryMenu.enabled)
+    if (key == 'i')
+        inventoryMenu.enabled = inventoryMenu.enabled^1;
+    if (inventoryMenu.enabled){
         menuBasicHandleKeyboard(&inventoryMenu, key);
+        // Enter key
+        if (key == 13){
+            if (inventoryMenu.hover_element >= 0 && inventoryMenu.hover_element <= inventoryMenu.num_elements-1){
+//                getPlayerInstance()->inventory[inventoryMenu->hover_element];
+
+            }
+
+        }
+        return;
+    }
     Player* player = getPlayerInstance();
 	if (key == 'w')
         if (isValidPos(player->pos.gridX, player->pos.gridY-1))
@@ -56,8 +63,6 @@ static void processKeyboard(unsigned char key, int x, int y) {
     if (key == 'a')
         if (isValidPos(player->pos.gridX-1, player->pos.gridY))
             player->pos.gridX -= 1;
-    if (key == 'i')
-        inventoryMenu.enabled = inventoryMenu.enabled^1;
     // Escape key
     if (key == 27){
         saveGame();
@@ -70,8 +75,10 @@ static void processKeyboard(unsigned char key, int x, int y) {
 }
 
 static void processSKeyboard(int key, int x, int y) {
-    if (inventoryMenu.enabled)
+    if (inventoryMenu.enabled){
         menuBasicHandleSKeyboard(&inventoryMenu, key);
+        return;
+    }
 
 	if (key == GLUT_KEY_F5){
         glutLeaveGameMode();
@@ -82,29 +89,27 @@ static void processSKeyboard(int key, int x, int y) {
 	}
 }
 
-static void renderDoors(Room* room){
-    for (int i = 0; i < room->num_doors; i++){
-        renderText(room->doors[i]->pos.gridX, room->doors[i]->pos.gridY, "+", COLOR_BROWN);
-    }
-}
-
-static void renderCorridors(Map* map){
-
-    for (int i = 0; i < map->num_corridors; i++){
-        Corridor* cor = map->corridors[i];
-        for (int j = 0; j < cor->path_length; j++){
-            Color color = COLOR_AMBER;
-            color.a = 0.5f;
-            renderText(cor->path[j].gridX, cor->path[j].gridY, "ô", color);
-        }
-    }
-}
-
 static void updateInventoryMenu(){
     Player* player = getPlayerInstance();
 
     for (int i = 0; i < player->inventory_size; i++){
-        inventoryMenu.uiElements[i] = createButton((Pos) {50, 100+i*35}, player->inventory[i]->name, FONTNORMALSCALE);
+        int xpos = 50;
+        Item* item = player->inventory[i];
+        switch(item->itemclass){
+        case IC_POTION:
+            xpos = 450+20;
+            break;
+        case IC_MELEEWEAPON:
+            xpos = 250+20;
+            break;
+        case IC_RANGEDWEAPON:
+            xpos = 50+20;
+            break;
+        case IC_FOOD:
+            xpos = 650+20;
+            break;
+        }
+        inventoryMenu.uiElements[i] = createButton((Pos) {xpos, 100+i*35}, player->inventory[i]->name, FONTNORMALSCALE);
 //        ((InputFieldExtra *) inventoryMenu.uiElements[0]->UIExtra)->maxLength = 20;
 //        configureInputFieldColor(inventoryMenu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
         configureButtonColor(inventoryMenu.uiElements[i], COLOR_AMBER, COLOR_CYAN);
@@ -117,7 +122,7 @@ static void updateInventoryMenu(){
 
 }
 
-void removeItem(Room* room, int a){
+static void removeItem(Room* room, int a){
     for (int i = a; i < room->num_items-1; i++){
         room->items[i] = room->items[i+1];
     }
@@ -125,7 +130,7 @@ void removeItem(Room* room, int a){
 
 }
 
-void pickUpItems(){
+static void pickUpItems(){
     Map* floor = getFloor(getCurFloor());
     Player* player = getPlayerInstance();
     for (int i = 0; i < floor->num_rooms; i++){
@@ -143,6 +148,57 @@ void pickUpItems(){
     }
 }
 
+static void renderPlayer(){
+    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "ò", COLOR_HOT_PINK, 0);
+//    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "i", COLOR_HOT_PINK, 0);
+//    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", COLOR_HOT_PINK, 0);
+}
+
+static void renderRoomDoors(Room* room){
+    for (int i = 0; i < room->num_doors; i++){
+        renderCell(room->doors[i]->pos.gridX, room->doors[i]->pos.gridY, "+", COLOR_BROWN, 1);
+    }
+}
+
+static void renderCorridors(Map* map){
+
+    for (int i = 0; i < map->num_corridors; i++){
+        Corridor* cor = map->corridors[i];
+        for (int j = 0; j < cor->path_length; j++){
+            Color color = COLOR_AMBER;
+            color.a = 0.5f;
+            renderCell(cor->path[j].gridX, cor->path[j].gridY, "ô", color, 1);
+        }
+    }
+}
+
+static void renderRoomItems(Room* room){
+    for (int j = 0; j < room->num_items; j++){
+        Item* item = room->items[j];
+        char temp[2];
+        sprintf(temp, "%c", item->sprite);
+        renderCell(item->pos.gridX, item->pos.gridY, temp, item->spriteColor, 0);
+    }
+}
+
+static void renderRoomStructures(Room* room){
+    for (int j = 0; j < room->num_structures; j++){
+        Structure* structure = room->structures[j];
+        char temp[2];
+        sprintf(temp, "%c", structure->sprite);
+        renderCell(structure->pos.gridX, structure->pos.gridY, temp, structure->spriteColor, 1);
+    }
+}
+
+static void renderEntities(Map* map){
+    for (int i = 0; i < map->num_entities; i++){
+        Entity* entity = map->entities[i];
+        char temp[2];
+        sprintf(temp, "%c", entity->sprite);
+        renderCell(entity->pos.gridX, entity->pos.gridY, temp, entity->spriteColor, 0);
+    }
+}
+
 static void render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -153,39 +209,14 @@ static void render() {
     for (int i = 0; i < map->num_rooms; i++) {
         Room* room = map->rooms[i];
 
-        Color wallsColor;
-        if (room->type == RT_REGULAR) wallsColor = (Color) {0.2, 0.2, 1, 1};
-        if (room->type == RT_ENCHANT) wallsColor = COLOR_PURPLE;
-        if (room->type == RT_NIGHTMARE) wallsColor = COLOR_ELECTRIC_BLUE;
-        if (room->type == RT_TREASURE) wallsColor = COLOR_GOLD;
-
         renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH,
-            (Color) {0.5, 0.5, 0.5, 1}, wallsColor);
+            room->floorsColor, room->wallsColor);
+        renderRoomDoors(room);
+        renderRoomItems(room);
+        renderRoomStructures(room);
 
-        renderDoors(room);
-        for (int j = 0; j < room->num_structures; j++){
-            renderText(room->structures[j]->pos.gridX, room->structures[j]->pos.gridY, "@", COLOR_BROWN);
-        }
-
-        for (int j = 0; j < room->num_items; j++){
-            Item* item = room->items[j];
-            char temp[5];
-            sprintf(temp, "%c", item->sprite);
-            renderText(item->pos.gridX, item->pos.gridY, temp, COLOR_GREEN);
-        }
-        for (int j = 0; j < room->scale.gridW; j++) {
-            for (int k = 0; k < room->scale.gridH; k++) {
-//                renderText(room->pos.gridX + j, room->pos.gridY + k, "A", 1.0, 0.0, 0.0, 1.0);
-            }
-        }
     }
-
-    for (int i = 0; i < map->num_entities; i++){
-        Entity* entity = map->entities[i];
-        char temp[5];
-        sprintf(temp, "%c", entity->sprite);
-        renderText(entity->pos.gridX, entity->pos.gridY, temp, COLOR_LAVENDER);
-    }
+    renderEntities(map);
     renderPlayer();
 
 
@@ -199,6 +230,10 @@ static void render() {
 //        glClear(GL_COLOR_BUFFER_BIT);
         updateInventoryMenu();
         renderQuad(( Pos ){50, 50}, ( Pos ){RWINDOW_WIDTH-50, RWINDOW_HEIGHT-50}, (Color) {0.5f, 0.5f, 0.5f, 0.9f} );
+        renderString(50, 70, "-Ranged", FONTNORMALSCALE, COLOR_AMETHYST);
+        renderString(250, 70, "-Melee", FONTNORMALSCALE, COLOR_AMETHYST);
+        renderString(450, 70, "-Potions", FONTNORMALSCALE, COLOR_AMETHYST);
+        renderString(650, 70, "-Foods", FONTNORMALSCALE, COLOR_AMETHYST);
         renderMenu(&inventoryMenu);
     }
 

@@ -1,6 +1,7 @@
 #include "item.h"
 #include "stdlib.h"
 #include "weapons.h"
+#include "logger.h"
 
 Item* createMeleeWeapon(Item* baseItem, MeleeWeaponClass subclass, int damage){
     baseItem->itemclass = IC_MELEEWEAPON;
@@ -9,7 +10,10 @@ Item* createMeleeWeapon(Item* baseItem, MeleeWeaponClass subclass, int damage){
     extra->subclass = subclass;
     extra->damage = damage;
 
-    baseItem->ItemExtra = (void *) extra;    return baseItem;
+    baseItem->ItemExtra = (void *) extra;
+
+    Log("MWeapon generated with pos: (%d, %d) damage: %d.", _DEBUG_,
+             baseItem->pos.gridX, baseItem->pos.gridY, extra->damage);    return baseItem;
 }
 
 Item* createRangedWeapon(Item* baseItem, RangedWeaponClass subclass, int range, int damage){
@@ -22,5 +26,8 @@ Item* createRangedWeapon(Item* baseItem, RangedWeaponClass subclass, int range, 
     extra->damage = damage;
 
     baseItem->ItemExtra = (void *) extra;
+
+    Log("RWeapon generated with pos: (%d, %d) damage: %d.", _DEBUG_,
+             baseItem->pos.gridX, baseItem->pos.gridY, extra->damage);
     return baseItem;
 }

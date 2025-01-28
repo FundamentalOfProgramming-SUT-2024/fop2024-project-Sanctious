@@ -3,6 +3,7 @@
 
 #include "gc.h"
 #include "config.h"
+#include "renderer.h"
 
 typedef enum{
     EC_DEMON,
@@ -36,6 +37,7 @@ typedef struct{
 typedef struct {
     char name[MAX_STR_SIZE];
     char sprite;
+    Color spriteColor;
     gCord pos;
 
     int armor;
@@ -47,7 +49,7 @@ typedef struct {
 
 } Entity;
 
-Entity* createEntity(char* name, gCord pos, char sprite);
+Entity* createEntity(char* name, gCord pos, char sprite, Color spriteColor);
 Entity* createDemon(Entity* entity);
 
 #endif

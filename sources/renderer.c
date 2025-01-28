@@ -49,7 +49,7 @@ void initFreeType(const char* fontPath) {
         exit(1);
     }
 
-    FT_Set_Pixel_Sizes(face, 0, FONTQUALITY);
+    FT_Set_Pixel_Sizes(face, FONTQUALITY, FONTQUALITY);
 }
 
 float gridCellWidth() {
@@ -60,7 +60,7 @@ float gridCellHeight() {
     return (float)WINDOW_HEIGHT / YCELLS;
 }
 
-void renderText(int col, int row, const char* text, Color color) {
+void renderCell(int col, int row, const char* text, Color color, int scaleToFit) {
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
@@ -108,11 +108,29 @@ void renderText(int col, int row, const char* text, Color color) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // Render quad with that texture ( glyph texture )
+//        float xpos = x + glyph->bitmap_left * fontScale;
+//        float ypos = y - glyph->bitmap_top * fontScale;
+//        float w = glyph->bitmap.width * fontScale;
+//        float h = glyph->bitmap.rows * fontScale;
+        float xpos1, xpos2, ypos1, ypos2;
+        if (scaleToFit){
+            xpos1 = x;
+            xpos2 = x+cellWidth;
+            ypos1 = y;
+            ypos2 = y+cellHeight;
+        }
+        else{
+            xpos1 = x + cellWidth/2 - glyph->bitmap.width*cellWidth/(2*FONTQUALITY);
+            xpos2 = x + cellWidth/2 + glyph->bitmap.width*cellWidth/(2*FONTQUALITY);
+            ypos1 = y + cellHeight/2 - glyph->bitmap.rows*cellHeight/(2*FONTQUALITY);
+            ypos2 = y + cellHeight/2 + glyph->bitmap.rows*cellHeight/(2*FONTQUALITY);
+        }
+
         glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0); glVertex2f(x, y);
-        glTexCoord2f(1.0, 0.0); glVertex2f(x + cellWidth, y);
-        glTexCoord2f(1.0, 1.0); glVertex2f(x + cellWidth, y + cellHeight);
-        glTexCoord2f(0.0, 1.0); glVertex2f(x, y + cellHeight);
+        glTexCoord2f(0.0, 0.0); glVertex2f(xpos1, ypos1);
+        glTexCoord2f(1.0, 0.0); glVertex2f(xpos2, ypos1);
+        glTexCoord2f(1.0, 1.0); glVertex2f(xpos2, ypos2);
+        glTexCoord2f(0.0, 1.0); glVertex2f(xpos1, ypos2);
         glEnd();
 
         x += cellWidth;

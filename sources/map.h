@@ -69,6 +69,8 @@ struct Room{
     gCord pos;
     gScale scale;
     gCord rrp; // relative room position in rooms grid
+    Color wallsColor;
+    Color floorsColor;
     // Visited by player or not
     char visited;
 

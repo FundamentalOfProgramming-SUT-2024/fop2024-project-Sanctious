@@ -2,6 +2,7 @@
 #define ITEM_H
 
 #include "config.h"
+#include "renderer.h"
 #include "gc.h"
 
 
@@ -23,6 +24,7 @@ typedef enum {
 typedef struct {
     char name[MAX_STR_SIZE];
     char sprite;
+    Color spriteColor;
     gCord pos;
     int count;
 
@@ -31,6 +33,6 @@ typedef struct {
     void* ItemExtra;
 } Item;
 
-Item* createBaseItem(char* name, gCord pos, char sprite, int count);
+Item* createBaseItem(char* name, gCord pos, char sprite, Color spriteColor, int count);
 
 #endif

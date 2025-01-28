@@ -2,13 +2,15 @@
 #include "stdlib.h"
 #include "strings.h"
 #include "logger.h"
+#include "renderer.h"
 
 
-Entity* createEntity(char* name, gCord pos, char sprite){
+Entity* createEntity(char* name, gCord pos, char sprite, Color spriteColor){
     Entity* entity = (Entity *) malloc(1 * sizeof(Entity));
 
     strcpy(entity->name, name);
     entity->sprite = sprite;
+    entity->spriteColor = spriteColor;
     entity->pos = pos;
 
     Log("Entity created with name: \"%s\" and sprite: %c", _DEBUG_, name, sprite);

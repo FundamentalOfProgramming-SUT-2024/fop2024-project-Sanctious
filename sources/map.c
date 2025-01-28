@@ -130,6 +130,26 @@ Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
     _room->scale.gridW = gw;
     _room->scale.gridH = gh;
 
+    // Room theme
+    switch(type){
+    case RT_TREASURE:
+        _room->wallsColor = COLOR_GOLD;
+        _room->floorsColor = COLOR_FUCHSIA;
+        break;
+    case RT_REGULAR:
+        _room->wallsColor = (Color) {0.2, 0.2, 1, 1};
+        _room->floorsColor = (Color) {0.5, 0.5, 0.5, 1};
+        break;
+    case RT_ENCHANT:
+        _room->wallsColor = COLOR_PURPLE;
+        _room->floorsColor = (Color) {0.5, 0.5, 0.5, 1};
+        break;
+    case RT_NIGHTMARE:
+        _room->wallsColor = COLOR_ELECTRIC_BLUE;
+        _room->floorsColor = (Color) {0.5, 0.5, 0.5, 1};
+        break;
+    }
+
     Log("Room number %d generated with \tpos: (%d, %d) \tsize: (%d, %d) \ttype: %d.", _DEBUG_, map->num_rooms,
         _room->pos.gridX, _room->pos.gridY, _room->scale.gridW, _room->scale.gridH, _room->type);
 
@@ -409,24 +429,20 @@ void checkIntegrityOfMap(Map* map){
 void generateStructures(Map* map){
     for (int i = 0; i < 10; i++){
         // check item and structure overlapping each other
-//        getRandomCordInRoom(getRandomRoom())
-        Structure* trap = generateTrap();
         Room* room = getRandomRoom(map);
-        trap->pos = getRandomCordInRoom(room);
 
-        room->structures[room->num_structures] = trap;
-        room->num_structures++;
-        Log("Trap generated with pos: (%d, %d) damage: %d.", _DEBUG_,
-             trap->pos.gridX, trap->pos.gridY, ((TrapExtra* )trap->StructureExtra)->damage);
+        Structure* structure = generateBaseStructure('O', COLOR_BROWN, getRandomCordInRoom(room));
+        room->structures[room->num_structures++] = generateTrap(structure, 2);
     }
 }
 
 void generateItems(Map* map){
     for (int i = 0; i < 10; i++){
         Room* room = getRandomRoom(map);
+
         char temp[100];
         sprintf(temp, "item%d", i);
-        Item* item = createBaseItem(temp, getRandomCordInRoom(room), 'f', 2);
+        Item* item = createBaseItem(temp, getRandomCordInRoom(room), 'F', COLOR_LIME_GREEN, 2);
         room->items[room->num_items++] = createMeleeWeapon(item, MELEEWEAPON_SWORD, 2);
     }
 }
@@ -434,9 +450,10 @@ void generateItems(Map* map){
 void generateEntities(Map* map){
     for (int i = 0; i < 10; i++){
         Room* room = getRandomRoom(map);
+
         char temp[100];
         sprintf(temp, "entity%d", i);
-        Entity* entity = createEntity(temp, getRandomCordInRoom(room), 'P');
+        Entity* entity = createEntity(temp, getRandomCordInRoom(room), 'S', COLOR_LAVENDER);
         map->entities[map->num_entities++] = createDemon(entity);
     }
 }

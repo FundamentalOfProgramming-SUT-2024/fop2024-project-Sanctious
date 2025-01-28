@@ -14,7 +14,7 @@ typedef struct{
 } Scale;
 
 void initializeRenderer(int, char**);
-void renderText(int col, int row, const char* text, Color color);
+void renderCell(int col, int row, const char* text, Color colorl, int scaleToFit);
 void renderString(int x, int y, char* text, float fontScale, Color color);
 float gridCellWidth();
 float gridCellHeight();
