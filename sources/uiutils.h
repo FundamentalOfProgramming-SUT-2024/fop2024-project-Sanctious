@@ -4,6 +4,7 @@
 #include "renderlibs.h"
 #include "config.h"
 #include "renderer.h"
+#include "item.h"
 
 extern FT_Library ft;
 extern FT_Face face;
@@ -15,7 +16,8 @@ typedef enum {
     UI_CAROUSEL,
     UI_SLIDER,
     UI_RANKENTY,
-    UI_SAVEENTY
+    UI_SAVEENTY,
+    UI_INVSLOT,
 } UIElementType;
 
 
@@ -98,6 +100,19 @@ typedef struct {
     int isActive;
 } RankEntryExtra;
 
+typedef struct {
+    Pos pos;
+    char label[MAX_STR_SIZE];
+    float fontScale;
+    // A -> active, DA -> deactive
+    Color Acolor;
+    Color DAcolor;
+
+    Item* item;
+
+    int isActive;
+} InvSlotExtra;
+
 // Save entry config
 typedef struct {
     Pos pos;
@@ -142,6 +157,7 @@ UIElement* createInputField(Pos pos, char* text, float fontScale, Scale boxScale
 UIElement* createLabel(Pos pos, char* text, float fontScale, Color color);
 UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, float fontScale);
 UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
+UIElement* createInvSlot(Pos pos, char* text, float fontScale, Item* item);
 //UIElement* createRankEntry(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
 //UIElement* createSaveEntry(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
 
@@ -149,6 +165,7 @@ void configureButtonColor(UIElement* button, Color Acolor, Color DAcolor);
 void configureInputFieldColor(UIElement* inputField, Color Acolor, Color DAcolor);
 void configureCarouselColor(UIElement* carousel, Color Acolor, Color DAcolor);
 void configureSliderColor(UIElement* slider, Color Acolor, Color DAcolor);
+void configureInvSlotColor(UIElement* invslot, Color Acolor, Color DAcolor);
 //void configureRankEntryColor(UIElement* slider, Color Acolor, Color DAcolor);
 //void configureSaveEntryColor(UIElement* slider, Color Acolor, Color DAcolor);
 

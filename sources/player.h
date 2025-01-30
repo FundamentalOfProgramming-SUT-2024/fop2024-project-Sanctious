@@ -8,13 +8,15 @@
 typedef struct {
     gCord pos;
 
+    Item* equippedItem;
+
     int inventory_size;
     Item* inventory[MAX_INVENTORY_SIZE];
 
     int armor;
     int gold;
     int health;
-
+    int hunger;
 
 } Player;
 

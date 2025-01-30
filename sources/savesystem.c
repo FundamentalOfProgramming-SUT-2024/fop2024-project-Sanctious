@@ -20,7 +20,7 @@ void setCurrentSave(SaveInfo* saveinfo){
     currentSave = saveinfo;
 }
 
-#define HASHMAP_SIZE 256
+#define HASHMAP_SIZE 400
 
 typedef struct KeyValue {
     void *key;
@@ -224,9 +224,9 @@ void saveEntityExtra(FILE* file, Entity* entity){
         fwrite(&(entity->EntityExtra), sizeof(SnakeExtra *), 1, file);
         fwrite((SnakeExtra *) entity->EntityExtra, sizeof(SnakeExtra), 1, file);
         break;
-    case EC_UNDEED:
-        fwrite(&(entity->EntityExtra), sizeof(UndeedExtra *), 1, file);
-        fwrite((UndeedExtra *) entity->EntityExtra, sizeof(UndeedExtra), 1, file);
+    case EC_UNDEAD:
+        fwrite(&(entity->EntityExtra), sizeof(UndeadExtra *), 1, file);
+        fwrite((UndeadExtra *) entity->EntityExtra, sizeof(UndeadExtra), 1, file);
         break;
     }
 }
@@ -262,11 +262,11 @@ void loadEntityExtra(FILE* file, Entity* entity, HashMap* hashmap){
         fread(extra, sizeof(SnakeExtra), 1, file);
         break;
     }
-    case EC_UNDEED:{
-        UndeedExtra* extra = (UndeedExtra *) malloc(1 * sizeof(UndeedExtra));
-        fread(&temp, sizeof(UndeedExtra *), 1, file);
+    case EC_UNDEAD:{
+        UndeadExtra* extra = (UndeadExtra *) malloc(1 * sizeof(UndeadExtra));
+        fread(&temp, sizeof(UndeadExtra *), 1, file);
         hashmap_add(hashmap, temp, extra);
-        fread(extra, sizeof(UndeedExtra), 1, file);
+        fread(extra, sizeof(UndeadExtra), 1, file);
         break;
     }
     }
@@ -423,8 +423,8 @@ void loadGame(char* name){
         fread(item, sizeof(Item), 1, file);
 
         loadItemExtra(file, item, hashmap);
-
     }
+    player->equippedItem = (Item *) hashmap_get(hashmap, player->equippedItem);
     // Link inventory items
     for (int i = 0; i < player->inventory_size; i++){
         player->inventory[i] = (Item *) hashmap_get(hashmap, player->inventory[i]);
@@ -585,9 +585,13 @@ for (int i = 0; i < numFloors; i ++){
 
 void createSave(SaveInfo* saveinfo){
     generateFloors();
+    setPlayerInstance(NULL);
     getPlayerInstance();
     saveinfo->gold = 10;
     saveinfo->playtime = 0;
+    saveinfo->gametime = 0;
+//    saveinfo->curFloor = 0;
+//    saveinfo->numFloors = 0;
 
     setCurrentSave(saveinfo);
     saveGame();

@@ -259,6 +259,43 @@ void configureSliderColor(UIElement* slider, Color Acolor, Color DAcolor)
     extra->DAcolor = DAcolor;
 }
 
+// Inventory slot creation
+UIElement* createInvSlot(Pos pos, char* text, float fontScale, Item* item)
+{
+    UIElement* invslot = (UIElement *) malloc(1 * sizeof(UIElement));
+    invslot->type = UI_INVSLOT;
+    InvSlotExtra* invslotConfig = (InvSlotExtra *) malloc(1 * sizeof(InvSlotExtra));
+    invslotConfig->fontScale = fontScale;
+
+
+    strcpy(invslotConfig->label, text);
+
+    float x = pos.x;
+    float y = pos.y;
+    // Center
+    if (x == -1) x = (RWINDOW_WIDTH-calculateTextWidth(text, fontScale))/2;
+    if (y == -1) y = (RWINDOW_HEIGHT+calculateTextHeight(text, fontScale))/2; // Text is rendering upwards
+
+    invslotConfig->pos = (Pos)
+    {
+        x, y
+    };
+    invslotConfig->Acolor = COLOR_GRAY;
+    invslotConfig->DAcolor = COLOR_CYAN;
+    invslotConfig->isActive = 0;
+    invslotConfig->item = item;
+
+    invslot->UIExtra = (void *) invslotConfig;
+
+    return invslot;
+}
+
+void configureInvSlotColor(UIElement* invslot, Color Acolor, Color DAcolor)
+{
+    InvSlotExtra* extra = (InvSlotExtra *) invslot->UIExtra;
+    extra->Acolor = Acolor;
+    extra->DAcolor = DAcolor;
+}
 //UIElement* createRankEntry(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
 //UIElement* createSaveEntry(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
 //void configureRankEntryColor(UIElement* slider, Color Acolor, Color DAcolor);
@@ -400,6 +437,18 @@ void renderMenu(Menu* menu)
         {
             LabelExtra* extra = (LabelExtra *) menu->uiElements[i]->UIExtra;
             renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->color);
+        }
+        // Button
+        if(menu->uiElements[i]->type == UI_INVSLOT)
+        {
+            InvSlotExtra* extra = (InvSlotExtra *) menu->uiElements[i]->UIExtra;
+            if (menu->hover_element == i)
+            {
+                renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
+                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+            }
+            else
+                renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
         }
     }
 

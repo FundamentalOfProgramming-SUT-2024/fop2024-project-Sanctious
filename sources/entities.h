@@ -10,9 +10,8 @@ typedef enum{
     EC_GIANT,
     EC_SNAKE,
     EC_DRAGON,
-    EC_UNDEED
+    EC_UNDEAD
 } EntityClass;
-
 
 typedef struct{
     int a;
@@ -32,7 +31,7 @@ typedef struct{
 
 typedef struct{
     int a;
-} UndeedExtra;
+} UndeadExtra;
 
 typedef struct {
     char name[MAX_STR_SIZE];
@@ -51,6 +50,12 @@ typedef struct {
 
 Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor);
 Entity* createDemon(Entity* entity);
+//Entity* createDragon(Entity* entity);
+//Entity* createGiant(Entity* entity);
+//Entity* createSnake(Entity* entity);
+//Entity* createUndead(Entity* entity);
+void EntityOnAction(Entity* entity);
+void* findEntityRoom(Entity* entity);
 
 #endif
 

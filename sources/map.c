@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <math.h>
 
 #include "logger.h"
@@ -10,8 +9,8 @@
 #include "config.h"
 #include "structures.h"
 #include "savesystem.h"
+#include "random.h"
 
-#define RANDOM(min, max) ((rand() % ((max) - (min) + 1)) + (min)) // Inclusive
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) < (Y)) ? (Y) : (X))
 
@@ -66,10 +65,8 @@ void setFloor(int floor, Map* map){
 }
 // Singleton design
 void generateFloors(){
-    srand(time(NULL));
-
     curFloor = 0;
-    numFloors = RANDOM(4,5);
+    numFloors = random(4,5);
 
     for (int i = 0; i < numFloors; i++){
         Map* map = (Map *) malloc(1 * sizeof(Map));
@@ -95,13 +92,13 @@ Map* getMapInstance() {
 }
 
 gCord getRandomCordInRoom(Room* room){
-    int _rx = RANDOM(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
-    int _ry = RANDOM(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
+    int _rx = random(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
+    int _ry = random(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
     return (gCord) {_rx, _ry};
 }
 
 Room* getRandomRoom(Map* map){
-    return map->rooms[RANDOM(0,map->num_rooms-1)];
+    return map->rooms[random(0,map->num_rooms-1)];
 }
 
 gCord addDirectionToPos(gCord pos, Direction dir){
@@ -134,7 +131,7 @@ Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
     switch(type){
     case RT_TREASURE:
         _room->wallsColor = COLOR_GOLD;
-        _room->floorsColor = COLOR_FUCHSIA;
+        _room->floorsColor = COLOR_MAROON;
         break;
     case RT_REGULAR:
         _room->wallsColor = (Color) {0.2, 0.2, 1, 1};
@@ -173,15 +170,15 @@ void generateRooms(Map* map){
             _higherYpos = (YCELLS-1)/MAPDIV * (j+1) -MIN_ROOM_HEIGHT -ROOM_BOTTOMBUFFER;
 
 
-            int _x = RANDOM(_lowerXpos, _higherXpos);
-            int _y = RANDOM(_lowerYpos, _higherYpos);
+            int _x = random(_lowerXpos, _higherXpos);
+            int _y = random(_lowerYpos, _higherYpos);
 
             // assuming that rooms dont collide
             // it is ensured that _higherXpos - _x is greater than MIN_ROOM_WIDTH
             Room* _room =generateRoom(map, _x, _y,
-                RANDOM(MIN_ROOM_WIDTH, _higherXpos - _x + MIN_ROOM_WIDTH),
-                RANDOM(MIN_ROOM_HEIGHT, _higherYpos - _y + MIN_ROOM_HEIGHT),
-                (RoomType) RANDOM(0,3));
+                random(MIN_ROOM_WIDTH, _higherXpos - _x + MIN_ROOM_WIDTH),
+                random(MIN_ROOM_HEIGHT, _higherYpos - _y + MIN_ROOM_HEIGHT),
+                (RoomType) random(0,3));
 
             _room->rrp.gridX = i;
             _room->rrp.gridY = j;
@@ -324,10 +321,10 @@ void generateDoors(Map* map){
         _y1 = room->pos.gridY-1;
         _y2 = room->pos.gridY + room->scale.gridH;
         // Random door pos
-        _rx1 = RANDOM(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
-        _rx2 = RANDOM(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
-        _ry1 = RANDOM(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
-        _ry2 = RANDOM(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
+        _rx1 = random(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
+        _rx2 = random(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
+        _ry1 = random(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
+        _ry2 = random(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
         // Remove left door
         if (findRoomByRRP(map, room->rrp.gridX-1, room->rrp.gridY) == NULL) _ry1 = -1;
         // Remove right door
@@ -383,7 +380,7 @@ void deleteRandomRooms(Map* map){
         for (int i = 0; i < map->num_rooms; i++){
             map->rooms[i]->dfsVisited = 0;
         }
-        int randomNum = RANDOM(0,map->num_rooms-1);
+        int randomNum = random(0,map->num_rooms-1);
         Room* room = map->rooms[randomNum];
         map->rooms[randomNum] = NULL;
 
@@ -431,7 +428,7 @@ void generateStructures(Map* map){
         // check item and structure overlapping each other
         Room* room = getRandomRoom(map);
 
-        Structure* structure = generateBaseStructure("", COLOR_BROWN, getRandomCordInRoom(room));
+        Structure* structure = generateBaseStructure("ö", COLOR_BROWN, getRandomCordInRoom(room));
         room->structures[room->num_structures++] = generateTrap(structure, 2);
     }
 }
@@ -441,9 +438,21 @@ void generateItems(Map* map){
         Room* room = getRandomRoom(map);
 
         char temp[100];
-        sprintf(temp, "item%d", i);
-        Item* item = createBaseItem(temp, getRandomCordInRoom(room), "F", COLOR_LIME_GREEN, 2);
+        sprintf(temp, "Sword%d", i);
+        Item* item = createBaseItem(temp, getRandomCordInRoom(room), "W", COLOR_LIME_GREEN, 2);
         room->items[room->num_items++] = createMeleeWeapon(item, MELEEWEAPON_SWORD, 2);
+
+        sprintf(temp, "Arrow%d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "F", COLOR_LIME_GREEN, 2);
+        room->items[room->num_items++] = createRangedWeapon(item, RANGEDWEAPON_ARROW, 2 ,2);
+
+        sprintf(temp, "Food%d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "U", COLOR_LIME_GREEN, 2);
+        room->items[room->num_items++] = createFood(item, FOOD_NORMAL, 2);
+
+        sprintf(temp, "Heal P%d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "T", COLOR_LIME_GREEN, 2);
+        room->items[room->num_items++] = createPotion(item, POTION_HEAL, 2);
     }
 }
 

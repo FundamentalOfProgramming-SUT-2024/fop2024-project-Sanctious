@@ -88,7 +88,6 @@ struct Room{
 
 };
 
-
 typedef struct {
     int id;
     gScale scale;

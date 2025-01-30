@@ -11,6 +11,7 @@
 #include "renderlibs.h"
 #include "main.h"
 #include "scene.h"
+#include "random.h"
 
 // ***********************************************************
 extern void initscene_main_menu();
@@ -76,6 +77,7 @@ Game* getGameInstance() {
 int main(int argc, char** argv)
 {
     validateConfig();
+    initRandom();
 //    validateSaveFiles();
 
     Log("Game started...", _DEBUG_);

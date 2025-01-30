@@ -5,20 +5,12 @@
 #include "renderer.h"
 #include "gc.h"
 
-
-//#include "map.h"
-
-/*
-
-    Damage multiplier ( get damage multiplier )
-
-*/
 typedef enum {
     // Item Type consumables
-    IC_FOOD,
-    IC_POTION,
-    IC_MELEEWEAPON,
-    IC_RANGEDWEAPON,
+    IC_FOOD         = 2, // Used in displaying inventory
+    IC_POTION       = 3,
+    IC_MELEEWEAPON  = 0,
+    IC_RANGEDWEAPON = 1,
 } ItemClass;
 
 typedef struct {

@@ -8,6 +8,9 @@ typedef struct{
 
     long long playtime;
     long long gold;
+    int gametime;
+    int numFloors;
+    int curFloor;
 
     Difficulty difficulty;
     MapSize mapsize;

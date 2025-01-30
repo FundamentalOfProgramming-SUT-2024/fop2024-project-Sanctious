@@ -7,7 +7,9 @@
 #include "../savesystem.h"
 #include "../uiutils.h"
 
-static Menu inventoryMenu;
+static int curMenu = 0;
+static int invtabs_c = 4;
+static Menu invtabs[4];
 static Menu pauseMenu;
 
 float r=1.0f,g=1.0f,b=1.0f;
@@ -34,35 +36,58 @@ static void renderRoomBox(float x, float y, int width, int height, Color tileCol
     renderQuad(( Pos ){xpos, ypos}, ( Pos ){xpos+w, ypos+h}, tileColor);
 
 }
+void playerAction(){
+    getCurrentSave()->gametime++;
+    Map* map = getFloor(getCurFloor());
+    for (int i = 0; i < map->num_entities; i++){
+        EntityOnAction(map->entities[i]);
+    }
+
+
+}
 
 static void processKeyboard(unsigned char key, int x, int y) {
-    if (key == 'i')
-        inventoryMenu.enabled = inventoryMenu.enabled^1;
-    if (inventoryMenu.enabled){
-        menuBasicHandleKeyboard(&inventoryMenu, key);
+    // Number system for item types to make it easier to do other stuff ( automate stuff )
+
+    if (key == 'i'){
+        for (int i = 0; i < invtabs_c; i++){
+            invtabs[i].enabled = invtabs[i].enabled^1;
+        }
+    }
+
+    if (invtabs[0].enabled){
+        menuBasicHandleKeyboard(&invtabs[curMenu], key);
         // Enter key
         if (key == 13){
-            if (inventoryMenu.hover_element >= 0 && inventoryMenu.hover_element <= inventoryMenu.num_elements-1){
-//                getPlayerInstance()->inventory[inventoryMenu->hover_element];
-
-            }
+//            if (inventoryMenu.hover_element >= 0 && inventoryMenu.hover_element <= inventoryMenu.num_elements-1){
+////                getPlayerInstance()->inventory[inventoryMenu->hover_element];
+//
+//            }
 
         }
         return;
     }
     Player* player = getPlayerInstance();
 	if (key == 'w')
-        if (isValidPos(player->pos.gridX, player->pos.gridY-1))
+        if (isValidPos(player->pos.gridX, player->pos.gridY-1)){
             player->pos.gridY -= 1;
+            playerAction();
+        }
     if (key == 'd')
-        if (isValidPos(player->pos.gridX+1, player->pos.gridY))
+        if (isValidPos(player->pos.gridX+1, player->pos.gridY)){
             player->pos.gridX += 1;
+            playerAction();
+        }
     if (key == 's')
-        if (isValidPos(player->pos.gridX, player->pos.gridY+1))
+        if (isValidPos(player->pos.gridX, player->pos.gridY+1)){
             player->pos.gridY += 1;
+            playerAction();
+        }
     if (key == 'a')
-        if (isValidPos(player->pos.gridX-1, player->pos.gridY))
+        if (isValidPos(player->pos.gridX-1, player->pos.gridY)){
             player->pos.gridX -= 1;
+            playerAction();
+        }
     // Escape key
     if (key == 27){
         saveGame();
@@ -75,8 +100,22 @@ static void processKeyboard(unsigned char key, int x, int y) {
 }
 
 static void processSKeyboard(int key, int x, int y) {
-    if (inventoryMenu.enabled){
-        menuBasicHandleSKeyboard(&inventoryMenu, key);
+    if (key == GLUT_KEY_RIGHT){
+        if (curMenu < invtabs_c-1){
+            invtabs[curMenu].hover_element = -1;
+            curMenu++;
+            invtabs[curMenu].hover_element = 0;
+        }
+    }
+    if (key == GLUT_KEY_LEFT){
+        if (0 < curMenu){
+            invtabs[curMenu].hover_element = -1;
+            curMenu--;
+            invtabs[curMenu].hover_element = 0;
+        }
+    }
+    if (invtabs[0].enabled){
+        menuBasicHandleSKeyboard(&invtabs[curMenu], key);
         return;
     }
 
@@ -91,33 +130,32 @@ static void processSKeyboard(int key, int x, int y) {
 
 static void updateInventoryMenu(){
     Player* player = getPlayerInstance();
+    for (int i = 0; i < invtabs_c; i++){
+        invtabs[i].num_elements = 0;
+        invtabs[i].num_interactable_elements = 0;
+    }
 
     for (int i = 0; i < player->inventory_size; i++){
-        int xpos = 50;
         Item* item = player->inventory[i];
-        switch(item->itemclass){
-        case IC_POTION:
-            xpos = 450+20;
-            break;
-        case IC_MELEEWEAPON:
-            xpos = 250+20;
-            break;
-        case IC_RANGEDWEAPON:
-            xpos = 50+20;
-            break;
-        case IC_FOOD:
-            xpos = 650+20;
-            break;
-        }
-        inventoryMenu.uiElements[i] = createButton((Pos) {xpos, 100+i*35}, player->inventory[i]->name, FONTNORMALSCALE);
+
+        Menu* _menu = &invtabs[item->itemclass];
+
+        int xpos = 70 + item->itemclass*200;
+        int count = _menu->num_elements;
+
+        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 100+count*35}, player->inventory[i]->name, FONTNORMALSCALE, item);
+        configureInvSlotColor(_menu->uiElements[count], COLOR_AMBER, COLOR_CYAN);
+        _menu->num_elements++;
+        _menu->num_interactable_elements++;
+
 //        ((InputFieldExtra *) inventoryMenu.uiElements[0]->UIExtra)->maxLength = 20;
 //        configureInputFieldColor(inventoryMenu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
-        configureButtonColor(inventoryMenu.uiElements[i], COLOR_AMBER, COLOR_CYAN);
+
 
     }
 
-    inventoryMenu.num_elements = player->inventory_size;
-    inventoryMenu.num_interactable_elements = player->inventory_size;
+//    inventoryMenu.num_elements = player->inventory_size;
+//    inventoryMenu.num_interactable_elements = player->inventory_size;
 
 
 }
@@ -149,7 +187,8 @@ static void pickUpItems(){
 }
 
 static void renderPlayer(){
-    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "ò", COLOR_HOT_PINK, 0);
+//    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "ò", COLOR_HOT_PINK, 0);
+    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "ð", COLOR_HOT_PINK, 0);
 //    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "i", COLOR_HOT_PINK, 0);
 //    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", COLOR_HOT_PINK, 0);
 }
@@ -182,7 +221,7 @@ static void renderRoomItems(Room* room){
 static void renderRoomStructures(Room* room){
     for (int j = 0; j < room->num_structures; j++){
         Structure* structure = room->structures[j];
-        renderCell(structure->pos.gridX, structure->pos.gridY, structure->sprite, structure->spriteColor, 1);
+        renderCell(structure->pos.gridX, structure->pos.gridY, structure->sprite, structure->spriteColor, 0);
     }
 }
 
@@ -219,16 +258,18 @@ static void render() {
     sprintf(message, "X= %d Y= %d\nFloor= %d", player->pos.gridX, player->pos.gridY, getCurFloor());
     renderString(0, 20, message, FONTNORMALSCALE, COLOR_PURPLE);
 
-    if (inventoryMenu.enabled){
+    if (invtabs[0].enabled){
 //        glClearColor(1, 1, 1, 1);
 //        glClear(GL_COLOR_BUFFER_BIT);
         updateInventoryMenu();
         renderQuad(( Pos ){50, 50}, ( Pos ){RWINDOW_WIDTH-50, RWINDOW_HEIGHT-50}, (Color) {0.5f, 0.5f, 0.5f, 0.9f} );
-        renderString(50, 70, "-Ranged", FONTNORMALSCALE, COLOR_AMETHYST);
-        renderString(250, 70, "-Melee", FONTNORMALSCALE, COLOR_AMETHYST);
-        renderString(450, 70, "-Potions", FONTNORMALSCALE, COLOR_AMETHYST);
-        renderString(650, 70, "-Foods", FONTNORMALSCALE, COLOR_AMETHYST);
-        renderMenu(&inventoryMenu);
+        renderString(650, 70, "-Potions", FONTNORMALSCALE, COLOR_AMETHYST);
+        renderString(50, 70, "-Melee", FONTNORMALSCALE, COLOR_AMETHYST);
+        renderString(250, 70, "-Ranged", FONTNORMALSCALE, COLOR_AMETHYST);
+        renderString(450, 70, "-Foods", FONTNORMALSCALE, COLOR_AMETHYST);
+        for (int i = 0; i < invtabs_c; i++){
+            renderMenu(&invtabs[i]);
+        }
     }
 
     glFlush();
@@ -251,9 +292,14 @@ static void playerChangeColor(int c){
 
 void initscene_game(){
     // Inventory
-    inventoryMenu.enabled = 0;
-    inventoryMenu.num_elements = 0;
-    inventoryMenu.num_interactable_elements = 0;
+    for (int i = 0; i < invtabs_c; i++){
+//        invtabs[i] = (Menu *) malloc(1 * sizeof(Menu));
+        invtabs[i].hover_element = -1;
+        invtabs[i].enabled = 0;
+        invtabs[i].num_elements = 0;
+        invtabs[i].num_interactable_elements = 0;
+    }
+    invtabs[0].hover_element = 0;
 
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));
 
