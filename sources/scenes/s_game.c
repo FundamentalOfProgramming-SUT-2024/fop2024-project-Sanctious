@@ -60,26 +60,26 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
     if (invtabs[0].enabled){
         menuBasicHandleKeyboard(&invtabs[curMenu], key);
+        Player* player = getPlayerInstance();
+        InvSlotExtra* extra;
+        if (invtabs[curMenu].num_elements != 0)
+            extra = ((InvSlotExtra *) (invtabs[curMenu].uiElements[invtabs[curMenu].hover_element]->UIExtra));
         // Enter key
         if (key == 13){
 //            if (inventoryMenu.hover_element >= 0 && inventoryMenu.hover_element <= inventoryMenu.num_elements-1){
 ////                getPlayerInstance()->inventory[inventoryMenu->hover_element];
 //
 //            }
+            player->equippedItem = extra->item;
 
         }
         if (key == 'q'){
-            Player* player = getPlayerInstance();
-            InvSlotExtra* extra = ((InvSlotExtra *) (invtabs[curMenu].uiElements[invtabs[curMenu].hover_element]->UIExtra));
             removeItemFromPlayer(player, extra->itemIndex);
             addItemToRoom(findPlayerRoom(), extra->item);
             extra->item->pos = player->pos;
         }
 
         if (key == 'e'){
-            Player* player = getPlayerInstance();
-            InvSlotExtra* extra = ((InvSlotExtra *) (invtabs[curMenu].uiElements[invtabs[curMenu].hover_element]->UIExtra));
-
             if (ItemOnConsume(extra->item)){
                 removeItemFromPlayer(player, extra->itemIndex);
             }
@@ -166,10 +166,7 @@ static void updateInventoryMenu(){
         int xpos = 70 + item->itemclass*200;
         int count = _menu->num_elements;
 
-        char temp[100];
-        sprintf(temp, "%s %dX", player->inventory[i]->name, player->inventory[i]->count);
-
-        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 100+count*35}, temp, FONTNORMALSCALE, item, i);
+        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 100+count*35}, item->name, FONTNORMALSCALE, item, i);
         configureInvSlotColor(_menu->uiElements[count], COLOR_AMBER, COLOR_CYAN);
         _menu->num_elements++;
         _menu->num_interactable_elements++;
@@ -180,6 +177,18 @@ static void updateInventoryMenu(){
 
     }
 
+    for (int i = 0; i < invtabs_c; i++){
+        for (int j = 0; j < invtabs[i].num_elements; j++){
+            InvSlotExtra* extra = (InvSlotExtra *) invtabs[i].uiElements[j]->UIExtra;
+            Item* item = extra->item;
+
+            char temp[100];
+            sprintf(temp, "(%d x)", item->count);
+            invtabs[i].uiElements[invtabs[i].num_elements+j] = createLabel((Pos) {extra->pos.x+calculateTextWidth(extra->label, FONTNORMALSCALE)+10, extra->pos.y}, temp, FONTNORMALSCALE*0.7, COLOR_CYAN);
+        }
+        invtabs[i].num_elements *= 2;
+        invtabs[i].num_interactable_elements *= 2;
+    }
 //    inventoryMenu.num_elements = player->inventory_size;
 //    inventoryMenu.num_interactable_elements = player->inventory_size;
 
@@ -216,9 +225,37 @@ static void renderPlayer(Player* player){
 
 static void renderPlayerStatus(Player* player){
     char message[100];
-    sprintf(message, "\u0100 \u0101 \u0102 \u0103 \u0104Hunger: %d", player->health,
-            player->armor, player->gold, player->hunger);
-    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
+    sprintf(message, "%d/%d", player->health, player->maxHealth);
+    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_RED);
+    renderString(20+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-53, "\u0100", FONTNORMALSCALE*0.75, COLOR_RED);
+
+    sprintf(message, "%d", player->gold);
+    renderString(170, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_GOLD);
+    renderString(170+calculateTextWidth(message, FONTNORMALSCALE), RWINDOW_HEIGHT-50, "\u0101", FONTNORMALSCALE*0.75, COLOR_GOLD);
+
+    sprintf(message, "%d/%d", player->armor, player->maxArmor);
+    renderString(320, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_GRAY);
+    renderString(320+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, "\u0102", FONTNORMALSCALE*0.9, COLOR_GRAY);
+
+    sprintf(message, "%d/%d", player->hunger, player->maxHunger);
+    renderString(470, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_BROWN);
+    renderString(470+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, "\u0103", FONTNORMALSCALE*0.9, COLOR_BROWN);
+
+    if (player->equippedItem != NULL){
+        sprintf(message, "%s", player->equippedItem->name);
+        renderString(620, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_PURPLE);
+        renderString(620+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, player->equippedItem->sprite, FONTNORMALSCALE*0.9, COLOR_BROWN);
+    }
+    else{
+        renderString(620, RWINDOW_HEIGHT-50, "Empty", FONTNORMALSCALE, COLOR_PURPLE);
+    }
+//
+//    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
+//    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
+//    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
+//    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
+//    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
+//    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
 }
 
 

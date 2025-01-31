@@ -31,8 +31,11 @@ Player* getPlayerInstance() {
 void initializePlayer(Player* player){
     player->gold = 2;
     player->health = 10;
+    player->maxHealth = 10;
     player->armor = 2;
+    player->maxArmor = 2;
     player->hunger = 2;
+    player->maxHunger = 2;
     player->inventory_size = 0;
     player->equippedItem = NULL;
 

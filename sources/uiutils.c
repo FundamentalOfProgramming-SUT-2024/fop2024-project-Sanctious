@@ -472,7 +472,7 @@ void menuBasicHandleKeyboard(Menu* menu, unsigned char key)
     // key == 8 -> backspace
     if (isprint(key) || key == 8)
     {
-        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_elements-1)
+        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_interactable_elements-1)
             if (menu->uiElements[menu->hover_element]->type == UI_INPUTFIELD)
             {
                 InputFieldExtra* extra = (InputFieldExtra *) menu->uiElements[menu->hover_element]->UIExtra;
@@ -519,7 +519,7 @@ void menuBasicHandleSKeyboard(Menu* menu, int key)
     }
     else if (key == GLUT_KEY_RIGHT)
     {
-        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_elements-1)
+        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_interactable_elements-1)
         {
             if (menu->uiElements[menu->hover_element]->type == UI_CAROUSEL)
             {
@@ -537,7 +537,7 @@ void menuBasicHandleSKeyboard(Menu* menu, int key)
 
     else if (key == GLUT_KEY_LEFT)
     {
-        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_elements-1)
+        if (menu->hover_element >= 0 && menu->hover_element <= menu->num_interactable_elements-1)
         {
             if (menu->uiElements[menu->hover_element]->type == UI_CAROUSEL)
             {

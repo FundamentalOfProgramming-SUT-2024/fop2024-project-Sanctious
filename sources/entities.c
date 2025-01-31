@@ -28,6 +28,11 @@ Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor){
     strcpy(entity->sprite, sprite);
     entity->spriteColor = spriteColor;
     entity->pos = pos;
+    entity->goldDrop = 0;
+    entity->armor = 5;
+    entity->maxArmor = 5;
+    entity->health = 2;
+    entity->maxHealth = 2;
 
     return entity;
 }

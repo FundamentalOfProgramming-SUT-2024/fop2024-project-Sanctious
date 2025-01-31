@@ -39,9 +39,11 @@ typedef struct {
     Color spriteColor;
     gCord pos;
 
-    int armor;
     int goldDrop;
+    int armor;
+    int maxArmor;
     int health;
+    int maxHealth;
 
     EntityClass entityclass;
     void* EntityExtra;

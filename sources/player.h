@@ -15,9 +15,12 @@ typedef struct {
     Item* inventory[MAX_INVENTORY_SIZE];
 
     int armor;
-    int gold;
+    int maxArmor;
     int health;
+    int maxHealth;
     int hunger;
+    int maxHunger;
+    int gold;
 
 } Player;
 
