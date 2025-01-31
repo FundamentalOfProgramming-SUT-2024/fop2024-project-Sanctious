@@ -39,11 +39,6 @@ const int odirs[8][2] = {
 void generateMap();
 static Map* instance = NULL;
 
-void changeFloor(int a){
-    curFloor = a;
-    printf("ASD");
-}
-
 int getCurFloor(){
     return curFloor;
 }
@@ -54,6 +49,16 @@ void setCurFloor(int floor){
 
 int getNumFloors(){
     return numFloors;
+}
+
+void changeFloor(int floorIndex){
+    if (floorIndex <= getNumFloors()-1 && 0 <= floorIndex){
+        Log("Changed floor from %d to %d", _DEBUG_, getCurFloor(), floorIndex);
+        curFloor = floorIndex;
+    }
+    else{
+        Log("Floor %d doesn't exist!", _DEBUG_, floorIndex);
+    }
 }
 
 Map* getFloor(int floor){
@@ -67,13 +72,23 @@ void setFloor(int floor, Map* map){
 void generateFloors(){
     curFloor = 0;
     numFloors = random(4,5);
-
+//    int p = 0;
     for (int i = 0; i < numFloors; i++){
         Map* map = (Map *) malloc(1 * sizeof(Map));
         map->id = i;
         generateMap(map);
         floors[i] = map;
     }
+    // Map validation
+//    for (int i = 0; i < numFloors; i++){
+//        Map* map = floors[i];
+//        for (int j = 0; j < map->num_rooms; j++){
+//            if (map->rooms[j]->type == RT_TREASURE){
+//                p++;
+//            }
+//        }
+//    }
+//    printf("%d\n", p);
 }
 Map* getMapInstance() {
     // First call
@@ -109,6 +124,45 @@ gCord addDirectionToPos(gCord pos, Direction dir){
 
 }
 
+void addEntityToMap(Map* map, Entity* entity){
+    map->entities[map->num_entities++] = entity;
+}
+
+void removeEntityFromMap(Map* map, int entityIndex){
+    for (int i = entityIndex; i < map->num_entities-1; i++){
+        map->entities[i] = map->entities[i+1];
+    }
+    map->num_entities--;
+}
+
+void addItemToRoom(Room* room, Item* item){
+    room->items[room->num_items++] = item;
+}
+
+void removeItemFromRoom(Room* room, int itemIndex){
+    for (int i = itemIndex; i < room->num_items-1; i++){
+        room->items[i] = room->items[i+1];
+    }
+    room->num_items--;
+}
+
+// Generate treasure-room props
+void gps_TreasureRoom(Room* room){
+
+}
+// Generate treasure-room props
+void gps_NightmareRoom(Room* room){
+
+}
+// Generate treasure-room props
+void gps_RegularRoom(Room* room){
+
+}
+// Generate treasure-room props
+void gps_EnchantRoom(Room* room){
+
+}
+
 // Factory design
 Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
     Room* _room = (Room *) malloc(1 * sizeof(Room));
@@ -132,18 +186,22 @@ Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
     case RT_TREASURE:
         _room->wallsColor = COLOR_GOLD;
         _room->floorsColor = COLOR_MAROON;
+        gps_TreasureRoom(_room);
         break;
     case RT_REGULAR:
         _room->wallsColor = (Color) {0.2, 0.2, 1, 1};
         _room->floorsColor = (Color) {0.5, 0.5, 0.5, 1};
+        gps_RegularRoom(_room);
         break;
     case RT_ENCHANT:
         _room->wallsColor = COLOR_PURPLE;
         _room->floorsColor = (Color) {0.5, 0.5, 0.5, 1};
+        gps_EnchantRoom(_room);
         break;
     case RT_NIGHTMARE:
         _room->wallsColor = COLOR_ELECTRIC_BLUE;
         _room->floorsColor = (Color) {0.5, 0.5, 0.5, 1};
+        gps_NightmareRoom(_room);
         break;
     }
 
@@ -156,7 +214,7 @@ Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
 void generateRooms(Map* map){
 
     int _lowerXpos, _higherXpos, _lowerYpos, _higherYpos;
-
+    int treasure = 0;
     // i should replace this with a more dynamic code
     // maybe other variable names
     // adding buffer zone to one pos is enough
@@ -175,10 +233,18 @@ void generateRooms(Map* map){
 
             // assuming that rooms dont collide
             // it is ensured that _higherXpos - _x is greater than MIN_ROOM_WIDTH
+
+            // Treasure room
+            RoomType rt = (RoomType) weightedRandom(1,3, (int[]) {5, 1, 1});
+            if (map->id == getNumFloors()-1 && treasure == 0 && random((i+1)*(j+1), MAPDIV*MAPDIV) == MAPDIV*MAPDIV){
+                rt = RT_TREASURE;
+                treasure = 1;
+            }
+
             Room* _room =generateRoom(map, _x, _y,
                 random(MIN_ROOM_WIDTH, _higherXpos - _x + MIN_ROOM_WIDTH),
                 random(MIN_ROOM_HEIGHT, _higherYpos - _y + MIN_ROOM_HEIGHT),
-                (RoomType) random(0,3));
+                rt);
 
             _room->rrp.gridX = i;
             _room->rrp.gridY = j;
@@ -375,6 +441,15 @@ void dfsMap(Map* map, Room* room){
 
 }
 
+void deleteRoom(Map* map, Room* room, int roomIndex){
+    Log("Deleted room: (%d, %d).", _DEBUG_, room->pos.gridX, room->pos.gridY);
+    free(room);
+    for (int i = roomIndex; i < map->num_rooms-1; i++){
+        map->rooms[i] = map->rooms[i+1];
+    }
+    map->num_rooms--;
+}
+
 void deleteRandomRooms(Map* map){
     while (map->num_rooms != 2*MAPDIV*MAPDIV/3){
         for (int i = 0; i < map->num_rooms; i++){
@@ -382,6 +457,10 @@ void deleteRandomRooms(Map* map){
         }
         int randomNum = random(0,map->num_rooms-1);
         Room* room = map->rooms[randomNum];
+
+        // Don't remove the treasure room
+        if (room->type == RT_TREASURE) continue;
+
         map->rooms[randomNum] = NULL;
 
         // Only one is NULL at each step
@@ -401,12 +480,7 @@ void deleteRandomRooms(Map* map){
         map->rooms[randomNum] = room;
 
         if (flag){
-            Log("Deleted room: (%d, %d).", _DEBUG_, room->pos.gridX, room->pos.gridY);
-            free(room);
-            for (int i = randomNum; i < map->num_rooms-1; i++){
-                map->rooms[i] = map->rooms[i+1];
-            }
-            map->num_rooms--;
+            deleteRoom(map, room, randomNum);
         }
 
 
@@ -462,8 +536,20 @@ void generateEntities(Map* map){
 
         char temp[100];
         sprintf(temp, "entity%d", i);
-        Entity* entity = createEntity(temp, getRandomCordInRoom(room), "S", COLOR_LAVENDER);
+        Entity* entity = createEntity(temp, getRandomCordInRoom(room), "\u0102", COLOR_LAVENDER);
+        map->entities[map->num_entities++] = createSnake(entity);
+
+        entity = createEntity(temp, getRandomCordInRoom(room), "\u0103", COLOR_LAVENDER);
         map->entities[map->num_entities++] = createDemon(entity);
+
+        entity = createEntity(temp, getRandomCordInRoom(room), "\u0104", COLOR_LAVENDER);
+        map->entities[map->num_entities++] = createDragon(entity);
+
+        entity = createEntity(temp, getRandomCordInRoom(room), "\u0105", COLOR_LAVENDER);
+        map->entities[map->num_entities++] = createUndead(entity);
+
+        entity = createEntity(temp, getRandomCordInRoom(room), "\u0106", COLOR_LAVENDER);
+        map->entities[map->num_entities++] = createGiant(entity);
     }
 }
 

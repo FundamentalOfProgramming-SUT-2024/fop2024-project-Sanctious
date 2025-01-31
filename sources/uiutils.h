@@ -109,6 +109,7 @@ typedef struct {
     Color DAcolor;
 
     Item* item;
+    int itemIndex;
 
     int isActive;
 } InvSlotExtra;
@@ -157,7 +158,7 @@ UIElement* createInputField(Pos pos, char* text, float fontScale, Scale boxScale
 UIElement* createLabel(Pos pos, char* text, float fontScale, Color color);
 UIElement* createCarousel(Pos pos, char* text, char** options, int num_options, float fontScale);
 UIElement* createSlider(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
-UIElement* createInvSlot(Pos pos, char* text, float fontScale, Item* item);
+UIElement* createInvSlot(Pos pos, char* text, float fontScale, Item* item, int itemIndex);
 //UIElement* createRankEntry(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
 //UIElement* createSaveEntry(Pos pos, char* text, int curValue, int minValue, int maxValue, int stepValue, float fontScale, float sliderOffset);
 

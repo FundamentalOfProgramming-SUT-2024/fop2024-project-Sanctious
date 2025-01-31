@@ -6,11 +6,11 @@
 #include "renderer.h"
 
 typedef enum{
-    EC_DEMON,
-    EC_GIANT,
-    EC_SNAKE,
-    EC_DRAGON,
-    EC_UNDEAD
+    EC_DEMON = 0,
+    EC_GIANT = 1,
+    EC_SNAKE = 2,
+    EC_UNDEAD = 3,
+    EC_DRAGON = 4,
 } EntityClass;
 
 typedef struct{
@@ -50,6 +50,10 @@ typedef struct {
 
 Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor);
 Entity* createDemon(Entity* entity);
+Entity* createSnake(Entity* entity);
+Entity* createGiant(Entity* entity);
+Entity* createDragon(Entity* entity);
+Entity* createUndead(Entity* entity);
 //Entity* createDragon(Entity* entity);
 //Entity* createGiant(Entity* entity);
 //Entity* createSnake(Entity* entity);

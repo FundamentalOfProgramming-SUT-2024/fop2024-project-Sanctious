@@ -5,5 +5,6 @@
 #include "weapons.h"
 #include "potions.h"
 #include "foods.h"
+#include "miscs.h"
 
 #endif

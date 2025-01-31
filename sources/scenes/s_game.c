@@ -12,6 +12,9 @@ static int invtabs_c = 4;
 static Menu invtabs[4];
 static Menu pauseMenu;
 
+
+static void pickUpItems();
+
 float r=1.0f,g=1.0f,b=1.0f;
 
 static void renderRoomBox(float x, float y, int width, int height, Color tileColor, Color wallColor) {
@@ -65,8 +68,21 @@ static void processKeyboard(unsigned char key, int x, int y) {
 //            }
 
         }
+        if (key == 'q'){
+            Player* player = getPlayerInstance();
+            InvSlotExtra* extra = ((InvSlotExtra *) (invtabs[curMenu].uiElements[invtabs[curMenu].hover_element]->UIExtra));
+            removeItemFromPlayer(player, extra->itemIndex);
+            addItemToRoom(findPlayerRoom(), extra->item);
+            extra->item->pos = player->pos;
+
+
+        }
         return;
     }
+    if (key == 'e'){
+        pickUpItems();
+    }
+
     Player* player = getPlayerInstance();
 	if (key == 'w')
         if (isValidPos(player->pos.gridX, player->pos.gridY-1)){
@@ -143,7 +159,7 @@ static void updateInventoryMenu(){
         int xpos = 70 + item->itemclass*200;
         int count = _menu->num_elements;
 
-        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 100+count*35}, player->inventory[i]->name, FONTNORMALSCALE, item);
+        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 100+count*35}, player->inventory[i]->name, FONTNORMALSCALE, item, i);
         configureInvSlotColor(_menu->uiElements[count], COLOR_AMBER, COLOR_CYAN);
         _menu->num_elements++;
         _menu->num_interactable_elements++;
@@ -160,13 +176,7 @@ static void updateInventoryMenu(){
 
 }
 
-static void removeItem(Room* room, int a){
-    for (int i = a; i < room->num_items-1; i++){
-        room->items[i] = room->items[i+1];
-    }
-    room->num_items--;
 
-}
 
 static void pickUpItems(){
     Map* floor = getFloor(getCurFloor());
@@ -179,19 +189,28 @@ static void pickUpItems(){
 
             if (item->pos.gridX == player->pos.gridX &&
                 item->pos.gridY == player->pos.gridY){
-                player->inventory[player->inventory_size++] = item;
-                removeItem(room, j);
+                addItemToPlayer(player, item);
+                removeItemFromRoom(room, j);
+                break;
             }
         }
     }
 }
 
-static void renderPlayer(){
+static void renderPlayer(Player* player){
 //    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "ò", COLOR_HOT_PINK, 0);
-    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "ð", COLOR_HOT_PINK, 0);
+    renderCell(player->pos.gridX, player->pos.gridY, "ð", COLOR_HOT_PINK, 0);
 //    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "i", COLOR_HOT_PINK, 0);
 //    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", COLOR_HOT_PINK, 0);
 }
+
+static void renderPlayerStatus(Player* player){
+    char message[100];
+    sprintf(message, "\u0100 \u0101 \u0102 \u0103 \u0104Hunger: %d", player->health,
+            player->armor, player->gold, player->hunger);
+    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
+}
+
 
 static void renderRoomDoors(Room* room){
     for (int i = 0; i < room->num_doors; i++){
@@ -237,7 +256,6 @@ static void render() {
 
     Map* map = getFloor(getCurFloor());
     renderCorridors(map);
-    pickUpItems();
 
     for (int i = 0; i < map->num_rooms; i++) {
         Room* room = map->rooms[i];
@@ -250,13 +268,15 @@ static void render() {
 
     }
     renderEntities(map);
-    renderPlayer();
 
 
     char message[100];
     Player* player = getPlayerInstance();
     sprintf(message, "X= %d Y= %d\nFloor= %d", player->pos.gridX, player->pos.gridY, getCurFloor());
     renderString(0, 20, message, FONTNORMALSCALE, COLOR_PURPLE);
+
+    renderPlayer(player);
+    renderPlayerStatus(player);
 
     if (invtabs[0].enabled){
 //        glClearColor(1, 1, 1, 1);

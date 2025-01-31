@@ -1,0 +1,15 @@
+#ifndef MISCS_H
+#define MISCS_H
+
+typedef enum {
+    GOLD_BLACK,
+    GOLD_NORMAL,
+} GoldClass;
+
+typedef struct{
+    GoldClass subclass;
+} GoldExtra;
+
+Item* createGold(Item* baseItem, GoldClass subclass);
+
+#endif

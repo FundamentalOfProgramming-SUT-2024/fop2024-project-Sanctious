@@ -3,6 +3,7 @@
 
 #include "logger.h"
 #include "player.h"
+#include "item.h"
 #include "map.h"
 
 void initializePlayer();
@@ -29,6 +30,9 @@ Player* getPlayerInstance() {
 
 void initializePlayer(Player* player){
     player->gold = 2;
+    player->health = 10;
+    player->armor = 2;
+    player->hunger = 2;
     player->inventory_size = 0;
     player->equippedItem = NULL;
 
@@ -76,4 +80,14 @@ char isValidPos(int gridXP, int gridYP){
     return 0;
 }
 
+void removeItemFromPlayer(Player* player, int itemIndex){
+    for (int i = itemIndex; i < player->inventory_size-1; i++){
+        player->inventory[i] = player->inventory[i+1];
+    }
+    player->inventory_size--;
+}
+
+void addItemToPlayer(Player* player, Item* item){
+    player->inventory[player->inventory_size++] = item;
+}
 

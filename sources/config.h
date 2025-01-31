@@ -20,8 +20,8 @@
 
 
 // Map
-#define XCELLS              80
-#define YCELLS              60
+#define XCELLS              40
+#define YCELLS              30
 #define MAPDIV              3
 #define MIN_ROOM_WIDTH      4
 #define MIN_ROOM_HEIGHT     4

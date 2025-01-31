@@ -17,17 +17,17 @@ struct Door;
 typedef struct Door Door;
 
 typedef enum {
-    UP = 0,
-    LEFT = 1,
-    DOWN = 2,
-    RIGHT = 3
+    UP      = 0,
+    LEFT    = 1,
+    DOWN    = 2,
+    RIGHT   = 3
 } Direction;
 
 typedef enum {
-    RT_TREASURE,
-    RT_REGULAR,
-    RT_ENCHANT,
-    RT_NIGHTMARE
+    RT_TREASURE     = 0,
+    RT_REGULAR      = 1,
+    RT_ENCHANT      = 2,
+    RT_NIGHTMARE    = 3
 } RoomType;
 
 typedef enum {
@@ -114,6 +114,12 @@ void generateFloors();
 void setFloor(int floor, Map* map);
 int getNumFloors();
 void setCurFloor(int floor);
+
+void addEntityToMap(Map* map, Entity* entity);
+void removeEntityFromMap(Map* map, int entityIndex);
+void addItemToRoom(Room* room, Item* item);
+void removeItemFromRoom(Room* room, int itemIndex);
+
 
 Room* findRoomByRRP(Map*, int, int);
 gCord getRandomCordInRoom(Room* room);

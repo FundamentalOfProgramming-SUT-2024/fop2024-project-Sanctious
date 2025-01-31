@@ -26,5 +26,7 @@ Player* getPlayerInstance();
 void setPlayerInstance(Player* player);
 Room* findPlayerRoom();
 char isValidPos(int , int);
+void removeItemFromPlayer(Player* player, int itemIndex);
+void addItemToPlayer(Player* player, Item* item);
 
 #endif

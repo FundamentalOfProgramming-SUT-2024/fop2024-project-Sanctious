@@ -260,7 +260,7 @@ void configureSliderColor(UIElement* slider, Color Acolor, Color DAcolor)
 }
 
 // Inventory slot creation
-UIElement* createInvSlot(Pos pos, char* text, float fontScale, Item* item)
+UIElement* createInvSlot(Pos pos, char* text, float fontScale, Item* item, int itemIndex)
 {
     UIElement* invslot = (UIElement *) malloc(1 * sizeof(UIElement));
     invslot->type = UI_INVSLOT;
@@ -284,6 +284,7 @@ UIElement* createInvSlot(Pos pos, char* text, float fontScale, Item* item)
     invslotConfig->DAcolor = COLOR_CYAN;
     invslotConfig->isActive = 0;
     invslotConfig->item = item;
+    invslotConfig->itemIndex = itemIndex;
 
     invslot->UIExtra = (void *) invslotConfig;
 

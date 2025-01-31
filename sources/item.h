@@ -11,6 +11,7 @@ typedef enum {
     IC_POTION       = 3,
     IC_MELEEWEAPON  = 0,
     IC_RANGEDWEAPON = 1,
+    IC_GOLD         = 4,
 } ItemClass;
 
 typedef struct {

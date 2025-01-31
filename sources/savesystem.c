@@ -127,6 +127,10 @@ void saveItemExtra(FILE* file, Item* item){
         fwrite(&(item->ItemExtra), sizeof(RangedWeaponExtra *), 1, file);
         fwrite((RangedWeaponExtra *) item->ItemExtra, sizeof(RangedWeaponExtra), 1, file);
         break;
+    case IC_GOLD:
+        fwrite(&(item->ItemExtra), sizeof(GoldExtra *), 1, file);
+        fwrite((GoldExtra *) item->ItemExtra, sizeof(GoldExtra), 1, file);
+        break;
     }
 }
 
@@ -160,6 +164,13 @@ void loadItemExtra(FILE* file, Item* item, HashMap* hashmap){
         fread(&temp, sizeof(RangedWeaponExtra *), 1, file);
         hashmap_add(hashmap, temp, extra);
         fread(extra, sizeof(RangedWeaponExtra), 1, file);
+        break;
+    }
+    case IC_GOLD:{
+        GoldExtra* extra = (GoldExtra *) malloc(1 * sizeof(GoldExtra));
+        fread(&temp, sizeof(GoldExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(GoldExtra), 1, file);
         break;
     }
     }
