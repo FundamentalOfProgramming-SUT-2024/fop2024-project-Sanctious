@@ -9,7 +9,7 @@
 #include "config.h"
 #include "structures.h"
 #include "savesystem.h"
-#include "random.h"
+#include "utils.h"
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) < (Y)) ? (Y) : (X))
@@ -539,17 +539,17 @@ void generateEntities(Map* map){
         Entity* entity = createEntity(temp, getRandomCordInRoom(room), "\u0102", COLOR_LAVENDER);
         map->entities[map->num_entities++] = createSnake(entity);
 
-        entity = createEntity(temp, getRandomCordInRoom(room), "\u0103", COLOR_LAVENDER);
-        map->entities[map->num_entities++] = createDemon(entity);
-
-        entity = createEntity(temp, getRandomCordInRoom(room), "\u0104", COLOR_LAVENDER);
-        map->entities[map->num_entities++] = createDragon(entity);
-
-        entity = createEntity(temp, getRandomCordInRoom(room), "\u0105", COLOR_LAVENDER);
-        map->entities[map->num_entities++] = createUndead(entity);
-
-        entity = createEntity(temp, getRandomCordInRoom(room), "\u0106", COLOR_LAVENDER);
-        map->entities[map->num_entities++] = createGiant(entity);
+//        entity = createEntity(temp, getRandomCordInRoom(room), "\u0103", COLOR_LAVENDER);
+//        map->entities[map->num_entities++] = createDemon(entity);
+//
+//        entity = createEntity(temp, getRandomCordInRoom(room), "\u0104", COLOR_LAVENDER);
+//        map->entities[map->num_entities++] = createDragon(entity);
+//
+//        entity = createEntity(temp, getRandomCordInRoom(room), "\u0105", COLOR_LAVENDER);
+//        map->entities[map->num_entities++] = createUndead(entity);
+//
+//        entity = createEntity(temp, getRandomCordInRoom(room), "\u0106", COLOR_LAVENDER);
+//        map->entities[map->num_entities++] = createGiant(entity);
     }
 }
 

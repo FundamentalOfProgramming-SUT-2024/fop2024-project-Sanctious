@@ -11,7 +11,7 @@
 #include "renderlibs.h"
 #include "main.h"
 #include "scene.h"
-#include "random.h"
+#include "utils.h"
 
 // ***********************************************************
 extern void initscene_main_menu();

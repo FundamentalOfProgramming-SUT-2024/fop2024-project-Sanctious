@@ -35,3 +35,16 @@ int ItemOnConsume(Item* item){
 
     return 0;
 }
+
+int ItemOnAttack(Item* item){
+    switch(item->itemclass){
+    case IC_MELEEWEAPON:{
+        return MWeaponOnAttack(item);
+    }
+    case IC_RANGEDWEAPON:{
+        return RWeaponOnAttack(item);
+    }
+    }
+
+    return 0;
+}

@@ -1,8 +1,7 @@
-#include "random.h"
+#include "utils.h"
 #include "logger.h"
 #include "stdlib.h"
 #include "time.h"
-
 
 void initRandom(){
     srand(time(NULL));
@@ -28,6 +27,10 @@ int weightedRandom(int x, int y, int weights[]){
             return x + i;
         }
     }
+}
 
-
+int clamp(int value, int min, int max) {
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
 }

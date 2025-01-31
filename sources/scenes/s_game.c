@@ -40,8 +40,19 @@ static void renderRoomBox(float x, float y, int width, int height, Color tileCol
 
 }
 void playerAction(){
-    getCurrentSave()->gametime++;
+    int curTime = ++getCurrentSave()->gametime;
     Map* map = getFloor(getCurFloor());
+    Player* player = getPlayerInstance();
+
+    player->combatTagTime++;
+
+    if (curTime%2 == 0 && player->hunger == player->maxHunger){
+        modifyPlayerHealth(player, 1);
+    }
+    if (curTime%4 == 0){
+        modifyPlayerHunger(player, -1);
+    }
+
     for (int i = 0; i < map->num_entities; i++){
         EntityOnAction(map->entities[i]);
     }
@@ -86,11 +97,13 @@ static void processKeyboard(unsigned char key, int x, int y) {
         }
         return;
     }
+    Player* player = getPlayerInstance();
     if (key == 'e'){
         pickUpItems();
     }
-
-    Player* player = getPlayerInstance();
+    if (key == 'f'){
+        ItemOnAttack(player->equippedItem);
+    }
 	if (key == 'w')
         if (isValidPos(player->pos.gridX, player->pos.gridY-1)){
             player->pos.gridY -= 1;

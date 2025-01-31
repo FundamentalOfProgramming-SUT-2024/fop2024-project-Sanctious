@@ -27,6 +27,8 @@ typedef struct Item {
 } Item;
 
 Item* createBaseItem(char* name, gCord pos, char sprite[5], Color spriteColor, int count);
+
 int ItemOnConsume(Item* item);
+int ItemOnAttack(Item* item);
 
 #endif

@@ -14,6 +14,7 @@ typedef struct {
     int inventory_size;
     Item* inventory[MAX_INVENTORY_SIZE];
 
+    int combatTagTime;
     int armor;
     int maxArmor;
     int health;
@@ -33,4 +34,7 @@ char isValidPos(int , int);
 void removeItemFromPlayer(Player* player, int itemIndex);
 void addItemToPlayer(Player* player, Item* item);
 
+void modifyPlayerHealth(Player* player, int offset);
+void modifyPlayerArmor(Player* player, int offset);
+void modifyPlayerHunger(Player* player, int offset);
 #endif

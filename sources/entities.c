@@ -31,7 +31,7 @@ Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor){
     entity->goldDrop = 0;
     entity->armor = 5;
     entity->maxArmor = 5;
-    entity->health = 2;
+    entity->health = 6;
     entity->maxHealth = 2;
 
     return entity;

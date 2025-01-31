@@ -34,5 +34,7 @@ typedef struct{
 
 Item* createMeleeWeapon(Item* baseItem, MeleeWeaponClass subclass, int damage);
 Item* createRangedWeapon(Item* baseItem, RangedWeaponClass subclass, int range, int damage);
+int MWeaponOnAttack(Item* item);
+int RWeaponOnAttack(Item* item);
 
 #endif

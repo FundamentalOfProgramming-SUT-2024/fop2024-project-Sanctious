@@ -3,6 +3,7 @@
 
 #include "logger.h"
 #include "player.h"
+#include "utils.h"
 #include "item.h"
 #include "map.h"
 
@@ -36,6 +37,7 @@ void initializePlayer(Player* player){
     player->maxArmor = 2;
     player->hunger = 2;
     player->maxHunger = 2;
+    player->combatTagTime = 0;
     player->inventory_size = 0;
     player->equippedItem = NULL;
 
@@ -94,3 +96,14 @@ void addItemToPlayer(Player* player, Item* item){
     player->inventory[player->inventory_size++] = item;
 }
 
+void modifyPlayerHealth(Player* player, int offset){
+    player->health = clamp(player->health+offset, 0, player->maxHealth);
+}
+
+void modifyPlayerArmor(Player* player, int offset){
+    player->armor = clamp(player->armor+offset, 0, player->maxArmor);
+}
+
+void modifyPlayerHunger(Player* player, int offset){
+    player->hunger = clamp(player->hunger+offset, 0, player->maxHunger);
+}
