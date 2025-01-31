@@ -2,6 +2,7 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../uiutils.h"
+#include "../auth.h"
 
 static Menu menu;
 
@@ -27,7 +28,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
             switch(menu.hover_element){
             // Authentication
             case 0:
-                changeScene(getSceneByID("authentication_menu"));
+                changeScene(getSceneByID("main_menu"));
                 break;
             case 1:
 
@@ -59,36 +60,39 @@ static void onEnter(){
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);
+
+    User* user = getCurrentUser();
+    char temp[100];
+
+    sprintf(temp, "Total gold: %d", user->stats.sumGold);
+    strcpy(((LabelExtra *) menu.uiElements[1]->UIExtra)->label, temp);
+
+    sprintf(temp, "Finished games: %d", user->stats.num_games);
+    strcpy(((LabelExtra *) menu.uiElements[2]->UIExtra)->label, temp);
+
+    sprintf(temp, "Total exp: %d", user->stats.exp);
+    strcpy(((LabelExtra *) menu.uiElements[3]->UIExtra)->label, temp);
+
+    sprintf(temp, "Playtime: %d", user->stats.playTime);
+    strcpy(((LabelExtra *) menu.uiElements[4]->UIExtra)->label, temp);
 }
 
 void initscene_profile_menu(){
     // Menu'
     menu.enabled = 1;
-    menu.num_elements = 8;
-    menu.num_interactable_elements = 7;
+    menu.num_elements = 5;
+    menu.num_interactable_elements = 1;
 
-    menu.uiElements[0] = createButton((Pos) {-1, 100}, "Authentication", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[1] = createButton((Pos) {-1, 150}, "New Game", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[2] = createButton((Pos) {-1, 200}, "Load Game", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[3] = createButton((Pos) {-1, 250}, "Profile", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[4] = createButton((Pos) {-1, 300}, "Leaderboard", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[5] = createButton((Pos) {-1, 350}, "Settings", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[5], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[6] = createButton((Pos) {-1, 410}, "Quit", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[6], COLOR_GRAY, COLOR_RUBY);
-//    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "", FONTNORMALSCALE, (Scale) {200, 30}, 20);
-//    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;
-//    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
-//    menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register :", FONTNORMALSCALE,(Scale) {200, 30}, 20);
-//    menu.uiElements[6] = createCarousel((Pos) {-1, 400}, "Options :",(char *[]){"Hello", "Test", "Poopak"}, 3, FONTNORMALSCALE);
-//    menu.uiElements[7] = createSlider((Pos) {-1, 450}, "Slider :", 50, 0, 100, 5, FONTNORMALSCALE, 50);
-//    menu.uiElements[7] = createLabel((Pos) {-1, 460}, "Enter", FONTNORMALSCALE, COLOR_CRIMSON);
-    menu.uiElements[7] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, COLOR_CRIMSON);
+    menu.uiElements[0] = createButton((Pos) {-1, 300}, "Back", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_RUBY);
+
+    menu.uiElements[1] = createLabel((Pos) {250, 100}, "Total gold: yyyy", FONTNORMALSCALE, COLOR_CORAL);
+
+    menu.uiElements[2] = createLabel((Pos) {250, 150}, "Finished games: yyyy", FONTNORMALSCALE, COLOR_CORAL);
+
+    menu.uiElements[3] = createLabel((Pos) {250, 200}, "Total exp: yyyy", FONTNORMALSCALE, COLOR_CORAL);
+
+    menu.uiElements[4] = createLabel((Pos) {250, 250}, "Playtime: yyyy", FONTNORMALSCALE, COLOR_CORAL);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

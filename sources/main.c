@@ -24,8 +24,9 @@ extern void initscene_register_menu();
 extern void initscene_login_menu();
 extern void initscene_settings_menu();
 extern void initscene_authentication_menu();
+extern void initscene_endgame();
 
-const int NUM_SCENES = 10;
+const int NUM_SCENES = 11;
 const void (*SCENES[MAX_NUM_SCENES])() =
     {   &initscene_main_menu,
         &initscene_game,
@@ -37,6 +38,7 @@ const void (*SCENES[MAX_NUM_SCENES])() =
         &initscene_login_menu,
         &initscene_settings_menu,
         &initscene_authentication_menu,
+        &initscene_endgame,
     };
 // ***********************************************************
 
