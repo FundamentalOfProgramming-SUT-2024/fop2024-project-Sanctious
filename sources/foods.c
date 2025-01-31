@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "logger.h"
 #include "foods.h"
+#include "player.h"
 
 Item* createFood(Item* baseItem, FoodClass subclass, int hunger){
     baseItem->itemclass = IC_FOOD;
@@ -16,4 +17,16 @@ Item* createFood(Item* baseItem, FoodClass subclass, int hunger){
              baseItem->pos.gridX, baseItem->pos.gridY, extra->hunger);
     return baseItem;
 }
+
+int FoodOnConsume(Item* item){
+    item->count--;
+    FoodExtra* extra = (FoodExtra *) item->ItemExtra;
+
+
+
+
+    if (item->count == 0) return 1;
+    return 0;
+}
+
 

@@ -74,8 +74,15 @@ static void processKeyboard(unsigned char key, int x, int y) {
             removeItemFromPlayer(player, extra->itemIndex);
             addItemToRoom(findPlayerRoom(), extra->item);
             extra->item->pos = player->pos;
+        }
 
+        if (key == 'e'){
+            Player* player = getPlayerInstance();
+            InvSlotExtra* extra = ((InvSlotExtra *) (invtabs[curMenu].uiElements[invtabs[curMenu].hover_element]->UIExtra));
 
+            if (ItemOnConsume(extra->item)){
+                removeItemFromPlayer(player, extra->itemIndex);
+            }
         }
         return;
     }
@@ -159,7 +166,10 @@ static void updateInventoryMenu(){
         int xpos = 70 + item->itemclass*200;
         int count = _menu->num_elements;
 
-        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 100+count*35}, player->inventory[i]->name, FONTNORMALSCALE, item, i);
+        char temp[100];
+        sprintf(temp, "%s %dX", player->inventory[i]->name, player->inventory[i]->count);
+
+        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 100+count*35}, temp, FONTNORMALSCALE, item, i);
         configureInvSlotColor(_menu->uiElements[count], COLOR_AMBER, COLOR_CYAN);
         _menu->num_elements++;
         _menu->num_interactable_elements++;

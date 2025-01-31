@@ -1,7 +1,7 @@
 #ifndef WEAPONS_H
 #define WEAPONS_H
 
-#include "item.h"
+typedef struct Item Item;
 
 typedef enum {
     MELEEWEAPON_SWORD, // Mace included

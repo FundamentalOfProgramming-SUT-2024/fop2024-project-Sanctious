@@ -1,9 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "item.h"
 #include "map.h"
 #include "config.h"
+
+typedef struct Item Item;
 
 typedef struct {
     gCord pos;

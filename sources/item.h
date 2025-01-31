@@ -14,7 +14,7 @@ typedef enum {
     IC_GOLD         = 4,
 } ItemClass;
 
-typedef struct {
+typedef struct Item {
     char name[MAX_STR_SIZE];
     char sprite[5]; // Custom sprite support
     Color spriteColor;
@@ -27,5 +27,6 @@ typedef struct {
 } Item;
 
 Item* createBaseItem(char* name, gCord pos, char sprite[5], Color spriteColor, int count);
+int ItemOnConsume(Item* item);
 
 #endif

@@ -148,18 +148,23 @@ void EntityOnAction(Entity* entity){
     switch(entity->entityclass){
     case EC_DEMON:{
         DemonOnAction(entity);
+        break;
     }
     case EC_DRAGON:{
         DragonOnAction(entity);
+        break;
     }
     case EC_GIANT:{
         GiantOnAction(entity);
+        break;
     }
     case EC_SNAKE:{
         SnakeOnAction(entity);
+        break;
     }
     case EC_UNDEAD:{
         UndeadOnAction(entity);
+        break;
     }
     }
 

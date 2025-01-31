@@ -1,7 +1,7 @@
 #ifndef POTIONS_H
 #define POTIONS_H
 
-#include "item.h"
+typedef struct Item Item;
 
 typedef enum {
     POTION_HEAL,
@@ -19,5 +19,6 @@ typedef struct{
 } PotionExtra;
 
 Item* createPotion(Item* baseItem, PotionClass subclass, int impact);
+int PotionOnConsume(Item* item);
 
 #endif

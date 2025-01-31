@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "potions.h"
 #include "logger.h"
+#include "player.h"
 
 Item* createPotion(Item* baseItem, PotionClass subclass, int impact){
     baseItem->itemclass = IC_POTION;
@@ -17,3 +18,13 @@ Item* createPotion(Item* baseItem, PotionClass subclass, int impact){
     return baseItem;
 }
 
+int PotionOnConsume(Item* item){
+    item->count--;
+    PotionExtra* extra = (PotionExtra *) item->ItemExtra;
+
+
+
+
+    if (item->count == 0) return 1;
+    return 0;
+}

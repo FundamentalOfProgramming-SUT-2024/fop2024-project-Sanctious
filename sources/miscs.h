@@ -1,6 +1,8 @@
 #ifndef MISCS_H
 #define MISCS_H
 
+typedef struct Item Item;
+
 typedef enum {
     GOLD_BLACK,
     GOLD_NORMAL,

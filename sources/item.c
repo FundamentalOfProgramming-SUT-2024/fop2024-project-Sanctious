@@ -4,6 +4,7 @@
 #include "logger.h"
 #include "renderer.h"
 #include "map.h"
+#include "allitems.h"
 
 Item* createBaseItem(char* name, gCord pos, char sprite[5], Color spriteColor, int count){
     Item* baseItem = (Item *) malloc(1 * sizeof(Item));
@@ -20,4 +21,17 @@ Item* createBaseItem(char* name, gCord pos, char sprite[5], Color spriteColor, i
     }
 
     return baseItem;
+}
+
+int ItemOnConsume(Item* item){
+    switch(item->itemclass){
+    case IC_FOOD:{
+        return FoodOnConsume(item);
+    }
+    case IC_POTION:{
+        return PotionOnConsume(item);
+    }
+    }
+
+    return 0;
 }
