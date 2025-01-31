@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "item.h"
 #include "map.h"
+#include "savesystem.h"
 
 void initializePlayer();
 static Player* instance = NULL;
@@ -30,13 +31,16 @@ Player* getPlayerInstance() {
 
 
 void initializePlayer(Player* player){
-    player->gold = 2;
-    player->health = 10;
-    player->maxHealth = 10;
-    player->armor = 2;
-    player->maxArmor = 2;
-    player->hunger = 2;
-    player->maxHunger = 2;
+    SaveInfo* saveinfo = getCurrentSave();
+
+    player->gold = 0;
+    player->maxHealth = saveinfo->difficulty.maxHealth;
+    player->health = player->maxHealth;
+    player->maxArmor = saveinfo->difficulty.maxArmor;
+    player->armor = player->maxArmor;
+    player->maxHunger = saveinfo->difficulty.maxHunger;
+    player->hunger = player->maxHunger;
+
     player->combatTagTime = 0;
     player->inventory_size = 0;
     player->equippedItem = NULL;

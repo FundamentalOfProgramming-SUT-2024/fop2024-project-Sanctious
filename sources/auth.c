@@ -96,7 +96,7 @@ User* createUser(char* name, char* password, char* email){
     fwrite(user, sizeof(User), 1, file);
     fclose(file);
 
-    Log("Register successful username: \"%s\".", _DEBUG_, name);
+    Log("User created successfully username: \"%s\".", _DEBUG_, name);
     return user;
 
 }
@@ -118,11 +118,11 @@ User* loadUser(char* name, char* password){
 
     // Load user without password
     if (password == NULL || comparePasswords(user, password)){
-        Log("Login successful username: \"%s\".", _DEBUG_, name);
+        Log("User successfully loaded username: \"%s\".", _DEBUG_, name);
         return user;
     }
     else {
-        Log("Login failed username: \"%s\".", _DEBUG_, name);
+        Log("Loading user failed username: \"%s\".", _DEBUG_, name);
         return NULL;
     }
 

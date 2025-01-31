@@ -595,6 +595,8 @@ for (int i = 0; i < numFloors; i ++){
 }
 
 void createSave(SaveInfo* saveinfo){
+    setCurrentSave(saveinfo);
+
     generateFloors();
     setPlayerInstance(NULL);
     getPlayerInstance();
@@ -604,7 +606,6 @@ void createSave(SaveInfo* saveinfo){
 //    saveinfo->curFloor = 0;
 //    saveinfo->numFloors = 0;
 
-    setCurrentSave(saveinfo);
     saveGame();
 }
 //    load{

@@ -43,13 +43,14 @@ void playerAction(){
     int curTime = ++getCurrentSave()->gametime;
     Map* map = getFloor(getCurFloor());
     Player* player = getPlayerInstance();
+    SaveInfo* saveinfo = getCurrentSave();
 
     player->combatTagTime++;
 
-    if (curTime%2 == 0 && player->hunger == player->maxHunger){
+    if (curTime%saveinfo->difficulty.healthRegenCDT == 0 && player->hunger == player->maxHunger){
         modifyPlayerHealth(player, 1);
     }
-    if (curTime%4 == 0){
+    if (curTime%saveinfo->difficulty.hungerDrainTicks == 0){
         modifyPlayerHunger(player, -1);
     }
 

@@ -29,18 +29,54 @@ static void processKeyboard(unsigned char key, int x, int y) {
             // Manually handle button press
             switch(menu.hover_element){
             // New game
-            case 4:
+            case 4:{
                 if (getCurrentUser() == NULL){
                     Log("User not signed in", _DEBUG_);
                     break;
                 }
 
                 SaveInfo* saveinfo = (SaveInfo *) malloc(1 * sizeof(SaveInfo));
-                InputFieldExtra* extra = (InputFieldExtra *) menu.uiElements[0]->UIExtra;
-                strcpy(saveinfo->savename, extra->input);
+                InputFieldExtra* snameExtra = (InputFieldExtra *) menu.uiElements[0]->UIExtra;
+                CarouselExtra* sizeExtra = (CarouselExtra *) menu.uiElements[1]->UIExtra;
+                CarouselExtra* difficultyExtra = (CarouselExtra *) menu.uiElements[2]->UIExtra;
+
+
+                switch(difficultyExtra->curOption){
+                case 0:
+                    saveinfo->difficulty.hungerDrainTicks = 10;
+                    saveinfo->difficulty.healthRegenCDT = 1;
+                    saveinfo->difficulty.maxArmor = 25;
+                    saveinfo->difficulty.maxHealth = 40;
+                    saveinfo->difficulty.maxHunger = 50;
+                    break;
+                case 1:
+                    saveinfo->difficulty.hungerDrainTicks = 5;
+                    saveinfo->difficulty.healthRegenCDT = 2;
+                    saveinfo->difficulty.maxArmor = 10;
+                    saveinfo->difficulty.maxHealth = 20;
+                    saveinfo->difficulty.maxHunger = 25;
+                    break;
+                case 2:
+                    saveinfo->difficulty.hungerDrainTicks = 2;
+                    saveinfo->difficulty.healthRegenCDT = 3;
+                    saveinfo->difficulty.maxArmor = 5;
+                    saveinfo->difficulty.maxHealth = 10;
+                    saveinfo->difficulty.maxHunger = 10;
+                    break;
+                case 3:
+                    saveinfo->difficulty.hungerDrainTicks = 2;
+                    saveinfo->difficulty.healthRegenCDT = 4;
+                    saveinfo->difficulty.maxArmor = 1;
+                    saveinfo->difficulty.maxHealth = 5;
+                    saveinfo->difficulty.maxHunger = 5;
+                    break;
+                }
+
+                strcpy(saveinfo->savename, snameExtra->input);
                 createSave(saveinfo);
 
                 break;
+            }
             // Back
             case 5:
                 changeScene(getSceneByID("main_menu"));
@@ -81,7 +117,7 @@ void initscene_newgame_menu(){
     menu.uiElements[1] = createCarousel((Pos) {RWINDOW_WIDTH/2-150, 150}, "Map Size :",(char *[]){"Normal", "Large", "Gamer", "SigmaBoy"}, 4, FONTNORMALSCALE);
     configureCarouselColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[2] = createCarousel((Pos) {RWINDOW_WIDTH/2-150, 200}, "Difficulty :",(char *[]){"Loser", "Mid", "Nerd", "Gamer"}, 4, FONTNORMALSCALE);
+    menu.uiElements[2] = createCarousel((Pos) {RWINDOW_WIDTH/2-150, 200}, "Difficulty :",(char *[]){"Crybaby", "Skibidi", "Alpha", "Sigma"}, 4, FONTNORMALSCALE);
     configureCarouselColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
 
     menu.uiElements[3] = createSlider((Pos) {RWINDOW_WIDTH/2-150, 250}, "Survival Chance :", 50, 0, 100, 5, FONTNORMALSCALE, 50);

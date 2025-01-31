@@ -3,6 +3,22 @@
 
 #include "map.h"
 
+typedef struct {
+    int hungerDrainTicks;
+    int healthRegenCDT; // Health regen cooldown ticks
+    int maxArmor;
+    int maxHealth;
+    int maxHunger;
+
+} Difficulty;
+
+typedef enum {
+    MS_NORMAL,
+    MS_LARGE,
+    MS_GAMER,
+    MS_SIGMABOI
+} MapSize;
+
 typedef struct{
     char savename[MAX_STR_SIZE];
 

@@ -30,20 +30,6 @@ typedef enum {
     RT_NIGHTMARE    = 3
 } RoomType;
 
-typedef enum {
-    DIFFICULTY_LOSER,
-    DIFFICULTY_MID,
-    DIFFICULTY_NERD,
-    DIFFICULTY_GAMER
-} Difficulty;
-
-typedef enum {
-    MS_NORMAL,
-    MS_LARGE,
-    MS_GAMER,
-    MS_SIGMABOI
-} MapSize;
-
 typedef struct {
     int gridW;
     int gridH;

@@ -45,8 +45,20 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
                 activatePopUp(&menu, COLOR_RUBY);
                 break;
+            // Guest
+            case 3:{
+                if (!userExists("Guest")){
+                    createUser("Guest", "1", "guest@guest.co");
+                }
+                User* user = loadUser("Guest", NULL);
+                setCurrentUser(user);
+                changeScene(getSceneByID("main_menu"));
+
+
+                break;
+            }
             // Quit
-            case 3:
+            case 4:
                 changeScene(getSceneByID("authentication_menu"));
                 break;
 
@@ -77,8 +89,8 @@ static void onEnter(){
 void initscene_login_menu(){
     // Menu
     menu.enabled = 1;
-    menu.num_elements = 5;
-    menu.num_interactable_elements = 4;
+    menu.num_elements = 6;
+    menu.num_interactable_elements = 5;
 
     menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Name :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
@@ -92,10 +104,13 @@ void initscene_login_menu(){
     menu.uiElements[2] = createButton((Pos) {-1, 300}, "Login", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[3] = createButton((Pos) {-1, 350}, "Back", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_LIME_GREEN);
+    menu.uiElements[3] = createButton((Pos) {-1, 350}, "Login as Guest", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_GREEN);
 
-    menu.uiElements[4] = createLabel((Pos) {-1, 40}, "Login sigmaboi!", FONTNORMALSCALE*2, COLOR_CRIMSON);
+    menu.uiElements[4] = createButton((Pos) {-1, 450}, "Back", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_LIME_GREEN);
+
+    menu.uiElements[5] = createLabel((Pos) {-1, 40}, "Login sigmaboi!", FONTNORMALSCALE*2, COLOR_CRIMSON);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));
