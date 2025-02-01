@@ -259,10 +259,7 @@ static void pickUpItems(){
 }
 
 static void renderPlayer(Player* player){
-//    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "ò", COLOR_HOT_PINK, 0);
-    renderCell(player->pos.gridX, player->pos.gridY, "ð", COLOR_HOT_PINK, 0);
-//    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "i", COLOR_HOT_PINK, 0);
-//    renderCell(getPlayerInstance()->pos.gridX, getPlayerInstance()->pos.gridY, "*", COLOR_HOT_PINK, 0);
+    renderCell(player->pos.gridX, player->pos.gridY, player->sprite, player->spriteColor, 0);
 }
 
 static void renderPlayerStatus(Player* player){

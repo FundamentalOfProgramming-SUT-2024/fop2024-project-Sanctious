@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "string.h"
 #include "logger.h"
 #include "player.h"
 #include "utils.h"
@@ -32,6 +33,9 @@ Player* getPlayerInstance() {
 
 void initializePlayer(Player* player){
     SaveInfo* saveinfo = getCurrentSave();
+
+    strcpy(player->sprite, "\u00f0");
+    player->spriteColor = saveinfo->playerSkin;
 
     player->gold = 0;
     player->maxHealth = saveinfo->difficulty.maxHealth;

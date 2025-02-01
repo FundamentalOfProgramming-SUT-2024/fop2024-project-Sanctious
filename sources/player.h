@@ -8,6 +8,8 @@ typedef struct Item Item;
 
 typedef struct {
     gCord pos;
+    char sprite[5]; // Custom sprite support
+    Color spriteColor;
 
     Item* equippedItem;
 

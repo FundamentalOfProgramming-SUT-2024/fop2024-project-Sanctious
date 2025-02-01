@@ -29,6 +29,7 @@ typedef struct{
     int curFloor;
 
     Difficulty difficulty;
+    Color playerSkin;
     MapSize mapsize;
 
 } SaveInfo;

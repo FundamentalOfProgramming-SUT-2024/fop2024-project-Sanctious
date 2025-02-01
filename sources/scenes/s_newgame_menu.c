@@ -39,7 +39,19 @@ static void processKeyboard(unsigned char key, int x, int y) {
                 InputFieldExtra* snameExtra = (InputFieldExtra *) menu.uiElements[0]->UIExtra;
                 CarouselExtra* sizeExtra = (CarouselExtra *) menu.uiElements[1]->UIExtra;
                 CarouselExtra* difficultyExtra = (CarouselExtra *) menu.uiElements[2]->UIExtra;
+                CarouselExtra* playerSkin = (CarouselExtra *) menu.uiElements[3]->UIExtra;
 
+                switch(playerSkin->curOption){
+                case 0:
+                    saveinfo->playerSkin = COLOR_MAROON;
+                    break;
+                case 1:
+                    saveinfo->playerSkin = COLOR_CYAN;
+                    break;
+                case 2:
+                    saveinfo->playerSkin = COLOR_PURPLE;
+                    break;
+                }
 
                 switch(difficultyExtra->curOption){
                 case 0:
@@ -120,8 +132,8 @@ void initscene_newgame_menu(){
     menu.uiElements[2] = createCarousel((Pos) {RWINDOW_WIDTH/2-150, 200}, "Difficulty :",(char *[]){"Crybaby", "Skibidi", "Alpha", "Sigma"}, 4, FONTNORMALSCALE);
     configureCarouselColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[3] = createSlider((Pos) {RWINDOW_WIDTH/2-150, 250}, "Survival Chance :", 50, 0, 100, 5, FONTNORMALSCALE, 50);
-    configureSliderColor(menu.uiElements[3], COLOR_GRAY, COLOR_CYAN);
+    menu.uiElements[3] = createCarousel((Pos) {RWINDOW_WIDTH/2-150, 250}, "Skin :",(char *[]){"Maroon", "Cyan", "Purple"}, 3, FONTNORMALSCALE);
+    configureCarouselColor(menu.uiElements[3], COLOR_GRAY, COLOR_CYAN);
 
     menu.uiElements[4] = createButton((Pos) {-1, 300}, "Create", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_LIME_GREEN);
