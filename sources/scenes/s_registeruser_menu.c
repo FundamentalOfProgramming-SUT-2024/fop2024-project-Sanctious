@@ -51,6 +51,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
                 if (!flag){
                     // Create user
+                    free(getCurrentUser());
                     setCurrentUser(createUser(name, email, password));
                     changeScene(getSceneByID("main_menu"));
 

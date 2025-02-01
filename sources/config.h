@@ -52,6 +52,7 @@
 #define MAX_MENU_UIELEMENTS     40
 #define MAX_SAVES_PU            5 // max saves per user
 #define MAX_STRING_INPUT        100
+#define MAX_NUM_USERS           1000
 #define MAX_CAROUSEL_OPTIONS    10
 #define LINE_INDENTATION        5 // Pixel
 #define INPUTBOX_TOPMARGIN      2 // Pixel

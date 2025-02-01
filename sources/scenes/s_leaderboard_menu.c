@@ -2,8 +2,11 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../uiutils.h"
+#include "../auth.h"
 
 static Menu menu;
+static User* users[MAX_NUM_USERS];
+static int count = 0;
 
 static void render() {
 
@@ -11,7 +14,6 @@ static void render() {
     renderMenu(&menu);
     glFlush();
 }
-
 
 static void processKeyboard(unsigned char key, int x, int y) {
     // Basic menu keyboard handling is done by UIutils
@@ -52,10 +54,36 @@ static void processSKeyboard(int key, int x, int y) {
 }
 
 static void onExit(){
+    for (int i = 0; i < count; i++){
+        free(users[i]);
+    }
+}
 
+static int sort(const void* user1, const void* user2){
+    User* usera = *(User **) user1;
+    User* userb = *(User **) user2;
+    long long diff = userb->stats.exp - usera->stats.exp;
+    return (diff > 0) - (diff < 0);
 }
 
 static void onEnter(){
+    count = loadAllUsers(users);
+    qsort(users, count, sizeof(User *), sort);
+
+    menu.num_elements = count;
+    menu.num_interactable_elements = 0;
+
+    char temp[100];
+    for (int i = 0; i < count; i ++){
+        sprintf(temp, "(%d). %s: g:%d pt:%d score:%d games:%d", i+1, users[i]->creds.name, users[i]->stats.sumGold, users[i]->stats.playTime, users[i]->stats.sumScores, users[i]->stats.num_games);
+        if (!strcmp(getCurrentUser()->creds.name, users[i]->creds.name)){
+            menu.uiElements[i] = createLabel((Pos) {200, 100+i*30}, temp, FONTNORMALSCALE*0.75, COLOR_CYAN);
+        }
+        else{
+            menu.uiElements[i] = createLabel((Pos) {200, 100+i*30}, temp, FONTNORMALSCALE*0.75, COLOR_MAGENTA);
+        }
+    }
+
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);
@@ -64,23 +92,6 @@ static void onEnter(){
 void initscene_leaderboard_menu(){
     // Menu
     menu.enabled = 1;
-    menu.num_elements = 8;
-    menu.num_interactable_elements = 7;
-
-    menu.uiElements[0] = createButton((Pos) {-1, 100}, "Authentication", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[1] = createButton((Pos) {-1, 150}, "New Game", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[2] = createButton((Pos) {-1, 200}, "Load Game", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[3] = createButton((Pos) {-1, 250}, "Profile", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[4] = createButton((Pos) {-1, 300}, "Leaderboard", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[5] = createButton((Pos) {-1, 350}, "Settings", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[5], COLOR_GRAY, COLOR_CYAN);
-    menu.uiElements[6] = createButton((Pos) {-1, 410}, "Quit", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[6], COLOR_GRAY, COLOR_RUBY);
 //    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "", FONTNORMALSCALE, (Scale) {200, 30}, 20);
 //    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;
 //    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;

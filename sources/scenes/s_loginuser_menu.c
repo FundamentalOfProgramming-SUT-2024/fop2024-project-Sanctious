@@ -39,6 +39,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     addMsgToPopUp(&menu, "User/Password incorrect.");
                 }
                 else{
+                    free(getCurrentUser());
                     setCurrentUser(user);
                     changeScene(getSceneByID("main_menu"));
                 }
@@ -51,6 +52,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     createUser("Guest", "1", "guest@guest.co");
                 }
                 User* user = loadUser("Guest", NULL);
+                free(getCurrentUser());
                 setCurrentUser(user);
                 changeScene(getSceneByID("main_menu"));
 

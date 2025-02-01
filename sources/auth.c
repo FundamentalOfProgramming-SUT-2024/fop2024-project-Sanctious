@@ -6,12 +6,12 @@
 #include "logger.h"
 #include "main.h"
 #include "map.h"
-
 #ifdef _WIN32
     #include <direct.h>
     #include <windows.h>
 #else
     #include <sys/stat.h>
+    #include <dirent.h>
 #endif
 
 void createDirectory(char* path) {
@@ -80,7 +80,7 @@ User* createUser(char* name, char* password, char* email){
     strcpy(user->creds.password, password);
     strcpy(user->creds.email, email);
 
-    user->stats = (Stats) {0, 0, 0, 0, 0};
+    user->stats = (Stats) {0, 0, 0, 10, 0};
     char temp[MAX_STR_SIZE];
     sprintf(temp, "saves/%s", name);
     createDirectory(temp);
@@ -127,3 +127,63 @@ User* loadUser(char* name, char* password){
     }
 
 }
+
+int loadAllUsers(User* users[MAX_NUM_USERS]){
+    int count = 0;  // Count of directories found
+    const char* path = "./saves";
+    char temp[MAX_STRING_INPUT+1];
+
+    #ifdef _WIN32
+    WIN32_FIND_DATA findData;
+    char searchPath[512];
+    snprintf(searchPath, sizeof(searchPath), "%s\\*", path);
+
+    HANDLE hFind = FindFirstFile(searchPath, &findData);
+    if (hFind == INVALID_HANDLE_VALUE) {
+        perror("Error opening directory");
+        return -1;
+    }
+
+    do {
+        if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            if (strcmp(findData.cFileName, ".") != 0 && strcmp(findData.cFileName, "..") != 0) {
+                strncpy(temp, findData.cFileName, MAX_STRING_INPUT);
+                temp[MAX_STRING_INPUT] = '\0'; // Ensure null termination
+                users[count] = loadUser(temp, NULL);
+                count++;
+//                if (count >= MAX_NUM_USERS) break;
+            }
+        }
+    } while (FindNextFile(hFind, &findData) != 0);
+
+    FindClose(hFind);
+
+    #else  // Linux/macOS
+    struct dirent *entry;
+    struct stat statbuf;
+    DIR *dir = opendir(path);
+    if (!dir) {
+        perror("Error opening directory");
+        return -1;
+    }
+
+    while ((entry = readdir(dir)) != NULL) {
+        char fullPath[512];
+        snprintf(fullPath, sizeof(fullPath), "%s/%s", path, entry->d_name);
+
+        if (stat(fullPath, &statbuf) == 0 && S_ISDIR(statbuf.st_mode)) {
+            if (entry->d_name[0] != '.') {  // Ignore "." and ".."
+                strncpy(temp, entry->d_name, MAX_STRING_INPUT);
+                temp[MAX_STRING_INPUT] = '\0';  // Ensure null termination
+                users[count] = loadUser(temp, NULL);
+                count++;
+//                if (count >= MAX_NUM_USERS) break;
+            }
+        }
+    }
+    closedir(dir);
+    #endif
+
+    return count;
+}
+
