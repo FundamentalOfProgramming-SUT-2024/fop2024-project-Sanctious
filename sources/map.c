@@ -537,7 +537,6 @@ void generateStructures(Map* map){
 }
 
 void generateItems(Map* map){
-    return;
     for (int i = 0; i < 10; i++){
         Room* room = getRandomRoom(map);
 

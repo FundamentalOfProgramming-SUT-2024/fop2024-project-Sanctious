@@ -45,6 +45,10 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
         }
     }
+    // Back
+    if (key == 27){
+        changeScene(getSceneByID("main_menu"));
+    }
 
 }
 
@@ -70,19 +74,45 @@ static void onEnter(){
     count = loadAllUsers(users);
     qsort(users, count, sizeof(User *), sort);
 
-    menu.num_elements = count;
+    menu.num_elements = count+4;
     menu.num_interactable_elements = 0;
 
     char temp[100];
     for (int i = 0; i < count; i ++){
-        sprintf(temp, "(%d). %s: g:%d pt:%d score:%d games:%d", i+1, users[i]->creds.name, users[i]->stats.sumGold, users[i]->stats.playTime, users[i]->stats.sumScores, users[i]->stats.num_games);
-        if (!strcmp(getCurrentUser()->creds.name, users[i]->creds.name)){
-            menu.uiElements[i] = createLabel((Pos) {200, 100+i*30}, temp, FONTNORMALSCALE*0.75, COLOR_CYAN);
+        Color color = COLOR_MAGENTA;
+        float fontSize = FONTNORMALSCALE*0.75;
+
+        switch(i){
+        case 0:
+            color = COLOR_CRIMSON;
+            fontSize = FONTNORMALSCALE*0.9;
+            sprintf(temp, "(Goat %d). %s: g:%d pt:%d score:%d games:%d", i+1, users[i]->creds.name, users[i]->stats.sumGold, users[i]->stats.playTime, users[i]->stats.sumScores, users[i]->stats.num_games);
+            break;
+        case 1:
+            color = COLOR_EMERALD;
+            fontSize = FONTNORMALSCALE*0.9;
+            sprintf(temp, "(Legend %d). %s: g:%d pt:%d score:%d games:%d", i+1, users[i]->creds.name, users[i]->stats.sumGold, users[i]->stats.playTime, users[i]->stats.sumScores, users[i]->stats.num_games);
+            break;
+        case 2:
+            color = COLOR_AMBER;
+            fontSize = FONTNORMALSCALE*0.9;
+            sprintf(temp, "(Mythical %d). %s: g:%d pt:%d score:%d games:%d", i+1, users[i]->creds.name, users[i]->stats.sumGold, users[i]->stats.playTime, users[i]->stats.sumScores, users[i]->stats.num_games);
+            break;
+        default:
+            color = COLOR_MAGENTA;
+            fontSize = FONTNORMALSCALE*0.75;
+            sprintf(temp, "(%d). %s: g:%d pt:%d score:%d games:%d", i+1, users[i]->creds.name, users[i]->stats.sumGold, users[i]->stats.playTime, users[i]->stats.sumScores, users[i]->stats.num_games);
+            break;
+
         }
-        else{
-            menu.uiElements[i] = createLabel((Pos) {200, 100+i*30}, temp, FONTNORMALSCALE*0.75, COLOR_MAGENTA);
-        }
+        if (!strcmp(getCurrentUser()->creds.name, users[i]->creds.name))
+            menu.uiElements[count+4-1] = createLabel((Pos) {200-20, 100+i*30}, ">", FONTNORMALSCALE*0.75, COLOR_CYAN);
+        menu.uiElements[i] = createLabel((Pos) {200, 100+i*30}, temp, fontSize, color);
     }
+
+    menu.uiElements[count+4-2] = createLabel((Pos) {200-20, 100+0*30}, "\u010A", FONTNORMALSCALE*0.9, COLOR_GOLD);
+    menu.uiElements[count+4-3] = createLabel((Pos) {200-20, 100+1*30}, "\u010A", FONTNORMALSCALE*0.9, COLOR_GRAY);
+    menu.uiElements[count+4-4] = createLabel((Pos) {200-20, 100+2*30}, "\u010A", FONTNORMALSCALE*0.9, COLOR_BROWN);
 
     menu.hover_element = -1;
     deactivatePopUp(&menu);
