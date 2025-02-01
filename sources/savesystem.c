@@ -182,6 +182,10 @@ void saveStructureExtra(FILE* file, Structure* structure){
         fwrite(&(structure->StructureExtra), sizeof(TrapExtra *), 1, file);
         fwrite((TrapExtra *) structure->StructureExtra, sizeof(TrapExtra), 1, file);
         break;
+    case ST_STAIRS:
+        fwrite(&(structure->StructureExtra), sizeof(StairsExtra *), 1, file);
+        fwrite((StairsExtra *) structure->StructureExtra, sizeof(StairsExtra), 1, file);
+        break;
     case ST_OBSTACLE:
 //        fwrite(&(structure->StructureExtra), sizeof(Obsta *), 1, file);
 //        fwrite((TrapExtra *) structure->StructureExtra, sizeof(TrapExtra), 1, file);
@@ -198,11 +202,17 @@ void loadStructureExtra(FILE* file, Structure* structure, HashMap* hashmap){
     void* temp;
     switch(structure->type){
     case ST_TRAP:{
-        // SWITCH CASE FAULT
         TrapExtra* extra = (TrapExtra *) malloc(1 * sizeof(TrapExtra));
         fread(&temp, sizeof(TrapExtra *), 1, file);
         hashmap_add(hashmap, temp, extra);
         fread(extra, sizeof(TrapExtra), 1, file);
+        break;
+    }
+    case ST_STAIRS:{
+        StairsExtra* extra = (StairsExtra *) malloc(1 * sizeof(StairsExtra));
+        fread(&temp, sizeof(StairsExtra *), 1, file);
+        hashmap_add(hashmap, temp, extra);
+        fread(extra, sizeof(StairsExtra), 1, file);
         break;
     }
     case ST_OBSTACLE:{

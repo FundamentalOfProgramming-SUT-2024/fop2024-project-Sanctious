@@ -13,16 +13,32 @@ Structure* generateBaseStructure(char sprite[5], Color spriteColor, gCord pos){
     return structure;
 }
 
-Structure* generateTrap(Structure* baseStructure, int damage){
-    baseStructure->type = ST_TRAP;
+Structure* generateTrap(Structure* structure, int damage){
+    structure->type = ST_TRAP;
 
     TrapExtra* extra = (TrapExtra *) malloc(1 * sizeof(TrapExtra));
 
     extra->damage = 5;
 
-    baseStructure->StructureExtra = (void *) extra;
+    structure->StructureExtra = (void *) extra;
 
     Log("Trap generated with pos: (%d, %d) damage: %d.", _DEBUG_,
-             baseStructure->pos.gridX, baseStructure->pos.gridY, extra->damage);
-    return baseStructure;
+             structure->pos.gridX, structure->pos.gridY, extra->damage);
+    return structure;
+}
+
+Structure* generateStairs(Structure* structure, int floorIndex){
+    structure->type = ST_STAIRS;
+
+    StairsExtra* extra = (StairsExtra *) malloc(1 * sizeof(StairsExtra));
+
+    extra->floorIndex = floorIndex;
+    extra->prevPos = (gCord) {-1, -1};
+    extra->nextPos = (gCord) {-1, -1};
+
+    structure->StructureExtra = (void *) extra;
+
+    Log("Stairs generated with pos: (%d, %d) floor: %d.", _DEBUG_,
+             structure->pos.gridX, structure->pos.gridY, extra->floorIndex+1);
+    return structure;
 }

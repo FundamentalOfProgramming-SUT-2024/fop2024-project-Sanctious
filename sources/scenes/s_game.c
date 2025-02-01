@@ -14,6 +14,7 @@ static Menu pauseMenu;
 
 
 static void pickUpItems();
+static void moveFloor(int offset);
 
 float r=1.0f,g=1.0f,b=1.0f;
 
@@ -100,7 +101,11 @@ static void processKeyboard(unsigned char key, int x, int y) {
     }
     Player* player = getPlayerInstance();
     if (key == 'e'){
+        moveFloor(1);
         pickUpItems();
+    }
+    if (key == 'g'){
+        moveFloor(-1);
     }
     if (key == 'f'){
         ItemOnAttack(player->equippedItem);
@@ -131,9 +136,6 @@ static void processKeyboard(unsigned char key, int x, int y) {
         changeScene(getSceneByID("main_menu"));
     }
 
-    if (key == 'g'){
-        changeFloor(getCurFloor()+1);
-    }
 }
 
 static void processSKeyboard(int key, int x, int y) {
@@ -209,6 +211,32 @@ static void updateInventoryMenu(){
 
 }
 
+static void moveFloor(int offset){
+    Map* floor = getFloor(getCurFloor());
+    Player* player = getPlayerInstance();
+    for (int i = 0; i < floor->num_rooms; i++){
+        Room* room = floor->rooms[i];
+
+        for (int j = 0; j < room->num_structures; j++){
+            Structure* structure = room->structures[j];
+
+            if (structure->pos.gridX == player->pos.gridX &&
+                structure->pos.gridY == player->pos.gridY){
+                StairsExtra* extra = (StairsExtra *) structure->StructureExtra;
+                if (offset == -1 && extra->prevPos.gridX != -1){
+                    player->pos = extra->prevPos;
+                    changeFloor(getCurFloor()+offset);
+                }
+                if (offset == 1 && extra->nextPos.gridX != -1){
+                    player->pos = extra->nextPos;
+                    changeFloor(getCurFloor()+offset);
+                }
+                break;
+            }
+        }
+    }
+
+}
 
 
 static void pickUpItems(){
@@ -333,7 +361,7 @@ static void render() {
 
     char message[100];
     Player* player = getPlayerInstance();
-    sprintf(message, "X= %d Y= %d\nFloor= %d", player->pos.gridX, player->pos.gridY, getCurFloor());
+    sprintf(message, "X= %d Y= %d\nFloor= %d", player->pos.gridX, player->pos.gridY, getCurFloor()+1);
     renderString(0, 20, message, FONTNORMALSCALE, COLOR_PURPLE);
 
     renderPlayer(player);

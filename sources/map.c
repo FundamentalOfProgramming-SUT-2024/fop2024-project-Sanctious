@@ -68,6 +68,17 @@ Map* getFloor(int floor){
 void setFloor(int floor, Map* map){
     floors[floor] = map;
 }
+Structure* findStairs(Map* floor){
+    for (int i = 0; i < floor->num_rooms; i++){
+        Room* room = floor->rooms[i];
+        for (int j = 0; j < room->num_structures; j++){
+            Structure* structure = room->structures[j];
+            if (structure->type == ST_STAIRS) return structure;
+        }
+
+    }
+    return NULL;
+}
 // Singleton design
 void generateFloors(){
     curFloor = 0;
@@ -78,6 +89,22 @@ void generateFloors(){
         map->id = i;
         generateMap(map);
         floors[i] = map;
+    }
+
+    // Link stairs
+    for (int i = 0; i < numFloors-1; i++){
+        Room* room1 = getRandomRoom(floors[i]);
+        Room* room2 = getRandomRoom(floors[i+1]);
+
+        Structure* stairs1 = generateBaseStructure("#", COLOR_LAVENDER, getRandomCordInRoom(room1));
+        room1->structures[room1->num_structures++] = generateStairs(stairs1, i);
+
+        Structure* stairs2 = generateBaseStructure("#", COLOR_LAVENDER, getRandomCordInRoom(room2));
+        room2->structures[room2->num_structures++] = generateStairs(stairs2, i+1);
+
+        ((StairsExtra *) stairs1->StructureExtra)->nextPos = stairs2->pos;
+        ((StairsExtra *) stairs2->StructureExtra)->prevPos = stairs1->pos;
+
     }
     // Map validation
 //    for (int i = 0; i < numFloors; i++){
@@ -90,6 +117,8 @@ void generateFloors(){
 //    }
 //    printf("%d\n", p);
 }
+
+
 Map* getMapInstance() {
     // First call
     if (instance == NULL) {
@@ -508,6 +537,7 @@ void generateStructures(Map* map){
 }
 
 void generateItems(Map* map){
+    return;
     for (int i = 0; i < 10; i++){
         Room* room = getRandomRoom(map);
 
