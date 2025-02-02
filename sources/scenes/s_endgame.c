@@ -2,11 +2,12 @@
 #include "../renderer.h"
 #include "../config.h"
 #include "../uiutils.h"
+#include "../player.h"
+#include "../savesystem.h"
 
 static Menu menu;
 
 static void render() {
-
     glClear(GL_COLOR_BUFFER_BIT);
     renderMenu(&menu);
     glFlush();
@@ -53,6 +54,29 @@ static void onExit(){
 }
 
 static void onEnter(){
+    Player* player = getPlayerInstance();
+    SaveInfo* saveinfo = getCurrentSave();
+
+    // Menu
+    menu.num_elements = 3;
+    menu.num_interactable_elements = 3;
+
+    char temp[100];
+    sprintf(temp, "Golds: %d", player->gold);
+    menu.uiElements[0] = createButton((Pos) {-1, 200}, temp, FONTNORMALSCALE*2);
+    configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
+    if (player->health == 0){
+        sprintf(temp, "You lost: %d", player->gold);
+    }
+    else{
+        sprintf(temp, "You won: %d", player->gold);
+    }
+    menu.uiElements[1] = createButton((Pos) {-1, 300}, temp, FONTNORMALSCALE*2);
+    configureButtonColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
+
+    menu.uiElements[2] = createButton((Pos) {-1, 400}, "Back", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_RUBY);
+
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);
@@ -61,17 +85,6 @@ static void onEnter(){
 void initscene_endgame(){
     // Menu
     menu.enabled = 1;
-    menu.num_elements = 3;
-    menu.num_interactable_elements = 3;
-
-    menu.uiElements[0] = createButton((Pos) {-1, 200}, "Register", FONTNORMALSCALE*2);
-    configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
-
-    menu.uiElements[1] = createButton((Pos) {-1, 300}, "Login", FONTNORMALSCALE*2);
-    configureButtonColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
-
-    menu.uiElements[2] = createButton((Pos) {-1, 400}, "Back", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_RUBY);
 
 //    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "", FONTNORMALSCALE, (Scale) {200, 30}, 20);
 //    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;

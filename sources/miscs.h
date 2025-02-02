@@ -13,5 +13,6 @@ typedef struct{
 } GoldExtra;
 
 Item* createGold(Item* baseItem, GoldClass subclass);
+int GoldOnPickup(Item* item);
 
 #endif

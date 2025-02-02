@@ -37,7 +37,9 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
                 InputFieldExtra* extra = (InputFieldExtra *) menu.uiElements[0]->UIExtra;
                 loadGame(extra->input);
-                changeScene(getSceneByID("game"));
+                if (!getCurrentSave()->gameFinished){
+                    changeScene(getSceneByID("game"));
+                }
 
                 break;
             // Back

@@ -4,17 +4,17 @@
 #include "foods.h"
 #include "player.h"
 
-Item* createFood(Item* baseItem, FoodClass subclass, int hunger){
+Item* createFood(Item* baseItem, FoodClass subclass, int hungerPoints){
     baseItem->itemclass = IC_FOOD;
     FoodExtra* extra = (FoodExtra *) malloc(1 * sizeof(FoodExtra));
 
     extra->subclass = subclass;
-    extra->hunger = hunger;
+    extra->hungerPoints = hungerPoints;
 
     baseItem->ItemExtra = (void *) extra;
 
-    Log("Food generated with pos: (%d, %d) hunger: %d.", _DEBUG_,
-             baseItem->pos.gridX, baseItem->pos.gridY, extra->hunger);
+    Log("Food generated with pos: (%d, %d) hungerPoints: %d.", _DEBUG_,
+             baseItem->pos.gridX, baseItem->pos.gridY, extra->hungerPoints);
     return baseItem;
 }
 
@@ -22,6 +22,7 @@ int FoodOnConsume(Item* item){
     item->count--;
     FoodExtra* extra = (FoodExtra *) item->ItemExtra;
 
+    modifyPlayerHunger(getPlayerInstance(), extra->hungerPoints);
 
 
 

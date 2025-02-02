@@ -30,5 +30,6 @@ Item* createBaseItem(char* name, gCord pos, char sprite[5], Color spriteColor, i
 
 int ItemOnConsume(Item* item);
 int ItemOnAttack(Item* item);
+int ItemOnPickup(Item* item);
 
 #endif

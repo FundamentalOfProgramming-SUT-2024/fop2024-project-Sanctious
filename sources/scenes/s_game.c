@@ -6,12 +6,14 @@
 #include "../map.h"
 #include "../savesystem.h"
 #include "../uiutils.h"
+#include "../auth.h"
 
 static int curMenu = 0;
 static int invtabs_c = 4;
 static Menu invtabs[4];
 static Menu pauseMenu;
 
+static Menu endMenu;
 
 static void pickUpItems();
 static void moveFloor(int offset);
@@ -59,12 +61,50 @@ void playerAction(){
         EntityOnAction(map->entities[i]);
     }
 
+//    if(player->health == 0 || player->hunger == 50){
+//        getCurrentSave()->gameFinished = 1;
+//    }
+
+}
+
+void showEndScreen(){
+    char temp[100];
+    Player* player = getPlayerInstance();
+
+    renderQuad(( Pos ){50, 50}, ( Pos ){RWINDOW_WIDTH-50, RWINDOW_HEIGHT-50}, (Color) {0.2f, 0.5f, 0.5f, 0.9f} );
+    if (player->health == 0){
+        renderString(70, 120, "You lost !", FONTNORMALSCALE*1.5, COLOR_CRIMSON);
+    }
+    else{
+        renderString(70, 120, "You won !", FONTNORMALSCALE*1.5, COLOR_GREEN);
+    }
+    sprintf(temp, "Collected gold : %d", player->gold);
+    renderString(70, 170, temp, FONTNORMALSCALE*0.9, COLOR_CRIMSON);
+    sprintf(temp, "Number of items : %d", player->inventory_size);
+    renderString(70, 220, temp, FONTNORMALSCALE*0.9, COLOR_CRIMSON);
+
+    renderString(70, 270, "Press \"Enter\" to continue.", FONTNORMALSCALE, COLOR_GRAY);
+//    renderMenu(&endMenu);
 
 }
 
 static void processKeyboard(unsigned char key, int x, int y) {
+    if (key == '*'){
+        getCurrentSave()->gameFinished = 1;
+    }
+    if (getCurrentSave()->gameFinished){
+        if (key == 13){
+            getCurrentSave()->gold = getPlayerInstance()->gold;
+            getCurrentUser()->stats.sumGold += getPlayerInstance()->gold;
+            getCurrentUser()->stats.sumScores += getPlayerInstance()->score;
+            saveGame();
+            updateUser(getCurrentUser());
+            changeScene(getSceneByID("endgame"));
+        }
+        menuBasicHandleKeyboard(&endMenu, key);
+        return;
+    }
     // Number system for item types to make it easier to do other stuff ( automate stuff )
-
     if (key == 'i'){
         for (int i = 0; i < invtabs_c; i++){
             invtabs[i].enabled = invtabs[i].enabled^1;
@@ -130,6 +170,30 @@ static void processKeyboard(unsigned char key, int x, int y) {
             player->pos.gridX -= 1;
             playerAction();
         }
+    if (key == '1')
+        if (isValidPos(player->pos.gridX+1, player->pos.gridY-1)){
+            player->pos.gridX += 1;
+            player->pos.gridY -= 1;
+            playerAction();
+        }
+    if (key == '2')
+        if (isValidPos(player->pos.gridX-1, player->pos.gridY+1)){
+            player->pos.gridX -= 1;
+            player->pos.gridY += 1;
+            playerAction();
+        }
+    if (key == '3')
+        if (isValidPos(player->pos.gridX+1, player->pos.gridY+1)){
+            player->pos.gridX += 1;
+            player->pos.gridY += 1;
+            playerAction();
+        }
+    if (key == '4')
+        if (isValidPos(player->pos.gridX-1, player->pos.gridY-1)){
+            player->pos.gridX -= 1;
+            player->pos.gridY -= 1;
+            playerAction();
+        }
     // Escape key
     if (key == 27){
         saveGame();
@@ -139,6 +203,11 @@ static void processKeyboard(unsigned char key, int x, int y) {
 }
 
 static void processSKeyboard(int key, int x, int y) {
+    if (getCurrentSave()->gameFinished){
+        menuBasicHandleSKeyboard(&endMenu, key);
+        return;
+    }
+
     if (key == GLUT_KEY_RIGHT){
         if (curMenu < invtabs_c-1){
             invtabs[curMenu].hover_element = -1;
@@ -203,7 +272,6 @@ static void updateInventoryMenu(){
             invtabs[i].uiElements[invtabs[i].num_elements+j] = createLabel((Pos) {extra->pos.x+calculateTextWidth(extra->label, FONTNORMALSCALE)+10, extra->pos.y}, temp, FONTNORMALSCALE*0.7, COLOR_CYAN);
         }
         invtabs[i].num_elements *= 2;
-        invtabs[i].num_interactable_elements *= 2;
     }
 //    inventoryMenu.num_elements = player->inventory_size;
 //    inventoryMenu.num_interactable_elements = player->inventory_size;
@@ -221,7 +289,8 @@ static void moveFloor(int offset){
             Structure* structure = room->structures[j];
 
             if (structure->pos.gridX == player->pos.gridX &&
-                structure->pos.gridY == player->pos.gridY){
+                structure->pos.gridY == player->pos.gridY &&
+                structure->type == ST_STAIRS){
                 StairsExtra* extra = (StairsExtra *) structure->StructureExtra;
                 if (offset == -1 && extra->prevPos.gridX != -1){
                     player->pos = extra->prevPos;
@@ -250,7 +319,9 @@ static void pickUpItems(){
 
             if (item->pos.gridX == player->pos.gridX &&
                 item->pos.gridY == player->pos.gridY){
-                addItemToPlayer(player, item);
+                if (!ItemOnPickup(item)){
+                    addItemToPlayer(player, item);
+                }
                 removeItemFromRoom(room, j);
                 break;
             }
@@ -364,6 +435,10 @@ static void render() {
     renderPlayer(player);
     renderPlayerStatus(player);
 
+    if (getCurrentSave()->gameFinished){
+        showEndScreen();
+    }
+
     if (invtabs[0].enabled){
 //        glClearColor(1, 1, 1, 1);
 //        glClear(GL_COLOR_BUFFER_BIT);
@@ -397,6 +472,9 @@ static void playerChangeColor(int c){
 
 
 void initscene_game(){
+    endMenu.enabled = 0;
+
+
     // Inventory
     for (int i = 0; i < invtabs_c; i++){
 //        invtabs[i] = (Menu *) malloc(1 * sizeof(Menu));

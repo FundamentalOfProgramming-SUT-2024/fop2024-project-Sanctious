@@ -101,6 +101,17 @@ User* createUser(char* name, char* password, char* email){
 
 }
 
+User* updateUser(User* user){
+    char temp[MAX_STR_SIZE];
+    sprintf(temp, "saves/%s/userdata.dat", getCurrentUser()->creds.name);
+
+    FILE* file = fopen(temp, "wb");
+    fwrite(getCurrentUser(), sizeof(User), 1, file);
+    fclose(file);
+
+    Log("Updated user: \"%s\".", _DEBUG_, user->creds.name);
+}
+
 User* loadUser(char* name, char* password){
     User* user = (User *) malloc(1 * sizeof(User));
 

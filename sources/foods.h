@@ -11,10 +11,10 @@ typedef enum {
 typedef struct{
     FoodClass subclass;
 
-    int hunger;
+    int hungerPoints;
 } FoodExtra;
 
-Item* createFood(Item* baseItem, FoodClass subclass, int hunger);
+Item* createFood(Item* baseItem, FoodClass subclass, int hungerPoints);
 int FoodOnConsume(Item* item);
 
 #endif

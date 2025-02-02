@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "logger.h"
 #include "miscs.h"
+#include "player.h"
 
 Item* createGold(Item* baseItem, GoldClass subclass){
     baseItem->itemclass = IC_GOLD;
@@ -17,3 +18,8 @@ Item* createGold(Item* baseItem, GoldClass subclass){
     return baseItem;
 }
 
+int GoldOnPickup(Item* item){
+    getPlayerInstance()->gold += item->count;
+
+    return 1;
+}

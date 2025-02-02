@@ -32,6 +32,7 @@ typedef struct{
     Color playerSkin;
     MapSize mapsize;
 
+    int gameFinished;
 } SaveInfo;
 
 SaveInfo* getCurrentSave();

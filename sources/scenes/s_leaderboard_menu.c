@@ -66,7 +66,7 @@ static void onExit(){
 static int sort(const void* user1, const void* user2){
     User* usera = *(User **) user1;
     User* userb = *(User **) user2;
-    long long diff = userb->stats.exp - usera->stats.exp;
+    long long diff = userb->stats.sumGold - usera->stats.sumGold;
     return (diff > 0) - (diff < 0);
 }
 
@@ -105,8 +105,9 @@ static void onEnter(){
             break;
 
         }
-        if (!strcmp(getCurrentUser()->creds.name, users[i]->creds.name))
-            menu.uiElements[count+4-1] = createLabel((Pos) {200-20, 100+i*30}, ">", FONTNORMALSCALE*0.75, COLOR_CYAN);
+        if (!strcmp(getCurrentUser()->creds.name, users[i]->creds.name)){
+            menu.uiElements[count+4-1] = createLabel((Pos) {200-35, 100+i*30}, ">", FONTNORMALSCALE*0.75, COLOR_CYAN);
+        }
         menu.uiElements[i] = createLabel((Pos) {200, 100+i*30}, temp, fontSize, color);
     }
 
@@ -129,7 +130,6 @@ void initscene_leaderboard_menu(){
 //    menu.uiElements[6] = createCarousel((Pos) {-1, 400}, "Options :",(char *[]){"Hello", "Test", "Poopak"}, 3, FONTNORMALSCALE);
 //    menu.uiElements[7] = createSlider((Pos) {-1, 450}, "Slider :", 50, 0, 100, 5, FONTNORMALSCALE, 50);
 //    menu.uiElements[7] = createLabel((Pos) {-1, 460}, "Enter", FONTNORMALSCALE, COLOR_CRIMSON);
-    menu.uiElements[7] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, COLOR_CRIMSON);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

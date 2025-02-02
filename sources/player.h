@@ -24,6 +24,7 @@ typedef struct {
     int hunger;
     int maxHunger;
     int gold;
+    int score;
 
 } Player;
 

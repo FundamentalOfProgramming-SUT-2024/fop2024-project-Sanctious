@@ -541,21 +541,25 @@ void generateItems(Map* map){
         Room* room = getRandomRoom(map);
 
         char temp[100];
-        sprintf(temp, "Sword%d", i);
+//        sprintf(temp, "Sword%d", i);
         Item* item = createBaseItem(temp, getRandomCordInRoom(room), "W", COLOR_LIME_GREEN, 2);
-        room->items[room->num_items++] = createMeleeWeapon(item, MELEEWEAPON_SWORD, 2);
+//        room->items[room->num_items++] = createMeleeWeapon(item, MELEEWEAPON_SWORD, 2);
+//
+//        sprintf(temp, "Arrow%d", i);
+//        item = createBaseItem(temp, getRandomCordInRoom(room), "F", COLOR_LIME_GREEN, 2);
+//        room->items[room->num_items++] = createRangedWeapon(item, RANGEDWEAPON_ARROW, 2 ,2);
+//
+//        sprintf(temp, "Food%d", i);
+//        item = createBaseItem(temp, getRandomCordInRoom(room), "U", COLOR_LIME_GREEN, 2);
+//        room->items[room->num_items++] = createFood(item, FOOD_NORMAL, 2);
+//
+//        sprintf(temp, "Heal P%d", i);
+//        item = createBaseItem(temp, getRandomCordInRoom(room), "T", COLOR_LIME_GREEN, 2);
+//        room->items[room->num_items++] = createPotion(item, POTION_HEAL, 2);
 
-        sprintf(temp, "Arrow%d", i);
-        item = createBaseItem(temp, getRandomCordInRoom(room), "F", COLOR_LIME_GREEN, 2);
-        room->items[room->num_items++] = createRangedWeapon(item, RANGEDWEAPON_ARROW, 2 ,2);
-
-        sprintf(temp, "Food%d", i);
-        item = createBaseItem(temp, getRandomCordInRoom(room), "U", COLOR_LIME_GREEN, 2);
-        room->items[room->num_items++] = createFood(item, FOOD_NORMAL, 2);
-
-        sprintf(temp, "Heal P%d", i);
-        item = createBaseItem(temp, getRandomCordInRoom(room), "T", COLOR_LIME_GREEN, 2);
-        room->items[room->num_items++] = createPotion(item, POTION_HEAL, 2);
+        sprintf(temp, "Gold %d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "G", COLOR_GOLD, 10);
+        room->items[room->num_items++] = createGold(item, GOLD_NORMAL);
     }
 }
 

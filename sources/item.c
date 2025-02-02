@@ -36,6 +36,16 @@ int ItemOnConsume(Item* item){
     return 0;
 }
 
+int ItemOnPickup(Item* item){
+    switch(item->itemclass){
+    case IC_GOLD:{
+        return GoldOnPickup(item);
+    }
+    }
+
+    return 0;
+}
+
 int ItemOnAttack(Item* item){
     switch(item->itemclass){
     case IC_MELEEWEAPON:{

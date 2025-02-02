@@ -399,10 +399,9 @@ void saveGame(){
 
     }
     }
-
-//    updateUserData();
-
     fclose(file);
+    Log("Saved the game!", _DEBUG_);
+//    updateUserData();
 }
 void loadGame(char* name){
     HashMap *hashmap = hashmap_init(NULL, NULL);
@@ -600,7 +599,6 @@ for (int i = 0; i < numFloors; i ++){
 //    printf("**%d %p**", map->num_rooms );
     }
     fclose(file);
-
 //    return map;
 }
 
@@ -613,9 +611,10 @@ void createSave(SaveInfo* saveinfo){
     saveinfo->gold = 10;
     saveinfo->playtime = 0;
     saveinfo->gametime = 0;
+    saveinfo->gameFinished = 0;
 //    saveinfo->curFloor = 0;
 //    saveinfo->numFloors = 0;
-
+    Log("Created a new save", _DEBUG_);
     saveGame();
 }
 //    load{

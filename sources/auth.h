@@ -34,5 +34,6 @@ int userExists(char* name);
 User* createUser(char* name, char* password, char* email);
 User* loadUser(char* name, char* password);
 int loadAllUsers(User* users[MAX_NUM_USERS]);
+User* updateUser(User* user);
 
 #endif
