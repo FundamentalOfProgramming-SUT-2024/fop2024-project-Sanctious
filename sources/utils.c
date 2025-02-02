@@ -41,3 +41,7 @@ int comparePos(gCord pos1, gCord pos2){
     if (pos1.gridY != pos2.gridY ) return 0;
     return 1;
 }
+
+int distancePos(gCord pos1, gCord pos2){
+    return abs(pos1.gridX-pos2.gridX) + abs(pos1.gridY-pos2.gridY);
+}

@@ -85,7 +85,8 @@ static void onEnter(){
 void initscene_endgame(){
     // Menu
     menu.enabled = 1;
-
+    menu.num_elements = 3;
+    menu.num_interactable_elements = 3;
 //    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "", FONTNORMALSCALE, (Scale) {200, 30}, 20);
 //    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;
 //    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;

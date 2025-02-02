@@ -16,6 +16,7 @@ static SaveInfo* currentSave = NULL;
 SaveInfo* getCurrentSave(){
     return currentSave;
 }
+
 void setCurrentSave(SaveInfo* saveinfo){
     currentSave = saveinfo;
 }

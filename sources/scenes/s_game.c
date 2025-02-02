@@ -16,6 +16,8 @@ static int invtabs_c = 4;
 static Menu invtabs[4];
 static Menu pauseMenu;
 
+static int showMap = 0;
+
 static Menu endMenu;
 
 static void pickUpItems();
@@ -35,6 +37,29 @@ void addEventMessage(char eventMsg[MAX_STRING_INPUT], ...){
 
 void renderEventBar(){
     renderString(0, 20, eventBar, FONTNORMALSCALE*0.75, COLOR_PURPLE);
+}
+
+void revealCorridor(){
+    Player* player = getPlayerInstance();
+    Corridor* corridor = findPlayerCorridor();
+
+    if (corridor != NULL){
+        for (int i = 0; i < corridor->path_length; i++){
+            if (distancePos(player->pos, corridor->path[i]) <= 2){
+                corridor->visited[i] = 1;
+            }
+        }
+
+
+    }
+
+}
+
+void revealMap(){
+    if (findPlayerRoom() != NULL){
+        findPlayerRoom()->visited = 1;
+    }
+    revealCorridor();
 }
 
 static void renderRoomBox(float x, float y, int width, int height, Color tileColor, Color wallColor) {
@@ -79,6 +104,7 @@ void playerAction(){
         }
     }
 
+    revealMap();
 
     for (int i = 0; i < 3; i++){
         player->multiesT[i] = clamp(player->multiesT[i]-1, 0, 1000000);
@@ -150,9 +176,13 @@ static void processKeyboard(unsigned char key, int x, int y) {
             getCurrentSave()->gold = getPlayerInstance()->gold;
             getCurrentUser()->stats.sumGold += getPlayerInstance()->gold;
             getCurrentUser()->stats.sumScores += getPlayerInstance()->score;
+            printf("ASd1");
             saveGame();
+            printf("ASd2");
             updateUser(getCurrentUser());
+            printf("ASd3");
             changeScene(getSceneByID("endgame"));
+            printf("ASd4");
         }
         menuBasicHandleKeyboard(&endMenu, key);
         return;
@@ -199,16 +229,21 @@ static void processKeyboard(unsigned char key, int x, int y) {
     Player* player = getPlayerInstance();
     if (key == 'e'){
         playerAction();
-        moveFloor(1);
         pickUpItems();
+        moveFloor(1);
+        revealMap();
     }
-    if (key == 'g'){
+    if (key == 'q'){
         playerAction();
         moveFloor(-1);
+        revealMap();
     }
     if (key == 'f'){
         playerAction();
         ItemOnAttack(player->equippedItem);
+    }
+    if (key == 'm'){
+        showMap ^= 1;
     }
 	if (key == 'w')
         if (isValidPos(player->pos.gridX, player->pos.gridY-1)){
@@ -447,9 +482,11 @@ static void renderCorridors(Map* map){
     for (int i = 0; i < map->num_corridors; i++){
         Corridor* cor = map->corridors[i];
         for (int j = 0; j < cor->path_length; j++){
-            Color color = COLOR_AMBER;
-            color.a = 0.5f;
-            renderCell(cor->path[j].gridX, cor->path[j].gridY, "ô", color, 1);
+            if (cor->visited[j] || showMap){
+                Color color = COLOR_AMBER;
+                color.a = 0.5f;
+                renderCell(cor->path[j].gridX, cor->path[j].gridY, "ô", color, 1);
+            }
         }
     }
 }
@@ -471,7 +508,10 @@ static void renderRoomStructures(Room* room){
 static void renderEntities(Map* map){
     for (int i = 0; i < map->num_entities; i++){
         Entity* entity = map->entities[i];
-        renderCell(entity->pos.gridX, entity->pos.gridY, entity->sprite, entity->spriteColor, 0);
+        if (findEntityRoom(entity)->visited || showMap){
+            renderCell(entity->pos.gridX, entity->pos.gridY, entity->sprite, entity->spriteColor, 0);
+
+        }
     }
 }
 
@@ -483,14 +523,15 @@ static void render() {
 
     for (int i = 0; i < map->num_rooms; i++) {
         Room* room = map->rooms[i];
-
-        renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH,
-            room->floorsColor, room->wallsColor);
-        renderRoomDoors(room);
-        renderRoomItems(room);
-        renderRoomStructures(room);
-
+        if (room->visited || showMap){
+            renderRoomBox(room->pos.gridX, room->pos.gridY, room->scale.gridW, room->scale.gridH,
+                room->floorsColor, room->wallsColor);
+            renderRoomDoors(room);
+            renderRoomItems(room);
+            renderRoomStructures(room);
+        }
     }
+
     renderEntities(map);
 
     Player* player = getPlayerInstance();
@@ -534,6 +575,9 @@ static void playerChangeColor(int c){
     glutTimerFunc(500, playerChangeColor, c+1);
 }
 
+void onEnter(){
+    revealMap();
+}
 
 void initscene_game(){
     endMenu.enabled = 0;
@@ -555,7 +599,7 @@ void initscene_game(){
 
     strcpy(scene->sceneID, "game");
 
-    scene->onEnter = NULL;
+    scene->onEnter = onEnter;
     scene->onExit = NULL;
     scene->onKeypress = processKeyboard;
     scene->onSpecialKeypress = processSKeyboard;

@@ -39,6 +39,7 @@ typedef struct {
 typedef struct {
     int path_length;
     gCord path[MAX_CORRIDOR_LENGTH];
+    int visited[MAX_CORRIDOR_LENGTH];
 } Corridor;
 
 struct Door{
@@ -57,8 +58,6 @@ struct Room{
     gCord rrp; // relative room position in rooms grid
     Color wallsColor;
     Color floorsColor;
-    // Visited by player or not
-    char visited;
 
     // Used in map generation
     char dfsVisited;
@@ -72,6 +71,8 @@ struct Room{
     int num_doors;
     Door* doors[MAXDOORS];
 
+    // Visited by player or not
+    int visited;
 };
 
 typedef struct {

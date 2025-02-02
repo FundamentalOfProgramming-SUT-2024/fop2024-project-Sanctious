@@ -288,6 +288,7 @@ void generateRooms(Map* map){
 
             _room->rrp.gridX = i;
             _room->rrp.gridY = j;
+            _room->visited = 0;
 
 
 
@@ -336,6 +337,9 @@ void generateCorridor(Map* map, Door* door){
     // Predetermined corridor path length
     corridor->path_length = abs(pos2.gridY-pos1.gridY) + abs(pos2.gridX-pos1.gridX) + 1 + 2;
 
+    for (int i = 0; i < corridor->path_length; i++){
+        corridor->visited[i] = 0;
+    }
     // for now path length is constant there is no collision with other rooms
     // Add current room pos to the list
     corridor->path[0] = door->pos;

@@ -78,6 +78,21 @@ Room* findPlayerRoom(){
     return NULL;
 }
 
+Corridor* findPlayerCorridor(){
+    Map* map = getFloor(getCurFloor());
+    Player* player = getPlayerInstance();
+
+    for (int i = 0; i < map->num_corridors; i++){
+        Corridor* corridor = map->corridors[i];
+        for (int j = 0; j < corridor->path_length; j++){
+            if (comparePos(player->pos, corridor->path[j])){
+                return corridor;
+            }
+        }
+    }
+    return NULL;
+}
+
 char isValidPos(int gridXP, int gridYP){
     // A bad implementation
     // Only calculate this once and you are good to go

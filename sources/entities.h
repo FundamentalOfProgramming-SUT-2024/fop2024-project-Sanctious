@@ -5,6 +5,8 @@
 #include "config.h"
 #include "renderer.h"
 
+typedef struct Room Room;
+
 typedef enum{
     EC_DEMON = 0,
     EC_GIANT = 1,
@@ -61,7 +63,7 @@ Entity* createUndead(Entity* entity, int damage);
 //Entity* createSnake(Entity* entity);
 //Entity* createUndead(Entity* entity);
 void EntityOnAction(Entity* entity);
-void* findEntityRoom(Entity* entity);
+Room* findEntityRoom(Entity* entity);
 
 #endif
 

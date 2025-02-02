@@ -4,10 +4,12 @@
 #include "logger.h"
 #include "renderer.h"
 #include "player.h"
+#include "scenes/s_game.h"
+#include "map.h"
 
 extern const int odirs[8][2];
 
-void* findEntityRoom(Entity* entity){
+Room* findEntityRoom(Entity* entity){
     Map* map = getFloor(getCurFloor());
 
     for (int i = 0; i < map->num_rooms; i++){
@@ -37,7 +39,7 @@ Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor){
     return entity;
 }
 
-Entity* createDemon(Entity* entitym, int damage){
+Entity* createDemon(Entity* entity, int damage){
     entity->entityclass = EC_DEMON;
     DemonExtra* extra = (DemonExtra *) malloc(1 * sizeof(DemonExtra));
 
@@ -176,3 +178,5 @@ void EntityOnAction(Entity* entity){
     }
 
 }
+
+
