@@ -1,8 +1,9 @@
+#include <stdlib.h>
 #include "map.h"
 #include "structures.h"
 #include "logger.h"
 #include "strings.h"
-#include <stdlib.h>
+#include "player.h"
 
 Structure* generateBaseStructure(char sprite[5], Color spriteColor, gCord pos){
     Structure* structure = (Structure *) malloc(1 * sizeof(Structure));
@@ -41,4 +42,27 @@ Structure* generateStairs(Structure* structure, int floorIndex){
     Log("Stairs generated with pos: (%d, %d) floor: %d.", _DEBUG_,
              structure->pos.gridX, structure->pos.gridY, extra->floorIndex+1);
     return structure;
+}
+
+int TrapOnStep(Structure* structure){
+    TrapExtra* extra = (TrapExtra *) structure->StructureExtra;
+    Player* player = getPlayerInstance();
+
+    modifyPlayerHealth(player, -extra->damage);
+
+
+    return 1;
+}
+
+
+int StructureOnStep(Structure* structure){
+    switch(structure->type){
+    case ST_STAIRS:
+
+        break;
+    case ST_TRAP:
+        return TrapOnStep(structure);
+        break;
+    }
+    return 0;
 }

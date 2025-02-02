@@ -175,6 +175,17 @@ void removeItemFromRoom(Room* room, int itemIndex){
     room->num_items--;
 }
 
+void addStructureToRoom(Room* room, Structure* structure){
+    room->structures[room->num_structures++] = structure;
+
+}
+void removeStructureFromRoom(Room* room, int structureIndex){
+    for (int i = structureIndex; i < room->num_structures-1; i++){
+        room->structures[i] = room->structures[i+1];
+    }
+    room->num_structures--;
+}
+
 // Generate treasure-room props
 void gps_TreasureRoom(Room* room){
 
@@ -531,13 +542,13 @@ void generateStructures(Map* map){
         // check item and structure overlapping each other
         Room* room = getRandomRoom(map);
 
-        Structure* structure = generateBaseStructure("ö", COLOR_BROWN, getRandomCordInRoom(room));
-        room->structures[room->num_structures++] = generateTrap(structure, 2);
+        Structure* structure = generateBaseStructure("\u010c", COLOR_WHITE, getRandomCordInRoom(room));
+        addStructureToRoom(room ,generateTrap(structure, 5));
     }
 }
 
 void generateItems(Map* map){
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i < 3; i++){
         Room* room = getRandomRoom(map);
 
         char temp[100];
@@ -549,17 +560,25 @@ void generateItems(Map* map){
 //        item = createBaseItem(temp, getRandomCordInRoom(room), "F", COLOR_LIME_GREEN, 2);
 //        room->items[room->num_items++] = createRangedWeapon(item, RANGEDWEAPON_ARROW, 2 ,2);
 //
-//        sprintf(temp, "Food%d", i);
-//        item = createBaseItem(temp, getRandomCordInRoom(room), "U", COLOR_LIME_GREEN, 2);
-//        room->items[room->num_items++] = createFood(item, FOOD_NORMAL, 2);
-//
-//        sprintf(temp, "Heal P%d", i);
-//        item = createBaseItem(temp, getRandomCordInRoom(room), "T", COLOR_LIME_GREEN, 2);
-//        room->items[room->num_items++] = createPotion(item, POTION_HEAL, 2);
+        sprintf(temp, "Food %d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "\u0103", COLOR_BROWN, 2);
+        addItemToRoom(room, createFood(item, FOOD_NORMAL, 10));
+
+        sprintf(temp, "Heal P%d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "\u010B", COLOR_CRIMSON, 1);
+        addItemToRoom(room, createPotion(item, POTION_HEAL, 2, 10));
+
+        sprintf(temp, "Speed P%d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "\u010B", COLOR_CYAN, 1);
+        addItemToRoom(room, createPotion(item, POTION_SPEED, 2, 10));
+
+        sprintf(temp, "Damage P%d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "\u010B", COLOR_BROWN, 1);
+        addItemToRoom(room, createPotion(item, POTION_DAMAGE, 2, 10));
 
         sprintf(temp, "Gold %d", i);
         item = createBaseItem(temp, getRandomCordInRoom(room), "G", COLOR_GOLD, 10);
-        room->items[room->num_items++] = createGold(item, GOLD_NORMAL);
+        addItemToRoom(room, createGold(item, GOLD_NORMAL));
     }
 }
 
@@ -570,7 +589,7 @@ void generateEntities(Map* map){
         char temp[100];
         sprintf(temp, "entity%d", i);
         Entity* entity = createEntity(temp, getRandomCordInRoom(room), "\u0102", COLOR_LAVENDER);
-        map->entities[map->num_entities++] = createSnake(entity);
+        addEntityToMap(map, createSnake(entity));
 
 //        entity = createEntity(temp, getRandomCordInRoom(room), "\u0103", COLOR_LAVENDER);
 //        map->entities[map->num_entities++] = createDemon(entity);

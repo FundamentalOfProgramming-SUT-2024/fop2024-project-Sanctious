@@ -42,7 +42,7 @@ int MWeaponOnAttack(Item* item){
         Entity* entity = map->entities[i];
         if (abs(player->pos.gridX-entity->pos.gridX) <= 1
             && abs(player->pos.gridY-entity->pos.gridY) <= 1){
-            entity->health -= ((MeleeWeaponExtra *) player->equippedItem->ItemExtra)->damage;
+            entity->health -= ((MeleeWeaponExtra *) player->equippedItem->ItemExtra)->damage * player->multies[0];
             if (entity->health <= 0){
                 removeEntityFromMap(map, i);
                 free(entity);
@@ -56,6 +56,14 @@ int MWeaponOnAttack(Item* item){
 int RWeaponOnAttack(Item* item){
     Player* player = getPlayerInstance();
     Map* map = getFloor(getCurFloor());
+    RangedWeaponExtra* extra = (RangedWeaponExtra *) item->ItemExtra;
+
+
+//    Item* _item = createBaseItem(_item->name, , _item->sprite, _item->spriteColor, 1);
+//    room->items[room->num_items++] = createRangedWeapon(_item, extra->subclass, extra->range, extra->damage);
+
+
+
 
     return 0;
 }

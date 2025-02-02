@@ -105,6 +105,8 @@ void addEntityToMap(Map* map, Entity* entity);
 void removeEntityFromMap(Map* map, int entityIndex);
 void addItemToRoom(Room* room, Item* item);
 void removeItemFromRoom(Room* room, int itemIndex);
+void addStructureToRoom(Room* room, Structure* structure);
+void removeStructureFromRoom(Room* room, int structureIndex);
 
 
 Room* findRoomByRRP(Map*, int, int);

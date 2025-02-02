@@ -45,6 +45,12 @@ void initializePlayer(Player* player){
     player->maxHunger = saveinfo->difficulty.maxHunger;
     player->hunger = player->maxHunger;
 
+    for (int i = 0; i < 3; i++){
+        player->multies[i] = 1;
+        player->multiesT[i] = 0;
+        player->def_multies[i] = 1;
+    }
+
     player->combatTagTime = 0;
     player->inventory_size = 0;
     player->equippedItem = NULL;

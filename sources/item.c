@@ -47,6 +47,8 @@ int ItemOnPickup(Item* item){
 }
 
 int ItemOnAttack(Item* item){
+    if (item == NULL) return 0;
+
     switch(item->itemclass){
     case IC_MELEEWEAPON:{
         return MWeaponOnAttack(item);

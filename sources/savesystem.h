@@ -9,6 +9,7 @@ typedef struct {
     int maxArmor;
     int maxHealth;
     int maxHunger;
+    int starveThreshold;
 
 } Difficulty;
 

@@ -7,6 +7,7 @@
 #include "../savesystem.h"
 #include "../uiutils.h"
 #include "../auth.h"
+#include "../utils.h"
 
 static int curMenu = 0;
 static int invtabs_c = 4;
@@ -48,10 +49,37 @@ void playerAction(){
     Player* player = getPlayerInstance();
     SaveInfo* saveinfo = getCurrentSave();
 
+    for (int i = 0; i < map->num_rooms; i++){
+        Room* room = map->rooms[i];
+        for (int j = 0; j < room->num_structures; j++){
+            Structure* structure = room->structures[j];
+            if (comparePos(structure->pos, player->pos)){
+                if (StructureOnStep(structure)){
+                    removeStructureFromRoom(room, j);
+                    break;
+                }
+            }
+        }
+    }
+
+
+    for (int i = 0; i < 3; i++){
+        player->multiesT[i] = clamp(player->multiesT[i]-1, 0, 1000000);
+
+        if (player->multiesT[i] == 0){
+            player->multies[i] = player->def_multies[i];
+        }
+    }
+
+    // Speed
+    if (curTime % player->multies[1] != 0){
+        return;
+    }
+
     player->combatTagTime++;
 
     if (curTime%saveinfo->difficulty.healthRegenCDT == 0 && player->hunger == player->maxHunger){
-        modifyPlayerHealth(player, 1);
+        modifyPlayerHealth(player, 1*player->multies[2]);
     }
     if (curTime%saveinfo->difficulty.hungerDrainTicks == 0){
         modifyPlayerHunger(player, -1);
@@ -61,10 +89,17 @@ void playerAction(){
         EntityOnAction(map->entities[i]);
     }
 
-//    if(player->health == 0 || player->hunger == 50){
-//        getCurrentSave()->gameFinished = 1;
-//    }
+    if(player->health == 0){
+        getCurrentSave()->gameFinished = 1;
+    }
 
+    if (player->hunger <= saveinfo->difficulty.starveThreshold){
+        modifyPlayerHealth(player, -1);
+    }
+
+    if (getCurFloor() == getNumFloors()-1 && getFloor(getCurFloor())->num_entities == 0){
+        saveinfo->gameFinished = 1;
+    }
 }
 
 void showEndScreen(){
@@ -136,6 +171,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
             if (ItemOnConsume(extra->item)){
                 removeItemFromPlayer(player, extra->itemIndex);
             }
+            playerAction();
         }
         return;
     }
@@ -149,6 +185,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
     }
     if (key == 'f'){
         ItemOnAttack(player->equippedItem);
+        playerAction();
     }
 	if (key == 'w')
         if (isValidPos(player->pos.gridX, player->pos.gridY-1)){
@@ -350,6 +387,11 @@ static void renderPlayerStatus(Player* player){
     sprintf(message, "%d/%d", player->hunger, player->maxHunger);
     renderString(470, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_BROWN);
     renderString(470+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, "\u0103", FONTNORMALSCALE*0.9, COLOR_BROWN);
+
+    sprintf(message, "D:%d/%d\nS:%d/%d\nH:%d/%d", player->multies[0], player->multiesT[0],
+            player->multies[1], player->multiesT[1],
+            player->multies[2], player->multiesT[2]);
+    renderString(750, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_BROWN);
 
     if (player->equippedItem != NULL){
         sprintf(message, "%s", player->equippedItem->name);

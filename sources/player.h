@@ -26,6 +26,11 @@ typedef struct {
     int gold;
     int score;
 
+    // Damage, Speed, Regen
+    int multies[3];
+    int multiesT[3];
+    int def_multies[3];
+
 } Player;
 
 

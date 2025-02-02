@@ -60,6 +60,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     saveinfo->difficulty.maxArmor = 25;
                     saveinfo->difficulty.maxHealth = 40;
                     saveinfo->difficulty.maxHunger = 50;
+                    saveinfo->difficulty.starveThreshold = 5;
                     break;
                 case 1:
                     saveinfo->difficulty.hungerDrainTicks = 5;
@@ -67,6 +68,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     saveinfo->difficulty.maxArmor = 10;
                     saveinfo->difficulty.maxHealth = 20;
                     saveinfo->difficulty.maxHunger = 25;
+                    saveinfo->difficulty.starveThreshold = 10;
                     break;
                 case 2:
                     saveinfo->difficulty.hungerDrainTicks = 2;
@@ -74,6 +76,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     saveinfo->difficulty.maxArmor = 5;
                     saveinfo->difficulty.maxHealth = 10;
                     saveinfo->difficulty.maxHunger = 10;
+                    saveinfo->difficulty.starveThreshold = 5;
                     break;
                 case 3:
                     saveinfo->difficulty.hungerDrainTicks = 2;
@@ -81,6 +84,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     saveinfo->difficulty.maxArmor = 1;
                     saveinfo->difficulty.maxHealth = 5;
                     saveinfo->difficulty.maxHunger = 5;
+                    saveinfo->difficulty.starveThreshold = 3;
                     break;
                 }
 

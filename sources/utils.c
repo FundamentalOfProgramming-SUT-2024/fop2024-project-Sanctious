@@ -2,6 +2,7 @@
 #include "logger.h"
 #include "stdlib.h"
 #include "time.h"
+#include "gc.h"
 
 void initRandom(){
     srand(time(NULL));
@@ -33,4 +34,10 @@ int clamp(int value, int min, int max) {
     if (value < min) return min;
     if (value > max) return max;
     return value;
+}
+
+int comparePos(gCord pos1, gCord pos2){
+    if (pos1.gridX != pos2.gridX ) return 0;
+    if (pos1.gridY != pos2.gridY ) return 0;
+    return 1;
 }

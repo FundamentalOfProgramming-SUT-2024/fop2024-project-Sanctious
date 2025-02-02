@@ -36,4 +36,6 @@ Structure* generateBaseStructure(char sprite[5], Color spriteColor, gCord pos);
 Structure* generateTrap(Structure* structure, int damage);
 Structure* generateStairs(Structure* structure, int floorIndex);
 
+int StructureOnStep(Structure* structure);
+
 #endif
