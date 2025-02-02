@@ -3,6 +3,7 @@
 #include "logger.h"
 #include "miscs.h"
 #include "player.h"
+#include "scenes/s_game.h"
 
 Item* createGold(Item* baseItem, GoldClass subclass){
     baseItem->itemclass = IC_GOLD;
@@ -19,7 +20,16 @@ Item* createGold(Item* baseItem, GoldClass subclass){
 }
 
 int GoldOnPickup(Item* item){
-    getPlayerInstance()->gold += item->count;
+    GoldExtra* extra = (GoldExtra *) item->ItemExtra;
+
+    if (extra->subclass == GOLD_BLACK){
+        getPlayerInstance()->gold += item->count * 5;
+    }
+    else if (extra->subclass == GOLD_NORMAL){
+        getPlayerInstance()->gold += item->count;
+    }
+
+
 
     return 1;
 }

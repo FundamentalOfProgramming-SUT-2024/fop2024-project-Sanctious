@@ -4,6 +4,7 @@
 #include "logger.h"
 #include "strings.h"
 #include "player.h"
+#include "scenes/s_game.h"
 
 Structure* generateBaseStructure(char sprite[5], Color spriteColor, gCord pos){
     Structure* structure = (Structure *) malloc(1 * sizeof(Structure));
@@ -50,7 +51,7 @@ int TrapOnStep(Structure* structure){
 
     modifyPlayerHealth(player, -extra->damage);
 
-
+    addEventMessage("You stepped on a trap %d\u010c", extra->damage);
     return 1;
 }
 

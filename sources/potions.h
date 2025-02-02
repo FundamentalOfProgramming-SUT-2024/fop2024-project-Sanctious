@@ -20,5 +20,6 @@ typedef struct{
 
 Item* createPotion(Item* baseItem, PotionClass subclass, int impact, int duration);
 int PotionOnConsume(Item* item);
+int PotionOnPickup(Item* item);
 
 #endif

@@ -552,9 +552,9 @@ void generateItems(Map* map){
         Room* room = getRandomRoom(map);
 
         char temp[100];
-//        sprintf(temp, "Sword%d", i);
-        Item* item = createBaseItem(temp, getRandomCordInRoom(room), "W", COLOR_LIME_GREEN, 2);
-//        room->items[room->num_items++] = createMeleeWeapon(item, MELEEWEAPON_SWORD, 2);
+        sprintf(temp, "Mace%d", i);
+        Item* item = createBaseItem(temp, getRandomCordInRoom(room), "\u010d", COLOR_LIME_GREEN, -1);
+        addItemToRoom(room, createMeleeWeapon(item, MELEEWEAPON_MACE, 5));
 //
 //        sprintf(temp, "Arrow%d", i);
 //        item = createBaseItem(temp, getRandomCordInRoom(room), "F", COLOR_LIME_GREEN, 2);
@@ -579,6 +579,10 @@ void generateItems(Map* map){
         sprintf(temp, "Gold %d", i);
         item = createBaseItem(temp, getRandomCordInRoom(room), "G", COLOR_GOLD, 10);
         addItemToRoom(room, createGold(item, GOLD_NORMAL));
+
+        sprintf(temp, "Gold %d", i);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "G", COLOR_EMERALD, 10);
+        addItemToRoom(room, createGold(item, GOLD_BLACK));
     }
 }
 
@@ -588,8 +592,8 @@ void generateEntities(Map* map){
 
         char temp[100];
         sprintf(temp, "entity%d", i);
-        Entity* entity = createEntity(temp, getRandomCordInRoom(room), "\u0102", COLOR_LAVENDER);
-        addEntityToMap(map, createSnake(entity));
+        Entity* entity = createEntity(temp, getRandomCordInRoom(room), "\u0105", COLOR_LAVENDER);
+        addEntityToMap(map, createSnake(entity, 1));
 
 //        entity = createEntity(temp, getRandomCordInRoom(room), "\u0103", COLOR_LAVENDER);
 //        map->entities[map->num_entities++] = createDemon(entity);

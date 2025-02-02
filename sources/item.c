@@ -5,6 +5,7 @@
 #include "renderer.h"
 #include "map.h"
 #include "allitems.h"
+#include "scenes/s_game.h"
 
 Item* createBaseItem(char* name, gCord pos, char sprite[5], Color spriteColor, int count){
     Item* baseItem = (Item *) malloc(1 * sizeof(Item));
@@ -39,8 +40,25 @@ int ItemOnConsume(Item* item){
 int ItemOnPickup(Item* item){
     switch(item->itemclass){
     case IC_GOLD:{
+        addEventMessage("Picked up %d%s", item->count, item->sprite);
         return GoldOnPickup(item);
     }
+    default:{
+        addEventMessage("Picked up %s %d%s", item->name, item->count, item->sprite);
+        break;
+    }
+//    }
+//    case IC_FOOD:{
+//        return FoodOnPickup(item);
+//    }
+//    case IC_POTION:{
+//        return PotionOnPickup(item);
+//    }
+//    case IC_MELEEWEAPON:{
+//        return MWeaponOnPickup(item);
+//    }
+//    case IC_RANGEDWEAPON:{
+//        return RWeaponOnPickup(item);
     }
 
     return 0;

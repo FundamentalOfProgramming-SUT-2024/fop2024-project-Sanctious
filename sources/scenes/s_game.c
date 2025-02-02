@@ -9,6 +9,8 @@
 #include "../auth.h"
 #include "../utils.h"
 
+char eventBar[MAX_STRING_INPUT*50];
+
 static int curMenu = 0;
 static int invtabs_c = 4;
 static Menu invtabs[4];
@@ -20,6 +22,20 @@ static void pickUpItems();
 static void moveFloor(int offset);
 
 float r=1.0f,g=1.0f,b=1.0f;
+
+void addEventMessage(char eventMsg[MAX_STRING_INPUT], ...){
+    va_list args;
+    char temp[MAX_STRING_INPUT];
+    va_start(args, eventMsg);
+    vsprintf(temp, eventMsg, args);
+    va_end(args);
+    strcat(temp, "\n");
+    strcat(eventBar, temp);
+}
+
+void renderEventBar(){
+    renderString(0, 20, eventBar, FONTNORMALSCALE*0.75, COLOR_PURPLE);
+}
 
 static void renderRoomBox(float x, float y, int width, int height, Color tileColor, Color wallColor) {
     float cellWidth = gridCellWidth();
@@ -44,6 +60,7 @@ static void renderRoomBox(float x, float y, int width, int height, Color tileCol
 
 }
 void playerAction(){
+    strcpy(eventBar, "");
     int curTime = ++getCurrentSave()->gametime;
     Map* map = getFloor(getCurFloor());
     Player* player = getPlayerInstance();
@@ -94,6 +111,7 @@ void playerAction(){
     }
 
     if (player->hunger <= saveinfo->difficulty.starveThreshold){
+        addEventMessage("You are starving!");
         modifyPlayerHealth(player, -1);
     }
 
@@ -158,34 +176,39 @@ static void processKeyboard(unsigned char key, int x, int y) {
 ////                getPlayerInstance()->inventory[inventoryMenu->hover_element];
 //
 //            }
+            playerAction();
+            addEventMessage("Equipped %s", extra->item->name);
             player->equippedItem = extra->item;
 
         }
         if (key == 'q'){
+            playerAction();
             removeItemFromPlayer(player, extra->itemIndex);
             addItemToRoom(findPlayerRoom(), extra->item);
             extra->item->pos = player->pos;
         }
 
         if (key == 'e'){
+            playerAction();
             if (ItemOnConsume(extra->item)){
                 removeItemFromPlayer(player, extra->itemIndex);
             }
-            playerAction();
         }
         return;
     }
     Player* player = getPlayerInstance();
     if (key == 'e'){
+        playerAction();
         moveFloor(1);
         pickUpItems();
     }
     if (key == 'g'){
+        playerAction();
         moveFloor(-1);
     }
     if (key == 'f'){
-        ItemOnAttack(player->equippedItem);
         playerAction();
+        ItemOnAttack(player->equippedItem);
     }
 	if (key == 'w')
         if (isValidPos(player->pos.gridX, player->pos.gridY-1)){
@@ -332,10 +355,12 @@ static void moveFloor(int offset){
                 if (offset == -1 && extra->prevPos.gridX != -1){
                     player->pos = extra->prevPos;
                     changeFloor(getCurFloor()+offset);
+                    addEventMessage("Descended to floor: %d", getCurFloor()+1);
                 }
                 if (offset == 1 && extra->nextPos.gridX != -1){
                     player->pos = extra->nextPos;
                     changeFloor(getCurFloor()+offset);
+                    addEventMessage("Ascended to floor: %d", getCurFloor()+1);
                 }
                 break;
             }
@@ -468,14 +493,11 @@ static void render() {
     }
     renderEntities(map);
 
-
-    char message[100];
     Player* player = getPlayerInstance();
-    sprintf(message, "X= %d Y= %d\nFloor= %d", player->pos.gridX, player->pos.gridY, getCurFloor()+1);
-    renderString(0, 20, message, FONTNORMALSCALE, COLOR_PURPLE);
 
     renderPlayer(player);
     renderPlayerStatus(player);
+    renderEventBar();
 
     if (getCurrentSave()->gameFinished){
         showEndScreen();
@@ -515,6 +537,8 @@ static void playerChangeColor(int c){
 
 void initscene_game(){
     endMenu.enabled = 0;
+    endMenu.num_elements = 0;
+    endMenu.num_interactable_elements = 0;
 
 
     // Inventory

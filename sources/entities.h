@@ -14,23 +14,23 @@ typedef enum{
 } EntityClass;
 
 typedef struct{
-    int a;
+    int damage;
 } DemonExtra;
 
 typedef struct{
-    int a;
+    int damage;
 } GiantExtra;
 
 typedef struct{
-    int a;
+    int damage;
 } SnakeExtra;
 
 typedef struct{
-    int a;
+    int damage;
 } DragonExtra;
 
 typedef struct{
-    int a;
+    int damage;
 } UndeadExtra;
 
 typedef struct {
@@ -51,11 +51,11 @@ typedef struct {
 } Entity;
 
 Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor);
-Entity* createDemon(Entity* entity);
-Entity* createSnake(Entity* entity);
-Entity* createGiant(Entity* entity);
-Entity* createDragon(Entity* entity);
-Entity* createUndead(Entity* entity);
+Entity* createDemon(Entity* entity, int damage);
+Entity* createSnake(Entity* entity, int damage);
+Entity* createGiant(Entity* entity, int damage);
+Entity* createDragon(Entity* entity, int damage);
+Entity* createUndead(Entity* entity, int damage);
 //Entity* createDragon(Entity* entity);
 //Entity* createGiant(Entity* entity);
 //Entity* createSnake(Entity* entity);

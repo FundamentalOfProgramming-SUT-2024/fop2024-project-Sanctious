@@ -37,7 +37,7 @@ Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor){
     return entity;
 }
 
-Entity* createDemon(Entity* entity){
+Entity* createDemon(Entity* entitym, int damage){
     entity->entityclass = EC_DEMON;
     DemonExtra* extra = (DemonExtra *) malloc(1 * sizeof(DemonExtra));
 
@@ -50,7 +50,7 @@ Entity* createDemon(Entity* entity){
     return entity;
 }
 
-Entity* createSnake(Entity* entity){
+Entity* createSnake(Entity* entity, int damage){
     entity->entityclass = EC_SNAKE;
     SnakeExtra* extra = (SnakeExtra *) malloc(1 * sizeof(SnakeExtra));
 
@@ -63,7 +63,7 @@ Entity* createSnake(Entity* entity){
     return entity;
 }
 
-Entity* createGiant(Entity* entity){
+Entity* createGiant(Entity* entity, int damage){
     entity->entityclass = EC_GIANT;
     GiantExtra* extra = (GiantExtra *) malloc(1 * sizeof(GiantExtra));
 
@@ -76,7 +76,7 @@ Entity* createGiant(Entity* entity){
     return entity;
 }
 
-Entity* createDragon(Entity* entity){
+Entity* createDragon(Entity* entity, int damage){
     entity->entityclass = EC_DRAGON;
     DragonExtra* extra = (DragonExtra *) malloc(1 * sizeof(DragonExtra));
 
@@ -89,7 +89,7 @@ Entity* createDragon(Entity* entity){
     return entity;
 }
 
-Entity* createUndead(Entity* entity){
+Entity* createUndead(Entity* entity, int damage){
     entity->entityclass = EC_UNDEAD;
     UndeadExtra* extra = (UndeadExtra *) malloc(1 * sizeof(UndeadExtra));
 
@@ -120,6 +120,8 @@ void DemonOnAction(Entity* entity){
                 player->pos.gridX-entity->pos.gridX == odirs[i][0]){
                 xuvector = 0;
                 yuvector = 0;
+                // attack player
+                addEventMessage("Entity %s%s damaged you by %d", entity->name, entity->sprite, extra->damage);
                 break;
             }
         }

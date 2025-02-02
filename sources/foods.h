@@ -16,5 +16,6 @@ typedef struct{
 
 Item* createFood(Item* baseItem, FoodClass subclass, int hungerPoints);
 int FoodOnConsume(Item* item);
+int FoodOnPickup(Item* item);
 
 #endif

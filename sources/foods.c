@@ -3,6 +3,7 @@
 #include "logger.h"
 #include "foods.h"
 #include "player.h"
+#include "scenes/s_game.h"
 
 Item* createFood(Item* baseItem, FoodClass subclass, int hungerPoints){
     baseItem->itemclass = IC_FOOD;
@@ -25,9 +26,14 @@ int FoodOnConsume(Item* item){
     modifyPlayerHunger(getPlayerInstance(), extra->hungerPoints);
 
 
-
+    addEventMessage("Consumed Food %d\u0103", extra->hungerPoints);
     if (item->count == 0) return 1;
     return 0;
 }
 
+int FoodOnPickup(Item* item){
+    getPlayerInstance()->gold += item->count;
 
+    addEventMessage("Picked up %d%s", item->count, item->sprite);
+    return 1;
+}

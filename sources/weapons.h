@@ -5,6 +5,7 @@ typedef struct Item Item;
 
 typedef enum {
     MELEEWEAPON_SWORD, // Mace included
+    MELEEWEAPON_MACE, // Mace included
 
 } MeleeWeaponClass;
 
@@ -36,5 +37,7 @@ Item* createMeleeWeapon(Item* baseItem, MeleeWeaponClass subclass, int damage);
 Item* createRangedWeapon(Item* baseItem, RangedWeaponClass subclass, int range, int damage);
 int MWeaponOnAttack(Item* item);
 int RWeaponOnAttack(Item* item);
+int MWeaponOnPickup(Item* item);
+int RWeaponOnPickup(Item* item);
 
 #endif
