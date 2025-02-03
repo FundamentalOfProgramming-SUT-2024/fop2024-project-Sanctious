@@ -55,9 +55,9 @@ void initializeGame(Game* game){
     }
 
     // Start the first scene
-    game->currentScene = getSceneByID("loadgame_menu");
+    game->currentScene = getSceneByID("newgame_menu");
     // REQUIRED FOR MENUS IN THE START
-    getSceneByID("loadgame_menu")->onEnter();
+    getSceneByID("newgame_menu")->onEnter();
 
     Log("Game handler initialized successfully.", _DEBUG_);
 }

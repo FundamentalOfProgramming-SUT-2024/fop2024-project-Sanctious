@@ -120,6 +120,8 @@ static void onExit(){
 }
 
 static void onEnter(){
+    setCurrentUser(loadUser("test", NULL));
+    
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);

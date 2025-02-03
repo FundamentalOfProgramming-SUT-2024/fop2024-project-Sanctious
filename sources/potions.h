@@ -6,7 +6,7 @@ typedef struct Item Item;
 typedef enum {
     POTION_HEAL,
     POTION_SPEED,  // Speed amplifier
-    POTION_DAMAGE, // Damage amplifier
+    POTION_STRENGTH, // Damage amplifier
 } PotionClass;
 
 

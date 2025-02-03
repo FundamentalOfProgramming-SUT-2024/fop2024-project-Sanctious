@@ -25,7 +25,7 @@ int PotionOnConsume(Item* item){
     PotionExtra* extra = (PotionExtra *) item->ItemExtra;
     Player* player = getPlayerInstance();
 
-    if (extra->subclass == POTION_DAMAGE){
+    if (extra->subclass == POTION_STRENGTH){
         addEventMessage("Consumed Damage potion x%d for %ds", extra->impact, extra->duration);
         player->multies[0] = extra->impact;
         player->multiesT[0] += extra->duration;

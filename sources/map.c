@@ -190,17 +190,50 @@ void removeStructureFromRoom(Room* room, int structureIndex){
 void gps_TreasureRoom(Room* room){
 
 }
-// Generate treasure-room props
+// Generate nightmare-room props
 void gps_NightmareRoom(Room* room){
+    // char temp[100];
+    // sprintf(temp, "entity%d", i);
+    // Entity* entity = createEntity(temp, getRandomCordInRoom(room), "\u0105", (Color) {0.0f, 0.6f, 0.0f, 1.0f});
+    // addEntityToMap(map, createSnake(entity, 1));
+
+    // entity = createEntity(temp, getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
+    // map->entities[map->num_entities++] = createDemon(entity, 1);
+
+    // entity = createEntity(temp, getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
+    // map->entities[map->num_entities++] = createDragon(entity, 1);
+
+    // entity = createEntity(temp, getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
+    // map->entities[map->num_entities++] = createUndead(entity, 1);
+
+    // entity = createEntity(temp, getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
+    // map->entities[map->num_entities++] = createGiant(entity, 1);
 
 }
-// Generate treasure-room props
+// Generate regular-room props
 void gps_RegularRoom(Room* room){
 
 }
-// Generate treasure-room props
+// Generate enchant-room props
 void gps_EnchantRoom(Room* room){
+    Item* item;
 
+    for (int i = 0; i < 3; i++ ){
+        if (randomRange(1, 3) == 1){
+            item = createBaseItem("Heal Potion", getRandomCordInRoom(room), "\u010B", COLOR_CRIMSON, 1);
+            addItemToRoom(room, createPotion(item, POTION_HEAL, 2, 10));
+        }
+
+        if (randomRange(1, 3) == 1){
+            item = createBaseItem("Speed Potion", getRandomCordInRoom(room), "\u010B", COLOR_CYAN, 1);
+            addItemToRoom(room, createPotion(item, POTION_SPEED, 2, 10));
+        }
+
+        if (randomRange(1, 3) == 1){
+            item = createBaseItem("Strenght Potion", getRandomCordInRoom(room), "\u010B", COLOR_BROWN, 1);
+            addItemToRoom(room, createPotion(item, POTION_STRENGTH, 2, 10));
+        }
+    }
 }
 
 // Factory design
@@ -571,18 +604,6 @@ void generateItems(Map* map){
         item = createBaseItem(temp, getRandomCordInRoom(room), "\u0103", COLOR_BROWN, 2);
         addItemToRoom(room, createFood(item, FOOD_NORMAL, 10));
 
-        sprintf(temp, "Heal P%d", i);
-        item = createBaseItem(temp, getRandomCordInRoom(room), "\u010B", COLOR_CRIMSON, 1);
-        addItemToRoom(room, createPotion(item, POTION_HEAL, 2, 10));
-
-        sprintf(temp, "Speed P%d", i);
-        item = createBaseItem(temp, getRandomCordInRoom(room), "\u010B", COLOR_CYAN, 1);
-        addItemToRoom(room, createPotion(item, POTION_SPEED, 2, 10));
-
-        sprintf(temp, "Damage P%d", i);
-        item = createBaseItem(temp, getRandomCordInRoom(room), "\u010B", COLOR_BROWN, 1);
-        addItemToRoom(room, createPotion(item, POTION_DAMAGE, 2, 10));
-
         sprintf(temp, "Gold %d", i);
         item = createBaseItem(temp, getRandomCordInRoom(room), "G", COLOR_GOLD, 10);
         addItemToRoom(room, createGold(item, GOLD_NORMAL));
@@ -602,17 +623,17 @@ void generateEntities(Map* map){
         Entity* entity = createEntity(temp, getRandomCordInRoom(room), "\u0105", (Color) {0.0f, 0.6f, 0.0f, 1.0f});
         addEntityToMap(map, createSnake(entity, 1));
 
-       entity = createEntity(temp, getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
-       map->entities[map->num_entities++] = createDemon(entity, 1);
+        entity = createEntity(temp, getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
+        map->entities[map->num_entities++] = createDemon(entity, 1);
 
-       entity = createEntity(temp, getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
-       map->entities[map->num_entities++] = createDragon(entity, 1);
+        entity = createEntity(temp, getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
+        map->entities[map->num_entities++] = createDragon(entity, 1);
 
-       entity = createEntity(temp, getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
-       map->entities[map->num_entities++] = createUndead(entity, 1);
+        entity = createEntity(temp, getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
+        map->entities[map->num_entities++] = createUndead(entity, 1);
 
-       entity = createEntity(temp, getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
-       map->entities[map->num_entities++] = createGiant(entity, 1);
+        entity = createEntity(temp, getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
+        map->entities[map->num_entities++] = createGiant(entity, 1);
     }
 }
 
