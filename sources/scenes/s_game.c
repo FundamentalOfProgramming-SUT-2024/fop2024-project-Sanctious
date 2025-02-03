@@ -176,6 +176,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
             getCurrentSave()->gold = getPlayerInstance()->gold;
             getCurrentUser()->stats.sumGold += getPlayerInstance()->gold;
             getCurrentUser()->stats.sumScores += getPlayerInstance()->score;
+            getCurrentUser()->stats.num_games += 1;
             printf("ASd1");
             saveGame();
             printf("ASd2");
@@ -485,7 +486,15 @@ static void renderCorridors(Map* map){
             if (cor->visited[j] || showMap){
                 Color color = COLOR_AMBER;
                 color.a = 0.5f;
-                renderCell(cor->path[j].gridX, cor->path[j].gridY, "ô", color, 1);
+                float cellWidth = gridCellWidth();
+                float cellHeight = gridCellHeight();
+
+                float xpos = (cor->path[j].gridX) * cellWidth + XBUFFER_ZONE;
+                float ypos = (cor->path[j].gridY) * cellHeight + YBUFFER_ZONE;
+                float w = 1 * cellWidth;
+                float h = 1 * cellHeight;
+
+                renderQuad(( Pos ){xpos, ypos}, ( Pos ){xpos+w, ypos+h}, color);
             }
         }
     }

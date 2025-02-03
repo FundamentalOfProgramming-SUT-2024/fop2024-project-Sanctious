@@ -82,7 +82,7 @@ Structure* findStairs(Map* floor){
 // Singleton design
 void generateFloors(){
     curFloor = 0;
-    numFloors = random(4,5);
+    numFloors = randomRange(4,5);
 //    int p = 0;
     for (int i = 0; i < numFloors; i++){
         Map* map = (Map *) malloc(1 * sizeof(Map));
@@ -136,13 +136,13 @@ Map* getMapInstance() {
 }
 
 gCord getRandomCordInRoom(Room* room){
-    int _rx = random(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
-    int _ry = random(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
+    int _rx = randomRange(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
+    int _ry = randomRange(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
     return (gCord) {_rx, _ry};
 }
 
 Room* getRandomRoom(Map* map){
-    return map->rooms[random(0,map->num_rooms-1)];
+    return map->rooms[randomRange(0,map->num_rooms-1)];
 }
 
 gCord addDirectionToPos(gCord pos, Direction dir){
@@ -268,22 +268,22 @@ void generateRooms(Map* map){
             _higherYpos = (YCELLS-1)/MAPDIV * (j+1) -MIN_ROOM_HEIGHT -ROOM_BOTTOMBUFFER;
 
 
-            int _x = random(_lowerXpos, _higherXpos);
-            int _y = random(_lowerYpos, _higherYpos);
+            int _x = randomRange(_lowerXpos, _higherXpos);
+            int _y = randomRange(_lowerYpos, _higherYpos);
 
             // assuming that rooms dont collide
             // it is ensured that _higherXpos - _x is greater than MIN_ROOM_WIDTH
 
             // Treasure room
             RoomType rt = (RoomType) weightedRandom(1,3, (int[]) {5, 1, 1});
-            if (map->id == getNumFloors()-1 && treasure == 0 && random((i+1)*(j+1), MAPDIV*MAPDIV) == MAPDIV*MAPDIV){
+            if (map->id == getNumFloors()-1 && treasure == 0 && randomRange((i+1)*(j+1), MAPDIV*MAPDIV) == MAPDIV*MAPDIV){
                 rt = RT_TREASURE;
                 treasure = 1;
             }
 
             Room* _room =generateRoom(map, _x, _y,
-                random(MIN_ROOM_WIDTH, _higherXpos - _x + MIN_ROOM_WIDTH),
-                random(MIN_ROOM_HEIGHT, _higherYpos - _y + MIN_ROOM_HEIGHT),
+                randomRange(MIN_ROOM_WIDTH, _higherXpos - _x + MIN_ROOM_WIDTH),
+                randomRange(MIN_ROOM_HEIGHT, _higherYpos - _y + MIN_ROOM_HEIGHT),
                 rt);
 
             _room->rrp.gridX = i;
@@ -347,11 +347,11 @@ void generateCorridor(Map* map, Door* door){
 
     corridor->path[1] = pos1;
     for (int i = 2; i <= corridor->path_length-2; i++){
-        int random = rand()%2;
-        if (xprog == pos2.gridX-pos1.gridX) random = 0;
-        if (yprog == pos2.gridY-pos1.gridY) random = 1;
+        int randomRange = rand()%2;
+        if (xprog == pos2.gridX-pos1.gridX) randomRange = 0;
+        if (yprog == pos2.gridY-pos1.gridY) randomRange = 1;
 
-        if (random) xprog += xuvector;
+        if (randomRange) xprog += xuvector;
         else yprog += yuvector;
 
         corridor->path[i].gridX = pos1.gridX + xprog;
@@ -431,10 +431,10 @@ void generateDoors(Map* map){
         _y1 = room->pos.gridY-1;
         _y2 = room->pos.gridY + room->scale.gridH;
         // Random door pos
-        _rx1 = random(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
-        _rx2 = random(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
-        _ry1 = random(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
-        _ry2 = random(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
+        _rx1 = randomRange(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
+        _rx2 = randomRange(room->pos.gridX, room->pos.gridX + room->scale.gridW-1);
+        _ry1 = randomRange(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
+        _ry2 = randomRange(room->pos.gridY, room->pos.gridY + room->scale.gridH-1);
         // Remove left door
         if (findRoomByRRP(map, room->rrp.gridX-1, room->rrp.gridY) == NULL) _ry1 = -1;
         // Remove right door
@@ -499,7 +499,7 @@ void deleteRandomRooms(Map* map){
         for (int i = 0; i < map->num_rooms; i++){
             map->rooms[i]->dfsVisited = 0;
         }
-        int randomNum = random(0,map->num_rooms-1);
+        int randomNum = randomRange(0,map->num_rooms-1);
         Room* room = map->rooms[randomNum];
 
         // Don't remove the treasure room

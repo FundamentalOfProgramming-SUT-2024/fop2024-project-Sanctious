@@ -1,4 +1,4 @@
-#include <strings.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -18,7 +18,7 @@ void createDirectory(char* path) {
 #ifdef _WIN32
     _mkdir(path);
 #else
-    mkdir(directoryName, 0700);
+    mkdir(path, 0700);
 #endif
 }
 
@@ -197,4 +197,3 @@ int loadAllUsers(User* users[MAX_NUM_USERS]){
 
     return count;
 }
-

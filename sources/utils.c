@@ -8,7 +8,7 @@ void initRandom(){
     srand(time(NULL));
 }
 
-int random(int x, int y){
+int randomRange(int x, int y){
     return (rand() % (y - x + 1)) + x;
 }
 
