@@ -1,6 +1,6 @@
 #include "uiutils.h"
 #include "stdlib.h"
-#include <strings.h>
+#include <string.h>
 #include "renderer.h"
 #include <ctype.h>
 

@@ -1,6 +1,6 @@
 #include "item.h"
 #include "stdlib.h"
-#include "strings.h"
+#include "string.h"
 #include "logger.h"
 #include "renderer.h"
 #include "map.h"

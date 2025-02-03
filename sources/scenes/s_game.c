@@ -474,7 +474,7 @@ static void renderPlayerStatus(Player* player){
 
 static void renderRoomDoors(Room* room){
     for (int i = 0; i < room->num_doors; i++){
-        renderCell(room->doors[i]->pos.gridX, room->doors[i]->pos.gridY, "+", COLOR_BROWN, 1);
+        renderCell(room->doors[i]->pos.gridX, room->doors[i]->pos.gridY, "+", (Color) {0.6f, 0.4f, 0.2f, 1.0f}, 1);
     }
 }
 
@@ -484,8 +484,6 @@ static void renderCorridors(Map* map){
         Corridor* cor = map->corridors[i];
         for (int j = 0; j < cor->path_length; j++){
             if (cor->visited[j] || showMap){
-                Color color = COLOR_AMBER;
-                color.a = 0.5f;
                 float cellWidth = gridCellWidth();
                 float cellHeight = gridCellHeight();
 
@@ -494,7 +492,7 @@ static void renderCorridors(Map* map){
                 float w = 1 * cellWidth;
                 float h = 1 * cellHeight;
 
-                renderQuad(( Pos ){xpos, ypos}, ( Pos ){xpos+w, ypos+h}, color);
+                renderQuad(( Pos ){xpos, ypos}, ( Pos ){xpos+w, ypos+h}, (Color) {0.4f, 0.5f, 0.6f, 1.0f});
             }
         }
     }

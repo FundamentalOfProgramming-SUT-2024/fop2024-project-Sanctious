@@ -91,6 +91,11 @@ static void processKeyboard(unsigned char key, int x, int y) {
                 strcpy(saveinfo->savename, snameExtra->input);
                 createSave(saveinfo);
 
+                loadGame(saveinfo->savename);
+                if (!getCurrentSave()->gameFinished){
+                    changeScene(getSceneByID("game"));
+                }
+
                 break;
             }
             // Back

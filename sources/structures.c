@@ -2,7 +2,7 @@
 #include "map.h"
 #include "structures.h"
 #include "logger.h"
-#include "strings.h"
+#include "string.h"
 #include "player.h"
 #include "scenes/s_game.h"
 
