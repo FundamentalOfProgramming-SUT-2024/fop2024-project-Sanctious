@@ -36,15 +36,15 @@
 #define CELLSIZE            (float) (WINDOW_WIDTH/XCELLS)
 
 // Game Logic
-#define MAX_FLOORS              5
-#define MAX_INVENTORY_SIZE      16
+#define MAX_FLOORS              10
+#define MAX_INVENTORY_SIZE      100
 #define MAX_NUM_SCENES          20
-#define MAXITEMS                64
+#define MAXITEMS                100
 #define MAXDOORS                200
 #define MAXENTITIES             200
 #define MAXROOMS                100
 #define MAXSTRUCTURES           200
-#define MAXCORRIDORS            100
+#define MAXCORRIDORS            400
 #define MAX_CORRIDOR_LENGTH     50
 #define MAX_STR_SIZE            256 // Codewise
 

@@ -7,5 +7,5 @@ bin/
 obj/
 build/
 dependencies/
-
+.vscode/
 CMakeLists.txt

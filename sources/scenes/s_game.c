@@ -8,9 +8,11 @@
 #include "../uiutils.h"
 #include "../auth.h"
 #include "../utils.h"
+#include "../main.h"
 
 char eventBar[MAX_STRING_INPUT*50];
 
+static int time = 0;
 static int curMenu = 0;
 static int invtabs_c = 4;
 static Menu invtabs[4];
@@ -24,6 +26,10 @@ static void pickUpItems();
 static void moveFloor(int offset);
 
 float r=1.0f,g=1.0f,b=1.0f;
+
+void resetEventMessage(){
+    strcpy(eventBar, "");
+}
 
 void addEventMessage(char eventMsg[MAX_STRING_INPUT], ...){
     va_list args;
@@ -85,7 +91,6 @@ static void renderRoomBox(float x, float y, int width, int height, Color tileCol
 
 }
 void playerAction(){
-    strcpy(eventBar, "");
     int curTime = ++getCurrentSave()->gametime;
     Map* map = getFloor(getCurFloor());
     Player* player = getPlayerInstance();
@@ -212,12 +217,14 @@ static void processKeyboard(unsigned char key, int x, int y) {
 ////                getPlayerInstance()->inventory[inventoryMenu->hover_element];
 //
 //            }
+            resetEventMessage();
             playerAction();
             addEventMessage("Equipped %s", extra->item->name);
             player->equippedItem = extra->item;
 
         }
         if (key == 'q'){
+            resetEventMessage();
             playerAction();
             removeItemFromPlayer(player, extra->itemIndex);
             addItemToRoom(findPlayerRoom(), extra->item);
@@ -225,6 +232,7 @@ static void processKeyboard(unsigned char key, int x, int y) {
         }
 
         if (key == 'e'){
+            resetEventMessage();
             playerAction();
             if (ItemOnConsume(extra->item)){
                 removeItemFromPlayer(player, extra->itemIndex);
@@ -234,19 +242,22 @@ static void processKeyboard(unsigned char key, int x, int y) {
     }
     Player* player = getPlayerInstance();
     if (key == 'e'){
+        resetEventMessage();
         playerAction();
         pickUpItems();
         moveFloor(1);
         revealMap();
     }
     if (key == 'q'){
+        resetEventMessage();
         playerAction();
         moveFloor(-1);
         revealMap();
     }
     if (key == 'f'){
-        playerAction();
+        resetEventMessage();
         ItemOnAttack(player->equippedItem);
+        playerAction();
     }
     if (key == 'm'){
         showMap ^= 1;
@@ -254,50 +265,59 @@ static void processKeyboard(unsigned char key, int x, int y) {
 	if (key == 'w')
         if (isValidPos(player->pos.gridX, player->pos.gridY-1)){
             player->pos.gridY -= 1;
+            resetEventMessage();
             playerAction();
         }
     if (key == 'd')
         if (isValidPos(player->pos.gridX+1, player->pos.gridY)){
             player->pos.gridX += 1;
+            resetEventMessage();
             playerAction();
         }
     if (key == 's')
         if (isValidPos(player->pos.gridX, player->pos.gridY+1)){
             player->pos.gridY += 1;
+            resetEventMessage();
             playerAction();
         }
     if (key == 'a')
         if (isValidPos(player->pos.gridX-1, player->pos.gridY)){
             player->pos.gridX -= 1;
+            resetEventMessage();
             playerAction();
         }
     if (key == '1')
         if (isValidPos(player->pos.gridX+1, player->pos.gridY-1)){
             player->pos.gridX += 1;
             player->pos.gridY -= 1;
+            resetEventMessage();
             playerAction();
         }
     if (key == '2')
         if (isValidPos(player->pos.gridX-1, player->pos.gridY+1)){
             player->pos.gridX -= 1;
             player->pos.gridY += 1;
+            resetEventMessage();
             playerAction();
         }
     if (key == '3')
         if (isValidPos(player->pos.gridX+1, player->pos.gridY+1)){
             player->pos.gridX += 1;
             player->pos.gridY += 1;
+            resetEventMessage();
             playerAction();
         }
     if (key == '4')
         if (isValidPos(player->pos.gridX-1, player->pos.gridY-1)){
             player->pos.gridX -= 1;
             player->pos.gridY -= 1;
+            resetEventMessage();
             playerAction();
         }
     // Escape key
     if (key == 27){
         saveGame();
+        updateUser(getCurrentUser());
         changeScene(getSceneByID("main_menu"));
     }
 
@@ -417,7 +437,7 @@ static void pickUpItems(){
     for (int i = 0; i < floor->num_rooms; i++){
         Room* room = floor->rooms[i];
 
-        for (int j = 0; j < room->num_items; j++){
+        for (int j = 0; j < room->num_items;){
             Item* item = room->items[j];
 
             if (item->pos.gridX == player->pos.gridX &&
@@ -426,7 +446,9 @@ static void pickUpItems(){
                     addItemToPlayer(player, item);
                 }
                 removeItemFromRoom(room, j);
-                break;
+            }
+            else{
+                j++;
             }
         }
     }
@@ -527,6 +549,14 @@ static void renderEntities(Map* map){
     }
 }
 
+static void renderPlaytime(){
+    char temp[100];
+    int hours, minutes, seconds;
+    formatTime(getCurrentUser()->stats.playTime, &hours, &minutes, &seconds);
+    sprintf(temp, "Playtime %02d:%02d:%02d", hours, minutes, seconds);
+    renderString(RWINDOW_WIDTH-calculateTextWidth(temp, FONTNORMALSCALE)-20, RWINDOW_HEIGHT-50, temp, FONTNORMALSCALE, COLOR_EMERALD);
+}
+
 static void render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -551,6 +581,7 @@ static void render() {
     renderPlayer(player);
     renderPlayerStatus(player);
     renderEventBar();
+    renderPlaytime();
 
     if (getCurrentSave()->gameFinished){
         showEndScreen();
@@ -587,8 +618,16 @@ static void playerChangeColor(int c){
     glutTimerFunc(500, playerChangeColor, c+1);
 }
 
+void calculatePlayTime(int value){
+    if (strcmp(getGameInstance()->currentScene->sceneID, "game")) return;
+    getCurrentUser()->stats.playTime += 1;
+    glutTimerFunc(1000, calculatePlayTime, 0);
+}
+
 void onEnter(){
     revealMap();
+    showMap = 0;
+    glutTimerFunc(0, calculatePlayTime, 0);
 }
 
 void initscene_game(){

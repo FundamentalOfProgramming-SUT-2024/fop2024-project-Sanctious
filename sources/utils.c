@@ -42,6 +42,20 @@ int comparePos(gCord pos1, gCord pos2){
     return 1;
 }
 
+int distancePosX(gCord pos1, gCord pos2){
+    return abs(pos1.gridX-pos2.gridX);
+}
+
+int distancePosY(gCord pos1, gCord pos2){
+    return abs(pos1.gridY-pos2.gridY);
+}
+
 int distancePos(gCord pos1, gCord pos2){
-    return abs(pos1.gridX-pos2.gridX) + abs(pos1.gridY-pos2.gridY);
+    return distancePosX(pos1, pos2) + distancePosY(pos1, pos2);
+}
+
+void formatTime(int secs, int *hours, int *minutes, int *seconds) {
+    *hours = secs / 3600;
+    *minutes = (secs % 3600) / 60;
+    *seconds = secs % 60;
 }

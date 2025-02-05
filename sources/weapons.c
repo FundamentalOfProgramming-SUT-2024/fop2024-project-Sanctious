@@ -4,6 +4,7 @@
 #include "logger.h"
 #include "map.h"
 #include "player.h"
+#include "utils.h"
 #include "scenes/s_game.h"
 
 Item* createMeleeWeapon(Item* baseItem, MeleeWeaponClass subclass, int damage){
@@ -43,9 +44,8 @@ int MWeaponOnAttack(Item* item){
 
     for (int i = 0; i < map->num_entities; ){
         Entity* entity = map->entities[i];
-        if (abs(player->pos.gridX-entity->pos.gridX) <= 1
-            && abs(player->pos.gridY-entity->pos.gridY) <= 1){
-            addEventMessage("You dealt %d%s to %s%s", extra->damage * player->multies[0], item->sprite, entity->name, entity->sprite);
+        if (distancePosX(player->pos, entity->pos) <= 1 &&
+            distancePosY(player->pos, entity->pos) <= 1){
             entity->health -= extra->damage * player->multies[0];
             if (entity->health <= 0){
                 removeEntityFromMap(map, i);
@@ -54,6 +54,7 @@ int MWeaponOnAttack(Item* item){
             }
             else{
                 i++;
+                addEventMessage("You dealt %d%s to %s%s, has %d\u0100 left", extra->damage * player->multies[0], item->sprite, entity->name, entity->sprite, entity->health);
             }
         }
         else{

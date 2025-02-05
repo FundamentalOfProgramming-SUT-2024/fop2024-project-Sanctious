@@ -17,10 +17,16 @@ typedef enum{
 
 typedef struct{
     int damage;
+
+    int followPlayer;
+    int maxfp;
 } DemonExtra;
 
 typedef struct{
     int damage;
+
+    int followPlayer;
+    int maxfp;
 } GiantExtra;
 
 typedef struct{
@@ -29,10 +35,17 @@ typedef struct{
 
 typedef struct{
     int damage;
+
+    int followPlayer;
+    int maxfp;
 } DragonExtra;
 
 typedef struct{
     int damage;
+
+    int followPlayer;
+    int triggered;
+    int maxfp;
 } UndeadExtra;
 
 typedef struct {
@@ -52,12 +65,12 @@ typedef struct {
 
 } Entity;
 
-Entity* createEntity(char* name, gCord pos, char sprite[5], Color spriteColor);
-Entity* createDemon(Entity* entity, int damage);
+Entity* createEntity(char* name, int maxHealth, gCord pos, char sprite[5], Color spriteColor);
+Entity* createDemon(Entity* entity, int damage, int maxfp);
 Entity* createSnake(Entity* entity, int damage);
-Entity* createGiant(Entity* entity, int damage);
-Entity* createDragon(Entity* entity, int damage);
-Entity* createUndead(Entity* entity, int damage);
+Entity* createGiant(Entity* entity, int damage, int maxfp);
+Entity* createDragon(Entity* entity, int damage, int maxfp);
+Entity* createUndead(Entity* entity, int damage, int maxfp);
 //Entity* createDragon(Entity* entity);
 //Entity* createGiant(Entity* entity);
 //Entity* createSnake(Entity* entity);

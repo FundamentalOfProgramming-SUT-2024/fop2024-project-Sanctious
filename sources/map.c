@@ -546,27 +546,27 @@ void gps_NightmareRoom(Map* map, Room* room){
     Entity* entity;
     for (int i = 0; i < 2; i++){
     if (randomRange(1, 5) == 1){
-        entity = createEntity("Snake", getRandomCordInRoom(room), "\u0105", (Color) {0.0f, 0.6f, 0.0f, 1.0f});
-        addEntityToMap(map, createSnake(entity, 1));
+        entity = createEntity("Snake", 20, getRandomCordInRoom(room), "\u0105", (Color) {0.0f, 0.6f, 0.0f, 1.0f});
+        addEntityToMap(map, createSnake(entity, 5));
     }
 
     if (randomRange(1, 2) == 1){
-        entity = createEntity("Demon", getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
-        addEntityToMap(map, createDemon(entity, 1));
+        entity = createEntity("Demon", 5, getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
+        addEntityToMap(map, createDemon(entity, 1, 5));
     }
     if (randomRange(1, 5) == 1){
-        entity = createEntity("Dragon", getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
-        addEntityToMap(map, createDragon(entity, 1));
+        entity = createEntity("Dragon", 10, getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
+        addEntityToMap(map, createDragon(entity, 2, 5));
     }
 
     if (randomRange(1, 7) == 1){
-        entity = createEntity("Undead", getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
-        addEntityToMap(map, createUndead(entity, 1));
+        entity = createEntity("Undead", 30, getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
+        addEntityToMap(map, createUndead(entity, 10, 10));
     }
 
     if (randomRange(1, 5) == 1){
-        entity = createEntity("Giant", getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
-        addEntityToMap(map, createGiant(entity, 1));
+        entity = createEntity("Giant", 15, getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
+        addEntityToMap(map, createGiant(entity, 3, 10));
     }
     }
 }
@@ -603,23 +603,23 @@ void gps_RegularRoom(Map* map, Room* room){
     }
 
     if (randomRange(1, 5) == 1){
-        entity = createEntity("Snake", getRandomCordInRoom(room), "\u0105", (Color) {0.0f, 0.6f, 0.0f, 1.0f});
-        addEntityToMap(map, createSnake(entity, 1));
+        entity = createEntity("Snake", 20, getRandomCordInRoom(room), "\u0105", (Color) {0.0f, 0.6f, 0.0f, 1.0f});
+        addEntityToMap(map, createSnake(entity, 5));
     }
 
     if (randomRange(1, 2) == 1){
-        entity = createEntity("Demon", getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
-        addEntityToMap(map, createDemon(entity, 1));
+        entity = createEntity("Demon", 5, getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
+        addEntityToMap(map, createDemon(entity, 1, 5));
     }
 
     if (randomRange(1, 2) == 1){
-        entity = createEntity("Dragon", getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
-        addEntityToMap(map, createDragon(entity, 1));
+        entity = createEntity("Dragon", 10, getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
+        addEntityToMap(map, createDragon(entity, 2, 5));
     }
 
     if (randomRange(1, 5) == 1){
-        entity = createEntity("Giant", getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
-        addEntityToMap(map, createGiant(entity, 1));
+        entity = createEntity("Giant", 15, getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
+        addEntityToMap(map, createGiant(entity, 3, 10));
     }
 }
 // Generate enchant-room props
@@ -716,31 +716,35 @@ void generateItems(Map* map){
 }
 
 void generateEntities(Map* map){
+    Room* room = getRandomRoom(map);
+    Entity* entity = createEntity("Undead", 30, getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
+    addEntityToMap(map, createUndead(entity, 10, 10));
+
     return;
     for (int i = 0; i < 10; i++){
         Room* room = getRandomRoom(map);
         Entity* entity;
         if (randomRange(1, 5) == 1){
-            entity = createEntity("Snake", getRandomCordInRoom(room), "\u0105", (Color) {0.0f, 0.6f, 0.0f, 1.0f});
-            addEntityToMap(map, createSnake(entity, 1));
+            entity = createEntity("Snake", 20, getRandomCordInRoom(room), "\u0105", (Color) {0.0f, 0.6f, 0.0f, 1.0f});
+            addEntityToMap(map, createSnake(entity, 5));
         }
         if (randomRange(1, 2) == 1){
-            entity = createEntity("Demon", getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
-            addEntityToMap(map, createDemon(entity, 1));
+            entity = createEntity("Demon", 5, getRandomCordInRoom(room), "\u0106", (Color) {0.6f, 0.0f, 0.2f, 1.0f});
+            addEntityToMap(map, createDemon(entity, 1, 5));
         }
         if (randomRange(1, 5) == 1){
-            entity = createEntity("Dragon", getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
-            addEntityToMap(map, createDragon(entity, 1));
+            entity = createEntity("Dragon", 10, getRandomCordInRoom(room), "\u0107", (Color) {1.0f, 0.0f, 0.0f, 1.0f});
+            addEntityToMap(map, createDragon(entity, 2, 5));
         }
 
         if (randomRange(1, 7) == 1){
-            entity = createEntity("Undead", getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
-            addEntityToMap(map, createUndead(entity, 1));
+            entity = createEntity("Undead", 30, getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
+            addEntityToMap(map, createUndead(entity, 10, 10));
         }
 
         if (randomRange(1, 5) == 1){
-            entity = createEntity("Giant", getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
-            addEntityToMap(map, createGiant(entity, 1));
+            entity = createEntity("Giant", 15, getRandomCordInRoom(room), "\u0109", (Color) {0.8f, 0.4f, 0.1f, 1.0f});
+            addEntityToMap(map, createGiant(entity, 3, 10));
         }
     }
 }
