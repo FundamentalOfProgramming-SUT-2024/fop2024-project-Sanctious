@@ -10,6 +10,7 @@
 #include "map.h"
 #include "allitems.h"
 
+#define HASHMAP_SIZE 1000
 
 static SaveInfo* currentSave = NULL;
 
@@ -21,7 +22,6 @@ void setCurrentSave(SaveInfo* saveinfo){
     currentSave = saveinfo;
 }
 
-#define HASHMAP_SIZE 400
 
 typedef struct KeyValue {
     void *key;

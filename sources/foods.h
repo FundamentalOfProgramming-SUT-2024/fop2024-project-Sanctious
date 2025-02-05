@@ -6,6 +6,8 @@ typedef struct Item Item;
 typedef enum {
     FOOD_NORMAL,
     FOOD_MAGICAL,
+    FOOD_LEGENDARY,
+    FOOD_ROTTEN,
 } FoodClass;
 
 typedef struct{

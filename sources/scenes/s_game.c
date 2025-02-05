@@ -121,6 +121,11 @@ void playerAction(){
 
     player->combatTagTime++;
 
+    if (findPlayerRoom() != NULL && findPlayerRoom()->type == RT_ENCHANT){
+        modifyPlayerHealth(player, -1);
+        addEventMessage("A sinister force is decreasing your health by 1\u0100");
+    }
+
     if (curTime%saveinfo->difficulty.healthRegenCDT == 0 && player->hunger == player->maxHunger){
         modifyPlayerHealth(player, 1*player->multies[2]);
     }

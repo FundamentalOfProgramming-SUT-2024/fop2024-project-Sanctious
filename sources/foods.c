@@ -23,10 +23,30 @@ int FoodOnConsume(Item* item){
     item->count--;
     FoodExtra* extra = (FoodExtra *) item->ItemExtra;
 
-    modifyPlayerHunger(getPlayerInstance(), extra->hungerPoints);
+    switch(extra->subclass){
+    case FOOD_NORMAL:
+        modifyPlayerHunger(getPlayerInstance(), extra->hungerPoints);
+        addEventMessage("Consumed %s %d\u0103", item->name, extra->hungerPoints);
+        break;
+    case FOOD_MAGICAL:
+        modifyPlayerHunger(getPlayerInstance(), extra->hungerPoints);
+        getPlayerInstance()->multies[1] *= 2;
+        getPlayerInstance()->multiesT[1] += 10;
+        addEventMessage("Consumed %s %d\u0103 2x\u010e", item->name, extra->hungerPoints);
+        break;
+    case FOOD_LEGENDARY:
+        modifyPlayerHunger(getPlayerInstance(), extra->hungerPoints);
+        getPlayerInstance()->multies[0] *= 2;
+        getPlayerInstance()->multiesT[0] += 10;
+        addEventMessage("Consumed %s %d\u0103 2x\u0104", item->name, extra->hungerPoints);
+        break;
+    case FOOD_ROTTEN:
+        modifyPlayerHealth(getPlayerInstance(), -2);
+        addEventMessage("Consumed %s, decreased health by 2\u0100", item->name);
+        break;
+    }
 
 
-    addEventMessage("Consumed Food %d\u0103", extra->hungerPoints);
     if (item->count == 0) return 1;
     return 0;
 }

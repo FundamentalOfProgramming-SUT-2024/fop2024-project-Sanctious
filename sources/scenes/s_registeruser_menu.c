@@ -25,14 +25,20 @@ static void processKeyboard(unsigned char key, int x, int y) {
         if (menu.uiElements[menu.hover_element]->type == UI_BUTTON){
             ButtonExtra* extra = (ButtonExtra *) menu.uiElements[menu.hover_element]->UIExtra;
             // Manually handle button press
+            switch(menu.hover_element){
             // Register
-            if (menu.hover_element == 3){
+            case 3:
                 resetMsgPopUp(&menu);
                 char* name = ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->input;
                 char* email = ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->input;
                 char* password = ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->input;
 
                 int flag = 0;
+
+                if (strlen(name) == 0){
+                    addMsgToPopUp(&menu, "Username can't be empty.\n");
+                    flag = 1;
+                }
 
                 if (userExists(name)){
                     addMsgToPopUp(&menu, "Username unavailable.\n");
@@ -63,10 +69,15 @@ static void processKeyboard(unsigned char key, int x, int y) {
                     activatePopUp(&menu, COLOR_RUBY);
                 }
 
-            }
+                break;
+            // Random password
+            case 4:
+//                char* password = ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->input;
+                break;
             // Back
-            else if(menu.hover_element == 4){
+            case 5:
                 changeScene(getSceneByID("authentication_menu"));
+                break;
             }
         }
     }
@@ -91,8 +102,8 @@ static void onEnter(){
 void initscene_register_menu(){
     // Menu
     menu.enabled = 1;
-    menu.num_elements = 5;
-    menu.num_interactable_elements = 5;
+    menu.num_elements = 6;
+    menu.num_interactable_elements = 6;
 
     menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Name :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
@@ -109,8 +120,11 @@ void initscene_register_menu(){
     menu.uiElements[3] = createButton((Pos) {-1, 300}, "Register", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_LIME_GREEN);
 
-    menu.uiElements[4] = createButton((Pos) {-1, 350}, "Back", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_RUBY);
+    menu.uiElements[4] = createButton((Pos) {-1, 350}, "Random Password", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_LIME_GREEN);
+
+    menu.uiElements[5] = createButton((Pos) {-1, 400}, "Back", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[5], COLOR_GRAY, COLOR_RUBY);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

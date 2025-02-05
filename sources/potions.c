@@ -25,20 +25,24 @@ int PotionOnConsume(Item* item){
     PotionExtra* extra = (PotionExtra *) item->ItemExtra;
     Player* player = getPlayerInstance();
 
-    if (extra->subclass == POTION_STRENGTH){
-        addEventMessage("Consumed Damage potion x%d for %ds", extra->impact, extra->duration);
-        player->multies[0] = extra->impact;
+    switch(extra->subclass){
+    case POTION_STRENGTH:
+        addEventMessage("Consumed Strength potion%s x%d for %ds", item->sprite, extra->impact, extra->duration);
+        player->multies[0] *= extra->impact;
         player->multiesT[0] += extra->duration;
-    }
-    else if (extra->subclass == POTION_HEAL){
-        addEventMessage("Consumed Heal potion x%d for %ds", extra->impact, extra->duration);
-        player->multies[2] = extra->impact;
+        break;
+
+    case POTION_HEAL:
+        addEventMessage("Consumed Heal potion%s x%d for %ds", item->sprite, extra->impact, extra->duration);
+        player->multies[2] *= extra->impact;
         player->multiesT[2] += extra->duration;
-    }
-    else if (extra->subclass == POTION_SPEED){
-        addEventMessage("Consumed Potion potion x%d for %ds", extra->impact, extra->duration);
-        player->multies[1] = extra->impact;
+        break;
+
+    case POTION_SPEED:
+        addEventMessage("Consumed Speed potion%s x%d for %ds", item->sprite, extra->impact, extra->duration);
+        player->multies[1] *= extra->impact;
         player->multiesT[1] += extra->duration;
+        break;
     }
 
 
