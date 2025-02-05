@@ -16,7 +16,8 @@ Item* createMeleeWeapon(Item* baseItem, MeleeWeaponClass subclass, int damage){
     baseItem->ItemExtra = (void *) extra;
 
     Log("MWeapon generated with pos: (%d, %d) damage: %d.", _DEBUG_,
-             baseItem->pos.gridX, baseItem->pos.gridY, extra->damage);    return baseItem;
+             baseItem->pos.gridX, baseItem->pos.gridY, extra->damage);
+    return baseItem;
 }
 
 Item* createRangedWeapon(Item* baseItem, RangedWeaponClass subclass, int range, int damage){
@@ -40,7 +41,7 @@ int MWeaponOnAttack(Item* item){
     Map* map = getFloor(getCurFloor());
     MeleeWeaponExtra* extra = (MeleeWeaponExtra *) player->equippedItem->ItemExtra;
 
-    for (int i = 0; i < map->num_entities; i++){
+    for (int i = 0; i < map->num_entities; ){
         Entity* entity = map->entities[i];
         if (abs(player->pos.gridX-entity->pos.gridX) <= 1
             && abs(player->pos.gridY-entity->pos.gridY) <= 1){
@@ -51,7 +52,12 @@ int MWeaponOnAttack(Item* item){
                 addEventMessage("You killed %s%s", entity->name, entity->sprite);
                 free(entity);
             }
-            break;
+            else{
+                i++;
+            }
+        }
+        else{
+            i++;
         }
     }
     return 0;

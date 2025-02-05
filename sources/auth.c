@@ -59,6 +59,19 @@ int isValidPassword(char* password){
 
 }
 
+void generateRandomPassword(char* password){
+    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+=-";
+    int length = 10;
+
+    do {
+        for (int i = 0; i < length; i++) {
+            password[i] = charset[rand() % strlen(charset)];
+        }
+    } while(!isValidPassword(password));
+
+    password[length] = '\0';
+}
+
 int userExists(char* name){
     char temp[100];
     sprintf(temp, "saves/%s/userdata.dat", name);

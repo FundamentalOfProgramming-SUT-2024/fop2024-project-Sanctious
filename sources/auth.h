@@ -30,6 +30,7 @@ User* getCurrentUser();
 void setCurrentUser(User* user);
 int isValidPassword(char* password);
 int isValidEmail(char* email);
+void generateRandomPassword(char* password);
 int userExists(char* name);
 User* createUser(char* name, char* password, char* email);
 User* loadUser(char* name, char* password);

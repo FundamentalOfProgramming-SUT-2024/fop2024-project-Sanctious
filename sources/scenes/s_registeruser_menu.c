@@ -71,9 +71,17 @@ static void processKeyboard(unsigned char key, int x, int y) {
 
                 break;
             // Random password
-            case 4:
-//                char* password = ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->input;
+            case 4:{
+                resetMsgPopUp(&menu);
+                char* password = ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->input;
+                char temp[100];
+                generateRandomPassword(temp);
+                strcpy(password, temp);
+                sprintf(temp, "You'r password is %s", password);
+                addMsgToPopUp(&menu, temp);
+                activatePopUp(&menu, COLOR_LIME_GREEN);
                 break;
+            }
             // Back
             case 5:
                 changeScene(getSceneByID("authentication_menu"));
