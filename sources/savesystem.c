@@ -295,6 +295,17 @@ void loadEntityExtra(FILE* file, Entity* entity, HashMap* hashmap){
 
 
 }
+
+int saveExists(char* name){
+    char temp[MAX_STR_SIZE];
+    sprintf(temp, "saves/%s/%s.dat", getCurrentUser()->creds.name, name);
+    FILE* file = fopen(temp, "rb");
+    if (file == NULL) {
+        return 0;
+    }
+    return 1;
+}
+
 void saveGame(){
     char temp[MAX_STR_SIZE];
     sprintf(temp, "saves/%s/%s.dat", getCurrentUser()->creds.name, getCurrentSave()->savename);
@@ -417,7 +428,7 @@ void loadGame(char* name){
     sprintf(temp, "saves/%s/%s.dat", getCurrentUser()->creds.name, name);
     FILE* file = fopen(temp, "rb");
     if (file == NULL) {
-        perror("Error opening file");
+        Log("Error opening file %s %d.", _ERROR_, __FILE__, __LINE__);
         return;
     }
 

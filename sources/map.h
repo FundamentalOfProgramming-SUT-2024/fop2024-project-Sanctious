@@ -101,6 +101,7 @@ void generateFloors();
 void setFloor(int floor, Map* map);
 int getNumFloors();
 void setCurFloor(int floor);
+Structure* getStairsInRoom(Room* room);
 
 void addEntityToMap(Map* map, Entity* entity);
 void removeEntityFromMap(Map* map, int entityIndex);

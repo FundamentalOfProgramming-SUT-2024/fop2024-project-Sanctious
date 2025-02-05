@@ -55,8 +55,13 @@ void initializePlayer(Player* player){
     player->inventory_size = 0;
     player->equippedItem = NULL;
 
-    player->pos.gridX = getFloor(getCurFloor())->rooms[0]->pos.gridX + 1;
-    player->pos.gridY = getFloor(getCurFloor())->rooms[0]->pos.gridY + 1;
+    Room* room;
+    do{
+        room = getRandomRoom(getFloor(getCurFloor()));
+    }
+    while (getStairsInRoom(room) != NULL);
+
+    player->pos = getRandomCordInRoom(room);
 
     Log("Player initialized successfully.", _DEBUG_);
     Log("Player Gold: %d", _DEBUG_, player->gold);

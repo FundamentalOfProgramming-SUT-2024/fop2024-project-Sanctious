@@ -98,13 +98,18 @@ void playerAction(){
 
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
-        for (int j = 0; j < room->num_structures; j++){
+        for (int j = 0; j < room->num_structures;){
             Structure* structure = room->structures[j];
             if (comparePos(structure->pos, player->pos)){
                 if (StructureOnStep(structure)){
                     removeStructureFromRoom(room, j);
-                    break;
                 }
+                else{
+                    j++;
+                }
+            }
+            else{
+                j++;
             }
         }
     }
@@ -187,13 +192,9 @@ static void processKeyboard(unsigned char key, int x, int y) {
             getCurrentUser()->stats.sumGold += getPlayerInstance()->gold;
             getCurrentUser()->stats.sumScores += getPlayerInstance()->score;
             getCurrentUser()->stats.num_games += 1;
-            printf("ASd1");
             saveGame();
-            printf("ASd2");
             updateUser(getCurrentUser());
-            printf("ASd3");
             changeScene(getSceneByID("endgame"));
-            printf("ASd4");
         }
         menuBasicHandleKeyboard(&endMenu, key);
         return;
@@ -243,16 +244,16 @@ static void processKeyboard(unsigned char key, int x, int y) {
     Player* player = getPlayerInstance();
     if (key == 'e'){
         resetEventMessage();
-        playerAction();
         pickUpItems();
         moveFloor(1);
         revealMap();
+        playerAction();
     }
     if (key == 'q'){
         resetEventMessage();
-        playerAction();
         moveFloor(-1);
         revealMap();
+        playerAction();
     }
     if (key == 'f'){
         resetEventMessage();
@@ -584,6 +585,10 @@ static void render() {
     renderPlaytime();
 
     if (getCurrentSave()->gameFinished){
+        // Disable inventory menu
+        for (int i = 0; i < invtabs_c; i++){
+            invtabs[i].enabled = 0;
+        }
         showEndScreen();
     }
 

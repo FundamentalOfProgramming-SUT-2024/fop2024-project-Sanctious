@@ -30,17 +30,30 @@ static void processKeyboard(unsigned char key, int x, int y) {
             switch(menu.hover_element){
             // Load games
             case 1:
+                resetMsgPopUp(&menu);
                 if (getCurrentUser() == NULL){
                     Log("User not signed in", _DEBUG_);
                     break;
                 }
 
                 InputFieldExtra* extra = (InputFieldExtra *) menu.uiElements[0]->UIExtra;
+
+                if (!saveExists(extra->input)){
+                    addMsgToPopUp(&menu, "This save file doesn't exist!");
+                    activatePopUp(&menu, COLOR_RUBY);
+                    break;
+                }
+
                 loadGame(extra->input);
                 if (!getCurrentSave()->gameFinished){
                     changeScene(getSceneByID("game"));
                 }
+                else{
+                    addMsgToPopUp(&menu, "This save is already finished!");
+                }
 
+
+                activatePopUp(&menu, COLOR_RUBY);
                 break;
             // Back
             case 2:

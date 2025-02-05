@@ -43,5 +43,6 @@ void setCurrentSave(SaveInfo* saveinfo);
 void createSave(SaveInfo* saveinfo);
 void loadGame(char* name);
 void saveGame();
+int saveExists(char* name);
 
 #endif

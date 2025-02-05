@@ -138,7 +138,7 @@ void DemonOnAction(Entity* entity){
             xuvector = 0;
             yuvector = 0;
             modifyPlayerHealth(player, -extra->damage);
-            addEventMessage("Entity %s%s damaged you by %d", entity->name, entity->sprite, extra->damage);
+            addEventMessage("Entity %s%s damaged you by %d\u0100", entity->name, entity->sprite, extra->damage);
         }
 
         entity->pos.gridX += xuvector;
@@ -176,7 +176,7 @@ void DragonOnAction(Entity* entity){
             xuvector = 0;
             yuvector = 0;
             modifyPlayerHealth(player, -extra->damage);
-            addEventMessage("Entity %s%s damaged you by %d", entity->name, entity->sprite, extra->damage);
+            addEventMessage("Entity %s%s damaged you by %d\u0100", entity->name, entity->sprite, extra->damage);
         }
 
         entity->pos.gridX += xuvector;
@@ -214,7 +214,7 @@ void GiantOnAction(Entity* entity){
             xuvector = 0;
             yuvector = 0;
             modifyPlayerHealth(player, -extra->damage);
-            addEventMessage("Entity %s%s damaged you by %d", entity->name, entity->sprite, extra->damage);
+            addEventMessage("Entity %s%s damaged you by %d\u0100", entity->name, entity->sprite, extra->damage);
         }
 
         entity->pos.gridX += xuvector;
@@ -246,7 +246,7 @@ void SnakeOnAction(Entity* entity){
             xuvector = 0;
             yuvector = 0;
             modifyPlayerHealth(player, -extra->damage);
-            addEventMessage("Entity %s%s damaged you by %d", entity->name, entity->sprite, extra->damage);
+            addEventMessage("Entity %s%s damaged you by %d\u0100", entity->name, entity->sprite, extra->damage);
         }
 
         entity->pos.gridX += xuvector;
@@ -284,7 +284,7 @@ void UndeadOnAction(Entity* entity){
             xuvector = 0;
             yuvector = 0;
             modifyPlayerHealth(player, -extra->damage);
-            addEventMessage("Entity %s%s damaged you by %d", entity->name, entity->sprite, extra->damage);
+            addEventMessage("Entity %s%s damaged you by %d\u0100", entity->name, entity->sprite, extra->damage);
         }
 
         entity->pos.gridX += xuvector;

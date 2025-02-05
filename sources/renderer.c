@@ -32,7 +32,7 @@ uint32_t decodeUTF8(const char** text) {
         code = ((*ptr & 0x07) << 18) | ((*(ptr + 1) & 0x3F) << 12) | ((*(ptr + 2) & 0x3F) << 6) | (*(ptr + 3) & 0x3F);
         (*text) += 4;
     } else {
-        return 0; // Invalid UTF-8 sequence
+        return 0;
     }
 
     return code;
@@ -250,7 +250,6 @@ void initializeRenderer(int argc, char** argv) {
     glutInitWindowSize(RWINDOW_WIDTH, RWINDOW_HEIGHT);
     glutInitWindowPosition(WINDOW_XPOS, WINDOW_YPOS);
     glutCreateWindow("Rogue");
-//    glutCreateWindow()
     Log("Game window created.", _DEBUG_);
 
     glClearColor(0.0, 0.0, 0.0, 1.0);

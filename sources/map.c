@@ -37,6 +37,7 @@ const int odirs[8][2] = {
 };
 
 void generateMap();
+void generateLastFloor();
 static Map* instance = NULL;
 
 int getCurFloor(){
@@ -80,6 +81,24 @@ Structure* findStairs(Map* floor){
     return NULL;
 }
 // Singleton design
+
+Room* getTreasureRoom(Map* map){
+    for (int i = 0; i < map->num_rooms; i++){
+        if (map->rooms[i]->type == RT_TREASURE){
+            return map->rooms[i];
+        }
+    }
+    return NULL;
+}
+
+Structure* getStairsInRoom(Room* room){
+    for (int i = 0; i < room->num_structures; i++){
+        if (room->structures[i]->type == ST_STAIRS) return room->structures[i];
+    }
+
+    return NULL;
+}
+
 void generateFloors(){
     curFloor = 0;
     numFloors = randomRange(4,5);
@@ -92,8 +111,21 @@ void generateFloors(){
     }
 
     // Link stairs
+    Map* map = (Map *) malloc(1 * sizeof(Map));
+    map->id = numFloors;
+    generateLastFloor(map);
+    floors[numFloors++] = map;
+
     for (int i = 0; i < numFloors-1; i++){
-        Room* room1 = getRandomRoom(floors[i]);
+        Room* room1;
+        do{
+            room1 = getRandomRoom(floors[i]);
+        }
+        while ( getStairsInRoom(room1) != NULL);
+        // Staircase in treasure room
+        if (getTreasureRoom(floors[i]) != NULL){
+            room1 = getTreasureRoom(floors[i]);
+        }
         Room* room2 = getRandomRoom(floors[i+1]);
 
         Structure* stairs1 = generateBaseStructure("#", COLOR_LAVENDER, getRandomCordInRoom(room1));
@@ -106,6 +138,7 @@ void generateFloors(){
         ((StairsExtra *) stairs2->StructureExtra)->prevPos = stairs1->pos;
 
     }
+
     // Map validation
 //    for (int i = 0; i < numFloors; i++){
 //        Map* map = floors[i];
@@ -231,7 +264,7 @@ Room* generateRoom(Map* map, int gx, int gy, int gw, int gh, RoomType type){
     return _room;
 }
 
-void generateRooms(Map* map){
+void generateRooms(Map* map, int xcells, int ycells, int division){
 
     int _lowerXpos, _higherXpos, _lowerYpos, _higherYpos;
     int treasure = 0;
@@ -240,12 +273,12 @@ void generateRooms(Map* map){
     // adding buffer zone to one pos is enough
     // Generate map
 
-    for (int i = 0; i < MAPDIV; i++){
-        _lowerXpos = (XCELLS-1)/MAPDIV * i + ROOM_LEFTBUFFER;
-        _higherXpos = (XCELLS-1)/MAPDIV * (i+1) -MIN_ROOM_WIDTH-ROOM_RIGHTBUFFER;
-        for (int j = 0; j < MAPDIV; j++){
-            _lowerYpos = (YCELLS-1)/MAPDIV * j + ROOM_TOPBUFFER;
-            _higherYpos = (YCELLS-1)/MAPDIV * (j+1) -MIN_ROOM_HEIGHT -ROOM_BOTTOMBUFFER;
+    for (int i = 0; i < division; i++){
+        _lowerXpos = (xcells-1)/division * i + ROOM_LEFTBUFFER;
+        _higherXpos = (xcells-1)/division * (i+1) -MIN_ROOM_WIDTH-ROOM_RIGHTBUFFER;
+        for (int j = 0; j < division; j++){
+            _lowerYpos = (ycells-1)/division * j + ROOM_TOPBUFFER;
+            _higherYpos = (ycells-1)/division * (j+1) -MIN_ROOM_HEIGHT -ROOM_BOTTOMBUFFER;
 
 
             int _x = randomRange(_lowerXpos, _higherXpos);
@@ -256,7 +289,7 @@ void generateRooms(Map* map){
 
             // Treasure room
             RoomType rt = (RoomType) weightedRandom(1,3, (int[]) {5, 1, 1});
-            if (map->id == getNumFloors()-1 && treasure == 0 && randomRange((i+1)*(j+1), MAPDIV*MAPDIV) == MAPDIV*MAPDIV){
+            if (map->id == getNumFloors()-1 && treasure == 0 && randomRange((i+1)*(j+1), division*division) == division*division){
                 rt = RT_TREASURE;
                 treasure = 1;
             }
@@ -538,7 +571,7 @@ void gps_TreasureRoom(Room* room){
         }
 
         Structure* structure = generateBaseStructure("\u010c", (Color) {1.0f, 0.0f, 0.0f, 1.0f}, getRandomCordInRoom(room));
-        addStructureToRoom(room, generateTrap(structure, 5));
+        addStructureToRoom(room, generateTrap(structure, randomRange(3,7)));
     }
 }
 // Generate nightmare-room props
@@ -572,9 +605,16 @@ void gps_NightmareRoom(Map* map, Room* room){
 }
 // Generate regular-room props
 void gps_RegularRoom(Map* map, Room* room){
+    Structure* structure;
     Item* item;
     Entity* entity;
 
+    for (int i = 0; i < 3; i++){
+        if (randomRange(1,3) == 1){
+            structure = generateBaseStructure("\u010c", (Color) {1.0f, 0.0f, 0.0f, 1.0f}, getRandomCordInRoom(room));
+            addStructureToRoom(room, generateTrap(structure, randomRange(3,7)));
+        }
+    }
     if (randomRange(1, 5) == 1){
         item = createBaseItem("Mace", getRandomCordInRoom(room), "\u010d", (Color) {0.6f, 0.5f, 0.3f, 1.0f}, -1);
         addItemToRoom(room, createMeleeWeapon(item, MELEEWEAPON_MACE, 5));
@@ -662,7 +702,7 @@ void gps_EnchantRoom(Room* room){
     addItemToRoom(room, createFood(item, FOOD_ROTTEN, 10));
 }
 
-void generateStructures(Map* map){
+void configureRooms(Map* map){
     for (int i = 0; i < map->num_rooms; i++){
         Room* room = map->rooms[i];
         // check item and structure overlapping each other
@@ -716,12 +756,7 @@ void generateItems(Map* map){
 }
 
 void generateEntities(Map* map){
-    Room* room = getRandomRoom(map);
-    Entity* entity = createEntity("Undead", 30, getRandomCordInRoom(room), "\u0108", (Color) {0.5f, 0.5f, 0.5f, 1.0f});
-    addEntityToMap(map, createUndead(entity, 10, 10));
-
-    return;
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i < 5; i++){
         Room* room = getRandomRoom(map);
         Entity* entity;
         if (randomRange(1, 5) == 1){
@@ -749,6 +784,17 @@ void generateEntities(Map* map){
     }
 }
 
+void configureLastFloor(Map* map){
+    Structure* structure;
+
+    for (int i = 0; i < 10; i++){
+        Room* room = getRandomRoom(map);
+        structure = generateBaseStructure("\u010c", (Color) {1.0f, 0.0f, 0.0f, 1.0f}, getRandomCordInRoom(room));
+        addStructureToRoom(room, generateTrap(structure, randomRange(3,7)));
+    }
+
+}
+
 void generateMap(Map* map){
 
     map->num_rooms = 0;
@@ -757,17 +803,30 @@ void generateMap(Map* map){
     map->scale.gridW = XCELLS;
     map->scale.gridH = YCELLS;
 
-    generateRooms(map);
+    generateRooms(map, XCELLS, YCELLS, MAPDIV);
     deleteRandomRooms(map);
     generateDoors(map);
     generateCorridors(map);
 
-    generateStructures(map);
+    configureRooms(map);
     generateItems(map);
-    generateEntities(map);
 
     checkIntegrityOfMap(map);
 
     Log("Floor-%d initialized successfully.", _DEBUG_, map->id);
 
+}
+
+void generateLastFloor(Map* map){
+    map->num_rooms = 0;
+    map->num_entities = 0;
+    map->num_corridors = 0;
+    map->scale.gridW = XCELLS;
+    map->scale.gridH = YCELLS;
+
+    generateRooms(map, XCELLS, YCELLS, 1);
+    generateEntities(map);
+    configureLastFloor(map);
+
+    Log("Floor-%d initialized successfully.", _DEBUG_, map->id);
 }
