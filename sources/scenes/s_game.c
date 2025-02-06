@@ -50,7 +50,7 @@ void addEventMessage(char eventMsg[MAX_STRING_INPUT], ...){
 }
 
 void renderEventBar(){
-    renderString(0, 20, eventBar, FONTNORMALSCALE*0.75, COLOR_PURPLE);
+    renderString(0, 30, eventBar, FONTNORMALSCALE*0.75, COLOR_PURPLE);
 }
 
 void revealCorridor(){
@@ -446,10 +446,10 @@ static void updateInventoryMenu(){
 
         Menu* _menu = &invtabs[item->itemclass];
 
-        int xpos = 70 + item->itemclass*200;
+        int xpos = 110 + item->itemclass*400;
         int count = _menu->num_elements;
 
-        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 100+count*35}, item->name, FONTNORMALSCALE, item, i);
+        _menu->uiElements[count] = createInvSlot((Pos) {xpos, 150+count*35}, item->name, FONTNORMALSCALE, item, i);
         configureInvSlotColor(_menu->uiElements[count], COLOR_AMBER, COLOR_CYAN);
         _menu->num_elements++;
         _menu->num_interactable_elements++;
@@ -542,29 +542,29 @@ static void renderPlayerStatus(Player* player){
     renderString(20+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-53, "\u0100", FONTNORMALSCALE*0.75, COLOR_RED);
 
     sprintf(message, "%d", player->gold);
-    renderString(170, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_GOLD);
-    renderString(170+calculateTextWidth(message, FONTNORMALSCALE), RWINDOW_HEIGHT-50, "\u0101", FONTNORMALSCALE*0.75, COLOR_GOLD);
+    renderString(270, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_GOLD);
+    renderString(270+calculateTextWidth(message, FONTNORMALSCALE), RWINDOW_HEIGHT-50, "\u0101", FONTNORMALSCALE*0.75, COLOR_GOLD);
 
     sprintf(message, "%d/%d", player->armor, player->maxArmor);
-    renderString(320, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_GRAY);
-    renderString(320+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, "\u0102", FONTNORMALSCALE*0.9, COLOR_GRAY);
+    renderString(460, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_GRAY);
+    renderString(460+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, "\u0102", FONTNORMALSCALE*0.9, COLOR_GRAY);
 
     sprintf(message, "%d/%d", player->hunger, player->maxHunger);
-    renderString(470, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_BROWN);
-    renderString(470+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, "\u0103", FONTNORMALSCALE*0.9, COLOR_BROWN);
+    renderString(680, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_BROWN);
+    renderString(680+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, "\u0103", FONTNORMALSCALE*0.9, COLOR_BROWN);
 
-    sprintf(message, "D:%d/%d\nS:%d/%d\nH:%d/%d", player->multies[0], player->multiesT[0],
+    sprintf(message, "D-%d:%ds\nS-%d:%ds\nH-%d:%ds", player->multies[0], player->multiesT[0],
             player->multies[1], player->multiesT[1],
             player->multies[2], player->multiesT[2]);
-    renderString(750, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_BROWN);
+    renderString(900, RWINDOW_HEIGHT-70, message, FONTNORMALSCALE, COLOR_BROWN);
 
     if (player->equippedItem != NULL){
         sprintf(message, "%s", player->equippedItem->name);
-        renderString(620, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_PURPLE);
-        renderString(620+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, player->equippedItem->sprite, FONTNORMALSCALE*0.9, COLOR_BROWN);
+        renderString(1120, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE, COLOR_PURPLE);
+        renderString(1120+calculateTextWidth(message, FONTNORMALSCALE)+3, RWINDOW_HEIGHT-50, player->equippedItem->sprite, FONTNORMALSCALE*0.9, COLOR_BROWN);
     }
     else{
-        renderString(620, RWINDOW_HEIGHT-50, "Empty", FONTNORMALSCALE, COLOR_PURPLE);
+        renderString(1120, RWINDOW_HEIGHT-50, "Empty", FONTNORMALSCALE, COLOR_PURPLE);
     }
 //
 //    renderString(20, RWINDOW_HEIGHT-50, message, FONTNORMALSCALE*3, COLOR_GOLD);
@@ -673,10 +673,10 @@ static void render() {
 //        glClear(GL_COLOR_BUFFER_BIT);
         updateInventoryMenu();
         renderQuad(( Pos ){50, 50}, ( Pos ){RWINDOW_WIDTH-50, RWINDOW_HEIGHT-50}, (Color) {0.5f, 0.5f, 0.5f, 0.9f} );
-        renderString(650, 70, "-Potions", FONTNORMALSCALE, COLOR_AMETHYST);
-        renderString(50, 70, "-Melee", FONTNORMALSCALE, COLOR_AMETHYST);
-        renderString(250, 70, "-Ranged", FONTNORMALSCALE, COLOR_AMETHYST);
-        renderString(450, 70, "-Foods", FONTNORMALSCALE, COLOR_AMETHYST);
+        renderString(1270, 100, "-Potions", FONTNORMALSCALE, COLOR_FUCHSIA);
+        renderString(70, 100, "-Melee", FONTNORMALSCALE, COLOR_FUCHSIA);
+        renderString(470, 100, "-Ranged", FONTNORMALSCALE, COLOR_FUCHSIA);
+        renderString(870, 100, "-Foods", FONTNORMALSCALE, COLOR_FUCHSIA);
         for (int i = 0; i < invtabs_c; i++){
             renderMenu(&invtabs[i]);
         }

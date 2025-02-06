@@ -12,6 +12,7 @@
 #include "main.h"
 #include "scene.h"
 #include "utils.h"
+#include "music.h"
 
 // ***********************************************************
 extern void initscene_main_menu();
@@ -55,9 +56,9 @@ void initializeGame(Game* game){
     }
 
     // Start the first scene
-    game->currentScene = getSceneByID("newgame_menu");
+    game->currentScene = getSceneByID("main_menu");
     // REQUIRED FOR MENUS IN THE START
-    getSceneByID("newgame_menu")->onEnter();
+    getSceneByID("main_menu")->onEnter();
 
     Log("Game handler initialized successfully.", _DEBUG_);
 }
@@ -83,7 +84,7 @@ int main(int argc, char** argv)
 //    validateSaveFiles();
 
     Log("Game started...", _DEBUG_);
-
+    initMusic("musics/starfighter.mp3");
     initializeRenderer(argc, argv);
 
     // Initialize Game and create Scenes

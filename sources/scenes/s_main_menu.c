@@ -34,18 +34,42 @@ static void processKeyboard(unsigned char key, int x, int y) {
                 break;
             // New game
             case 1:
+                resetMsgPopUp(&menu);
+                if (getCurrentUser() == NULL){
+                    addMsgToPopUp(&menu, "You are not signed in!");
+                    activatePopUp(&menu, COLOR_RUBY);
+                    break;
+                }
                 changeScene(getSceneByID("newgame_menu"));
                 break;
             // Load game
             case 2:
+                resetMsgPopUp(&menu);
+                if (getCurrentUser() == NULL){
+                    addMsgToPopUp(&menu, "You are not signed in!");
+                    activatePopUp(&menu, COLOR_RUBY);
+                    break;
+                }
                 changeScene(getSceneByID("loadgame_menu"));
                 break;
             // Profile
             case 3:
+                resetMsgPopUp(&menu);
+                if (getCurrentUser() == NULL){
+                    addMsgToPopUp(&menu, "You are not signed in!");
+                    activatePopUp(&menu, COLOR_RUBY);
+                    break;
+                }
                 changeScene(getSceneByID("profile_menu"));
                 break;
             // Leaderboard
             case 4:
+                resetMsgPopUp(&menu);
+                if (getCurrentUser() == NULL){
+                    addMsgToPopUp(&menu, "You are not signed in!");
+                    activatePopUp(&menu, COLOR_RUBY);
+                    break;
+                }
                 changeScene(getSceneByID("leaderboard_menu"));
                 break;
             // Settings
@@ -98,28 +122,28 @@ void initscene_main_menu(){
     menu.num_elements = 9;
     menu.num_interactable_elements = 7;
 
-    menu.uiElements[0] = createButton((Pos) {-1, 100}, "Authentication", FONTNORMALSCALE);
+    menu.uiElements[0] = createButton((Pos) {-1, 150}, "Authentication", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[1] = createButton((Pos) {-1, 150}, "New Game", FONTNORMALSCALE);
+    menu.uiElements[1] = createButton((Pos) {-1, 220}, "New Game", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[2] = createButton((Pos) {-1, 200}, "Load Game", FONTNORMALSCALE);
+    menu.uiElements[2] = createButton((Pos) {-1, 290}, "Load Game", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[3] = createButton((Pos) {-1, 250}, "Profile", FONTNORMALSCALE);
+    menu.uiElements[3] = createButton((Pos) {-1, 360}, "Profile", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[4] = createButton((Pos) {-1, 300}, "Leaderboard", FONTNORMALSCALE);
+    menu.uiElements[4] = createButton((Pos) {-1, 430}, "Leaderboard", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[5] = createButton((Pos) {-1, 350}, "Settings", FONTNORMALSCALE);
+    menu.uiElements[5] = createButton((Pos) {-1, 500}, "Settings", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[5], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[6] = createButton((Pos) {-1, 410}, "Quit", FONTNORMALSCALE);
+    menu.uiElements[6] = createButton((Pos) {-1, 570}, "Quit", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[6], COLOR_GRAY, COLOR_RUBY);
 
-    menu.uiElements[7] = createLabel((Pos) {-1, 40}, "Welcome to Roþue!", FONTNORMALSCALE*2, COLOR_CRIMSON);
+    menu.uiElements[7] = createLabel((Pos) {-1, 70}, "Welcome to Roþue!", FONTNORMALSCALE*2, COLOR_CRIMSON);
 
     menu.uiElements[8] = createLabel((Pos) {10, RWINDOW_HEIGHT-10}, "Not logged in!", FONTNORMALSCALE*0.75, COLOR_CRIMSON);
 

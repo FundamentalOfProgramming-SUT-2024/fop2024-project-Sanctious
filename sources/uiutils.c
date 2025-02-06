@@ -360,7 +360,7 @@ void renderMenu(Menu* menu)
             if (menu->hover_element == i)
             {
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
-                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+                renderString(extra->pos.x-35*5*extra->fontScale, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
             }
             else
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
@@ -372,7 +372,7 @@ void renderMenu(Menu* menu)
             if (menu->hover_element == i)
             {
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
-                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+                renderString(extra->pos.x-35*5*extra->fontScale, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
             }
             else
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
@@ -405,13 +405,13 @@ void renderMenu(Menu* menu)
             if (menu->hover_element == i)
             {
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
-                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+                renderString(extra->pos.x-35*5*extra->fontScale, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
             }
             else
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
-            renderString(extra->pos.x+140, extra->pos.y, "<", extra->fontScale, extra->Acolor);
-            renderString(extra->pos.x+170, extra->pos.y, extra->options[extra->curOption], extra->fontScale, extra->DAcolor);
-            renderString(extra->pos.x+290, extra->pos.y, ">", extra->fontScale, extra->Acolor);
+            renderString(extra->pos.x+calculateTextWidth(extra->label, extra->fontScale)+40, extra->pos.y, "<", extra->fontScale, extra->Acolor);
+            renderString(extra->pos.x+calculateTextWidth(extra->label, extra->fontScale)+70, extra->pos.y, extra->options[extra->curOption], extra->fontScale, extra->DAcolor);
+            renderString(extra->pos.x+calculateTextWidth(extra->label, extra->fontScale)+80+calculateTextWidth(extra->options[extra->curOption], extra->fontScale), extra->pos.y, ">", extra->fontScale, extra->Acolor);
 
 
         }
@@ -422,7 +422,7 @@ void renderMenu(Menu* menu)
             if (menu->hover_element == i)
             {
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
-                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+                renderString(extra->pos.x-35*5*extra->fontScale, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
             }
             else
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);
@@ -446,7 +446,7 @@ void renderMenu(Menu* menu)
             if (menu->hover_element == i)
             {
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->Acolor);
-                renderString(extra->pos.x-25, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
+                renderString(extra->pos.x-35*5*extra->fontScale, extra->pos.y, ">", extra->fontScale, COLOR_GRAY);
             }
             else
                 renderString(extra->pos.x, extra->pos.y, extra->label, extra->fontScale, extra->DAcolor);

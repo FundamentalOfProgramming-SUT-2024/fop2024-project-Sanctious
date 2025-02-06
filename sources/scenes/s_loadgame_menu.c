@@ -81,6 +81,7 @@ static void onEnter(){
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);
+    resetMenuFields(&menu);
 }
 
 void initscene_loadgame_menu(){
@@ -93,10 +94,10 @@ void initscene_loadgame_menu(){
     ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->maxLength = 20;
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[1] = createButton((Pos) {-1, 150}, "Load", FONTNORMALSCALE);
+    menu.uiElements[1] = createButton((Pos) {-1, 170}, "Load", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[1], COLOR_GRAY, COLOR_LIME_GREEN);
 
-    menu.uiElements[2] = createButton((Pos) {-1, 200}, "Back", FONTNORMALSCALE);
+    menu.uiElements[2] = createButton((Pos) {-1, 240}, "Back", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_RUBY);
 
 

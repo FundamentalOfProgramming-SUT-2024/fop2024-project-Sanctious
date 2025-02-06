@@ -110,29 +110,31 @@ static void onEnter(){
 void initscene_register_menu(){
     // Menu
     menu.enabled = 1;
-    menu.num_elements = 6;
+    menu.num_elements = 7;
     menu.num_interactable_elements = 6;
 
-    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Name :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
+    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 150}, "Name :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[1] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 150}, "Email :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
+    menu.uiElements[1] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 220}, "Email :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->maxLength = 30;
     configureInputFieldColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[2] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 200}, "Password :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
+    menu.uiElements[2] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 290}, "Password :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->masking = 1;
     ((InputFieldExtra *) menu.uiElements[2]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
     configureInputFieldColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[3] = createButton((Pos) {-1, 300}, "Register", FONTNORMALSCALE);
+    menu.uiElements[3] = createButton((Pos) {-1, 360}, "Register", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_LIME_GREEN);
 
-    menu.uiElements[4] = createButton((Pos) {-1, 350}, "Random Password", FONTNORMALSCALE);
+    menu.uiElements[4] = createButton((Pos) {-1, 430}, "Random Password", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_LIME_GREEN);
 
-    menu.uiElements[5] = createButton((Pos) {-1, 400}, "Back", FONTNORMALSCALE);
+    menu.uiElements[5] = createButton((Pos) {-1, 500}, "Back", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[5], COLOR_GRAY, COLOR_RUBY);
+
+    menu.uiElements[6] = createLabel((Pos) {-1, 70}, "Register", FONTNORMALSCALE*1.5, COLOR_EMERALD);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

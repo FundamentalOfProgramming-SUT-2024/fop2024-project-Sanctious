@@ -66,10 +66,10 @@ static void onEnter(){
         sprintf(temp, "You won");
         color = COLOR_LIME_GREEN;
     }
-    menu.uiElements[2] = createLabel((Pos) {-1, 200}, temp, FONTNORMALSCALE*1.5, color);
+    menu.uiElements[2] = createLabel((Pos) {-1, 200}, temp, FONTNORMALSCALE*2.5, color);
 
     sprintf(temp, "Golds: %d", player->gold);
-    menu.uiElements[1] = createLabel((Pos) {-1, 300}, temp, FONTNORMALSCALE*1.5, COLOR_CYAN);
+    menu.uiElements[1] = createLabel((Pos) {-1, 300}, temp, FONTNORMALSCALE, COLOR_CYAN);
 
     menu.hover_element = -1;
     deactivatePopUp(&menu);

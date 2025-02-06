@@ -82,10 +82,10 @@ static void onExit(){
 }
 
 static void onEnter(){
-    resetMenuFields(&menu);
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);
+    resetMenuFields(&menu);
 }
 
 void initscene_login_menu(){
@@ -94,11 +94,11 @@ void initscene_login_menu(){
     menu.num_elements = 6;
     menu.num_interactable_elements = 5;
 
-    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Name :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
+    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 150}, "Name :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
     ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->maxLength = 30;
 
-    menu.uiElements[1] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 150}, "Password :", FONTNORMALSCALE, (Scale) {150, 30}, 20);
+    menu.uiElements[1] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 220}, "Password :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->masking = 1;
     ((InputFieldExtra *) menu.uiElements[1]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
     configureInputFieldColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
@@ -106,13 +106,13 @@ void initscene_login_menu(){
     menu.uiElements[2] = createButton((Pos) {-1, 300}, "Login", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[3] = createButton((Pos) {-1, 350}, "Login as Guest", FONTNORMALSCALE);
+    menu.uiElements[3] = createButton((Pos) {-1, 370}, "Login as Guest", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[3], COLOR_GRAY, COLOR_GREEN);
 
-    menu.uiElements[4] = createButton((Pos) {-1, 450}, "Back", FONTNORMALSCALE);
-    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_LIME_GREEN);
+    menu.uiElements[4] = createButton((Pos) {-1, 420}, "Back", FONTNORMALSCALE);
+    configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_RUBY);
 
-    menu.uiElements[5] = createLabel((Pos) {-1, 40}, "Login sigmaboi!", FONTNORMALSCALE*2, COLOR_CRIMSON);
+    menu.uiElements[5] = createLabel((Pos) {-1, 70}, "Login", FONTNORMALSCALE*1.5, COLOR_EMERALD);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

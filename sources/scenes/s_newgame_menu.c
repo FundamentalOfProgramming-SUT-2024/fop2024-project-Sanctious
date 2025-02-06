@@ -44,6 +44,12 @@ static void processKeyboard(unsigned char key, int x, int y) {
                 CarouselExtra* difficultyExtra = (CarouselExtra *) menu.uiElements[2]->UIExtra;
                 CarouselExtra* playerSkin = (CarouselExtra *) menu.uiElements[3]->UIExtra;
 
+                if (strlen(snameExtra->input) == 0){
+                    addMsgToPopUp(&menu, "Save name can't be empty!You are not signed in!");
+                    activatePopUp(&menu, COLOR_RUBY);
+                    break;
+                }
+
                 switch(playerSkin->curOption){
                 case 0:
                     saveinfo->playerSkin = COLOR_MAROON;
@@ -123,11 +129,10 @@ static void onExit(){
 }
 
 static void onEnter(){
-    setCurrentUser(loadUser("test", NULL));
-
     menu.hover_element = -1;
     deactivatePopUp(&menu);
     resetMsgPopUp(&menu);
+    resetMenuFields(&menu);
 }
 
 void initscene_newgame_menu(){
@@ -136,26 +141,26 @@ void initscene_newgame_menu(){
     menu.num_elements = 7;
     menu.num_interactable_elements = 6;
 
-    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-150, 100}, "Save Name :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
+    menu.uiElements[0] = createInputField((Pos) {RWINDOW_WIDTH/2-200, 150}, "Save Name :", FONTNORMALSCALE, (Scale) {200, 30}, 20);
     ((InputFieldExtra *) menu.uiElements[0]->UIExtra)->maxLength = 20;
     configureInputFieldColor(menu.uiElements[0], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[1] = createCarousel((Pos) {RWINDOW_WIDTH/2-150, 150}, "Map Size :",(char *[]){"Normal", "Large", "Gamer", "SigmaBoy"}, 4, FONTNORMALSCALE);
+    menu.uiElements[1] = createCarousel((Pos) {RWINDOW_WIDTH/2-200, 220}, "Map Size :",(char *[]){"Normal", "Large", "Gamer", "SigmaBoy"}, 4, FONTNORMALSCALE);
     configureCarouselColor(menu.uiElements[1], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[2] = createCarousel((Pos) {RWINDOW_WIDTH/2-150, 200}, "Difficulty :",(char *[]){"Crybaby", "Skibidi", "Alpha", "Sigma"}, 4, FONTNORMALSCALE);
+    menu.uiElements[2] = createCarousel((Pos) {RWINDOW_WIDTH/2-200, 290}, "Difficulty :",(char *[]){"Crybaby", "Skibidi", "Alpha", "Sigma"}, 4, FONTNORMALSCALE);
     configureCarouselColor(menu.uiElements[2], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[3] = createCarousel((Pos) {RWINDOW_WIDTH/2-150, 250}, "Skin :",(char *[]){"Maroon", "Cyan", "Purple"}, 3, FONTNORMALSCALE);
+    menu.uiElements[3] = createCarousel((Pos) {RWINDOW_WIDTH/2-200, 360}, "Skin :",(char *[]){"Maroon", "Cyan", "Purple"}, 3, FONTNORMALSCALE);
     configureCarouselColor(menu.uiElements[3], COLOR_GRAY, COLOR_CYAN);
 
-    menu.uiElements[4] = createButton((Pos) {-1, 300}, "Create", FONTNORMALSCALE);
+    menu.uiElements[4] = createButton((Pos) {-1, 450}, "Create", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[4], COLOR_GRAY, COLOR_LIME_GREEN);
 
-    menu.uiElements[5] = createButton((Pos) {-1, 350}, "Back", FONTNORMALSCALE);
+    menu.uiElements[5] = createButton((Pos) {-1, 520}, "Back", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[5], COLOR_GRAY, COLOR_RUBY);
 
-    menu.uiElements[6] = createLabel((Pos) {-1, 40}, "Configure your save", FONTNORMALSCALE*1.5, COLOR_BEIGE);
+    menu.uiElements[6] = createLabel((Pos) {-1, 70}, "Configure your save", FONTNORMALSCALE*1.5, COLOR_BEIGE);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

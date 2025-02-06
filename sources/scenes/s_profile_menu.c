@@ -83,16 +83,16 @@ void initscene_profile_menu(){
     menu.num_elements = 5;
     menu.num_interactable_elements = 1;
 
-    menu.uiElements[0] = createButton((Pos) {-1, 300}, "Back", FONTNORMALSCALE);
+    menu.uiElements[0] = createButton((Pos) {-1, 380}, "Back", FONTNORMALSCALE);
     configureButtonColor(menu.uiElements[0], COLOR_GRAY, COLOR_RUBY);
 
-    menu.uiElements[1] = createLabel((Pos) {250, 100}, "Total gold: yyyy", FONTNORMALSCALE, COLOR_CORAL);
+    menu.uiElements[1] = createLabel((Pos) {500, 100}, "Total gold: yyyy", FONTNORMALSCALE, COLOR_CORAL);
 
-    menu.uiElements[2] = createLabel((Pos) {250, 150}, "Finished games: yyyy", FONTNORMALSCALE, COLOR_CORAL);
+    menu.uiElements[2] = createLabel((Pos) {500, 170}, "Finished games: yyyy", FONTNORMALSCALE, COLOR_CORAL);
 
-    menu.uiElements[3] = createLabel((Pos) {250, 200}, "Total exp: yyyy", FONTNORMALSCALE, COLOR_CORAL);
+    menu.uiElements[3] = createLabel((Pos) {500, 240}, "Total exp: yyyy", FONTNORMALSCALE, COLOR_CORAL);
 
-    menu.uiElements[4] = createLabel((Pos) {250, 250}, "Playtime: yyyy", FONTNORMALSCALE, COLOR_CORAL);
+    menu.uiElements[4] = createLabel((Pos) {500, 310}, "Playtime: yyyy", FONTNORMALSCALE, COLOR_CORAL);
 
     // Scene
     Scene* scene = (Scene *) malloc(1 * sizeof(Scene));

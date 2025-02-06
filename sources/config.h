@@ -8,8 +8,6 @@
 // Window
 #define WINDOW_WIDTH        1800
 #define WINDOW_HEIGHT       1200
-#define WINDOW_XPOS         0
-#define WINDOW_YPOS         0
 #define XBUFFER_ZONE        0
 #define YBUFFER_ZONE        70
 #define LOWER_YBUFFER_ZONE  30
@@ -17,6 +15,8 @@
 // Real sizes
 #define RWINDOW_WIDTH       (WINDOW_WIDTH+XBUFFER_ZONE+EXTRA_BUFFER)
 #define RWINDOW_HEIGHT      (WINDOW_HEIGHT+YBUFFER_ZONE+EXTRA_BUFFER+LOWER_YBUFFER_ZONE)
+#define WINDOW_XPOS         (2560-RWINDOW_WIDTH)/2
+#define WINDOW_YPOS         (1440-RWINDOW_HEIGHT)/2
 
 
 // Map
@@ -31,8 +31,8 @@
 #define ROOM_BOTTOMBUFFER   2 // Below 2 is buggy
 
 // Render
-#define FONTQUALITY         96 // 24 * x
-#define FONTNORMALSCALE     (0.25f) // 1 / x
+#define FONTQUALITY         192 // 24 * x
+#define FONTNORMALSCALE     (0.20f) // 1 / x
 #define CELLSIZE            (float) (WINDOW_WIDTH/XCELLS)
 
 // Game Logic
@@ -55,17 +55,17 @@
 #define MAX_NUM_USERS           1000
 #define MAX_CAROUSEL_OPTIONS    10
 #define LINE_INDENTATION        5 // Pixel
-#define INPUTBOX_TOPMARGIN      2 // Pixel
-#define INPUTBOX_BOTTOMMARGIN   8 // Pixel
-#define INPUTBOX_LEFTMARGIN     5 // Pixel
-#define INPUTBOX_RIGHTMARGIN    5 // Pixel
+#define INPUTBOX_TOPMARGIN      6 // Pixel
+#define INPUTBOX_BOTTOMMARGIN   12 // Pixel
+#define INPUTBOX_LEFTMARGIN     10 // Pixel
+#define INPUTBOX_RIGHTMARGIN    10 // Pixel
 #define PASSWORDMASK_CHAR       '*'
 #define PASSWORD_MAXLENGTH      20
 #define PASSWORD_MINLENGTH      7
-#define POPUP_BOX_TOPMARGIN     10
+#define POPUP_BOX_TOPMARGIN     16
 #define POPUP_BOX_LEFTMARGIN    5
 #define POPUP_BOX_RIGHTMARGIN   5
-#define POPUP_BOX_BOTTOMMARGIN  10
+#define POPUP_BOX_BOTTOMMARGIN  6
 
 #define COLOR_RED           (Color) {1.0f, 0.0f, 0.0f, 1.0f}
 #define COLOR_GREEN         (Color) {0.0f, 1.0f, 0.0f, 1.0f}

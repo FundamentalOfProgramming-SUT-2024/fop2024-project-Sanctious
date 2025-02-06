@@ -106,14 +106,14 @@ static void onEnter(){
 
         }
         if (!strcmp(getCurrentUser()->creds.name, users[i]->creds.name)){
-            menu.uiElements[count+4-1] = createLabel((Pos) {200-35, 100+i*30}, ">", FONTNORMALSCALE*0.75, COLOR_CYAN);
+            menu.uiElements[count+4-1] = createLabel((Pos) {500-60, 100+i*50}, ">", FONTNORMALSCALE*0.75, COLOR_CYAN);
         }
-        menu.uiElements[i] = createLabel((Pos) {200, 100+i*30}, temp, fontSize, color);
+        menu.uiElements[i] = createLabel((Pos) {500, 100+i*50}, temp, fontSize, color);
     }
 
-    menu.uiElements[count+4-2] = createLabel((Pos) {200-20, 100+0*30}, "\u010A", FONTNORMALSCALE*0.9, COLOR_GOLD);
-    menu.uiElements[count+4-3] = createLabel((Pos) {200-20, 100+1*30}, "\u010A", FONTNORMALSCALE*0.9, COLOR_GRAY);
-    menu.uiElements[count+4-4] = createLabel((Pos) {200-20, 100+2*30}, "\u010A", FONTNORMALSCALE*0.9, COLOR_BROWN);
+    menu.uiElements[count+4-2] = createLabel((Pos) {500-40, 100+0*50}, "\u010A", FONTNORMALSCALE*0.9, COLOR_GOLD);
+    menu.uiElements[count+4-3] = createLabel((Pos) {500-40, 100+1*50}, "\u010A", FONTNORMALSCALE*0.9, COLOR_GRAY);
+    menu.uiElements[count+4-4] = createLabel((Pos) {500-40, 100+2*50}, "\u010A", FONTNORMALSCALE*0.9, COLOR_BROWN);
 
     menu.hover_element = -1;
     deactivatePopUp(&menu);
@@ -123,10 +123,10 @@ static void onEnter(){
 void initscene_leaderboard_menu(){
     // Menu
     menu.enabled = 1;
-//    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "", FONTNORMALSCALE, (Scale) {200, 30}, 20);
+//    menu.uiElements[4] = createInputField((Pos) {-1, 300}, "", FONTNORMALSCALE, (Scale) {300, 30}, 20);
 //    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->masking = 1;
 //    ((InputFieldExtra *) menu.uiElements[4]->UIExtra)->maxLength = PASSWORD_MAXLENGTH;
-//    menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register :", FONTNORMALSCALE,(Scale) {200, 30}, 20);
+//    menu.uiElements[5] = createInputField((Pos) {-1, 350}, "Register :", FONTNORMALSCALE,(Scale) {300, 30}, 20);
 //    menu.uiElements[6] = createCarousel((Pos) {-1, 400}, "Options :",(char *[]){"Hello", "Test", "Poopak"}, 3, FONTNORMALSCALE);
 //    menu.uiElements[7] = createSlider((Pos) {-1, 450}, "Slider :", 50, 0, 100, 5, FONTNORMALSCALE, 50);
 //    menu.uiElements[7] = createLabel((Pos) {-1, 460}, "Enter", FONTNORMALSCALE, COLOR_CRIMSON);
