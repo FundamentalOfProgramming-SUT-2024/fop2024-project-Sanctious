@@ -20,6 +20,14 @@ static Menu pauseMenu;
 
 static int showMap = 0;
 
+int shooting = 0;
+Direction shootDir = NONE;
+Direction prevShootDir = NONE;
+//UP      = 0,
+//    LEFT    = 1,
+//    DOWN    = 2,
+//    RIGHT
+
 static Menu endMenu;
 
 static void pickUpItems();
@@ -72,10 +80,10 @@ static void renderRoomBox(float x, float y, int width, int height, Color tileCol
     float cellWidth = gridCellWidth();
     float cellHeight = gridCellHeight();
 
-    float xpos = (x-0.5) * cellWidth + XBUFFER_ZONE;
-    float ypos = (y-0.5) * cellHeight + YBUFFER_ZONE;
-    float w = (width+1) * cellWidth;
-    float h = (height+1) * cellHeight;
+    float xpos = (x-0.4) * cellWidth + XBUFFER_ZONE;
+    float ypos = (y-0.4) * cellHeight + YBUFFER_ZONE;
+    float w = ((float) width + 0.8) * cellWidth;
+    float h = ((float) height + 0.8) * cellHeight;
 
     renderQuad(( Pos ){xpos, ypos}, ( Pos ){xpos+w, ypos+h}, wallColor);
 
@@ -144,6 +152,7 @@ void playerAction(){
     }
 
     for (int i = 0; i < map->num_entities; i++){
+        if (map->entities[i]->frozen) continue;
         EntityOnAction(map->entities[i]);
     }
 
@@ -158,6 +167,10 @@ void playerAction(){
 
     if (getCurFloor() == getNumFloors()-1 && getFloor(getCurFloor())->num_entities == 0){
         saveinfo->gameFinished = 1;
+    }
+
+    for (int i = 0; i < map->num_entities; i++){
+        map->entities[i]->frozen = 0;
     }
 }
 
@@ -183,6 +196,10 @@ void showEndScreen(){
 }
 
 static void processKeyboard(unsigned char key, int x, int y) {
+    if (shooting && shootDir == NONE){
+        return;
+    }
+
     if (key == '*'){
         getCurrentSave()->gameFinished = 1;
     }
@@ -255,10 +272,45 @@ static void processKeyboard(unsigned char key, int x, int y) {
         revealMap();
         playerAction();
     }
+    if (key == 't'){
+        if (player->equippedItem != NULL && player->equippedItem->itemclass == IC_RANGEDWEAPON){
+            if (isInsideRoom(player->pos)){
+                if (prevShootDir != NONE){
+                    shooting = 1;
+                    shootDir = prevShootDir;
+
+                    resetEventMessage();
+                    ItemOnAttack(getPlayerInstance()->equippedItem);
+                    playerAction();
+
+                    shootDir = NONE;
+                    shooting = 0;
+                }
+                else{
+                    addEventMessage("You haven’t shot anything yet");
+                }
+            }
+            else{
+                addEventMessage("The passageway is too tight to throw anything");
+            }
+        }
+    }
     if (key == 'f'){
-        resetEventMessage();
-        ItemOnAttack(player->equippedItem);
-        playerAction();
+        if (player->equippedItem != NULL && player->equippedItem->itemclass == IC_RANGEDWEAPON){
+            resetEventMessage();
+            if (isInsideRoom(player->pos)){
+                shooting = 1;
+                addEventMessage("Choose the direction by using the arrow keys \u0110\u0111\u0112\u0113");
+            }
+            else{
+                addEventMessage("The passageway is too tight to throw anything");
+            }
+        }
+        else if (player->equippedItem != NULL){
+            resetEventMessage();
+            ItemOnAttack(player->equippedItem);
+            playerAction();
+        }
     }
     if (key == 'm'){
         showMap ^= 1;
@@ -325,19 +377,43 @@ static void processKeyboard(unsigned char key, int x, int y) {
 }
 
 static void processSKeyboard(int key, int x, int y) {
+    if (key == GLUT_KEY_RIGHT && shooting){
+        shootDir = RIGHT;
+    }
+    else if (key == GLUT_KEY_LEFT && shooting){
+        shootDir = LEFT;
+    }
+    else if (key == GLUT_KEY_DOWN && shooting){
+        shootDir = DOWN;
+    }
+    else if (key == GLUT_KEY_UP && shooting){
+        shootDir = UP;
+    }
+
+    if (shootDir != NONE){
+        resetEventMessage();
+        ItemOnAttack(getPlayerInstance()->equippedItem);
+        playerAction();
+
+        prevShootDir = shootDir;
+        shootDir = NONE;
+        shooting = 0;
+        return;
+    }
+
     if (getCurrentSave()->gameFinished){
         menuBasicHandleSKeyboard(&endMenu, key);
         return;
     }
 
-    if (key == GLUT_KEY_RIGHT){
+    if (key == GLUT_KEY_RIGHT && invtabs[0].enabled){
         if (curMenu < invtabs_c-1){
             invtabs[curMenu].hover_element = -1;
             curMenu++;
             invtabs[curMenu].hover_element = 0;
         }
     }
-    if (key == GLUT_KEY_LEFT){
+    if (key == GLUT_KEY_LEFT && invtabs[0].enabled){
         if (0 < curMenu){
             invtabs[curMenu].hover_element = -1;
             curMenu--;

@@ -40,6 +40,7 @@ void setPlayerInstance(Player* player);
 Room* findPlayerRoom();
 Corridor* findPlayerCorridor();
 char isValidPos(int , int);
+int findItemIndex(Player* player, Item* item);
 void removeItemFromPlayer(Player* player, int itemIndex);
 void addItemToPlayer(Player* player, Item* item);
 

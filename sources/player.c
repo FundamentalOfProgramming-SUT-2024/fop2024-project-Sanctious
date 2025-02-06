@@ -8,6 +8,7 @@
 #include "item.h"
 #include "map.h"
 #include "savesystem.h"
+#include "allitems.h"
 
 void initializePlayer();
 static Player* instance = NULL;
@@ -63,6 +64,9 @@ void initializePlayer(Player* player){
 
     player->pos = getRandomCordInRoom(room);
 
+    Item* item = createBaseItem("Mace", player->pos, "\u010d", (Color) {0.6f, 0.5f, 0.3f, 1.0f}, -1);
+    addItemToPlayer(player, createMeleeWeapon(item, MELEEWEAPON_MACE, 5));
+
     Log("Player initialized successfully.", _DEBUG_);
     Log("Player Gold: %d", _DEBUG_, player->gold);
     Log("Player Pos: (%d, %d)", _DEBUG_, player->pos.gridX, player->pos.gridY);
@@ -117,6 +121,14 @@ char isValidPos(int gridXP, int gridYP){
             return 1;
     }
     return 0;
+}
+
+int findItemIndex(Player* player, Item* item){
+    for (int i = 0; i < player->inventory_size; i++){
+        if (player->inventory[i] == item) return i;
+    }
+
+    return -1;
 }
 
 void removeItemFromPlayer(Player* player, int itemIndex){

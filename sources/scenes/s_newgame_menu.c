@@ -30,8 +30,11 @@ static void processKeyboard(unsigned char key, int x, int y) {
             switch(menu.hover_element){
             // New game
             case 4:{
+                resetMsgPopUp(&menu);
+
                 if (getCurrentUser() == NULL){
-                    Log("User not signed in", _DEBUG_);
+                    addMsgToPopUp(&menu, "You are not signed in!");
+                    activatePopUp(&menu, COLOR_RUBY);
                     break;
                 }
 

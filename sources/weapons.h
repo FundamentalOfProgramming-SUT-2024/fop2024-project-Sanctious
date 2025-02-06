@@ -4,8 +4,8 @@
 typedef struct Item Item;
 
 typedef enum {
-    MELEEWEAPON_SWORD, // Mace included
-    MELEEWEAPON_MACE, // Mace included
+    MELEEWEAPON_SWORD,
+    MELEEWEAPON_MACE,
 
 } MeleeWeaponClass;
 
@@ -18,7 +18,8 @@ typedef struct{
 
 //**********************
 typedef enum {
-    RANGEDWEAPON_ARROW, // Dagger included
+    RANGEDWEAPON_ARROW,
+    RANGEDWEAPON_DAGGER,
     RANGEDWEAPON_MAGICWAND,
 
 } RangedWeaponClass;

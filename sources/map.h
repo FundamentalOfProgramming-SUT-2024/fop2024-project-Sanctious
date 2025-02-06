@@ -20,7 +20,8 @@ typedef enum {
     UP      = 0,
     LEFT    = 1,
     DOWN    = 2,
-    RIGHT   = 3
+    RIGHT   = 3,
+    NONE    = 4,
 } Direction;
 
 typedef enum {
@@ -102,9 +103,11 @@ void setFloor(int floor, Map* map);
 int getNumFloors();
 void setCurFloor(int floor);
 Structure* getStairsInRoom(Room* room);
+int isInsideRoom(gCord pos);
 
 void addEntityToMap(Map* map, Entity* entity);
 void removeEntityFromMap(Map* map, int entityIndex);
+int findEntityIndex(Map* map, Entity* entity);
 void addItemToRoom(Room* room, Item* item);
 void removeItemFromRoom(Room* room, int itemIndex);
 void addStructureToRoom(Room* room, Structure* structure);

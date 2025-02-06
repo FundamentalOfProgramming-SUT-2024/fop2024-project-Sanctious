@@ -24,6 +24,16 @@ Room* findEntityRoom(Entity* entity){
     return NULL;
 }
 
+Entity* findEntityByPosition(gCord pos){
+    Map* map = getFloor(getCurFloor());
+
+    for (int i = 0; i < map->num_entities; i++){
+        if (comparePos(map->entities[i]->pos, pos)) return map->entities[i];
+    }
+
+    return NULL;
+}
+
 Entity* createEntity(char* name, int maxHealth, gCord pos, char sprite[5], Color spriteColor){
     Entity* entity = (Entity *) malloc(1 * sizeof(Entity));
 
@@ -32,6 +42,7 @@ Entity* createEntity(char* name, int maxHealth, gCord pos, char sprite[5], Color
     entity->spriteColor = spriteColor;
     entity->pos = pos;
 
+    entity->frozen = 0;
     entity->goldDrop = 0;
     entity->armor = 5;
     entity->maxArmor = 5;

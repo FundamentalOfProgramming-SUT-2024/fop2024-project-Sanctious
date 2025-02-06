@@ -54,6 +54,8 @@ typedef struct {
     Color spriteColor;
     gCord pos;
 
+    int frozen;
+
     int goldDrop;
     int armor;
     int maxArmor;
@@ -77,6 +79,7 @@ Entity* createUndead(Entity* entity, int damage, int maxfp);
 //Entity* createUndead(Entity* entity);
 void EntityOnAction(Entity* entity);
 Room* findEntityRoom(Entity* entity);
+Entity* findEntityByPosition(gCord pos);
 
 #endif
 

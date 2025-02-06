@@ -178,12 +178,32 @@ Room* getRandomRoom(Map* map){
     return map->rooms[randomRange(0,map->num_rooms-1)];
 }
 
+int isInsideRoom(gCord pos){
+    Map* map = getFloor(getCurFloor());
+    for (int i = 0; i < map->num_rooms; i++) {
+        Room* room = map->rooms[i];
+        if (room->pos.gridX <= pos.gridX &&
+                pos.gridX < room->scale.gridW+room->pos.gridX &&
+                room->pos.gridY <= pos.gridY &&
+                pos.gridY < room->scale.gridH+room->pos.gridY)
+            return 1;
+    }
+    return 0;
+}
+
 gCord addDirectionToPos(gCord pos, Direction dir){
     if (dir == UP) return (gCord){pos.gridX, pos.gridY-1};
     if (dir == DOWN) return (gCord){pos.gridX, pos.gridY+1};
     if (dir == LEFT) return (gCord){pos.gridX-1, pos.gridY};
     if (dir == RIGHT) return (gCord){pos.gridX+1, pos.gridY};
 
+}
+
+int findEntityIndex(Map* map, Entity* entity){
+    for (int i = 0; i < map->num_entities; i++){
+        if (entity == map->entities[i]) return i;
+    }
+    return -1;
 }
 
 void addEntityToMap(Map* map, Entity* entity){
@@ -561,12 +581,12 @@ void gps_TreasureRoom(Room* room){
 
 
         if (randomRange(1, 2) == 1){
-            item = createBaseItem("Gold", getRandomCordInRoom(room), "G", (Color) {1.0, 0.84, 0.0, 1.0}, 10);
+            item = createBaseItem("Gold", getRandomCordInRoom(room), "\u010f", (Color) {1.0, 0.84, 0.0, 1.0}, 10);
             addItemToRoom(room, createGold(item, GOLD_NORMAL));
         }
 
         if (randomRange(1, 5) == 1){
-            item = createBaseItem("Black Gold", getRandomCordInRoom(room), "G", (Color) {0.85, 0.65, 0.13, 1.0}, 10);
+            item = createBaseItem("Black Gold", getRandomCordInRoom(room), "\u010f", (Color) {0.85, 0.65, 0.13, 1.0}, 10);
             addItemToRoom(room, createGold(item, GOLD_BLACK));
         }
 
@@ -609,6 +629,21 @@ void gps_RegularRoom(Map* map, Room* room){
     Item* item;
     Entity* entity;
 
+    if (randomRange(1, 5) == 1){
+        item = createBaseItem("Dagger", getRandomCordInRoom(room), "\u0114", (Color) {0.7, 0.7, 0.75, 1.0}, 10);
+        addItemToRoom(room, createRangedWeapon(item, RANGEDWEAPON_DAGGER, 5, 12));
+    }
+
+    if (randomRange(1, 5) == 1){
+        item = createBaseItem("Magic Wand", getRandomCordInRoom(room), "\u0116", (Color) {0.5, 0.3, 0.7, 1.0}, 8);
+        addItemToRoom(room, createRangedWeapon(item, RANGEDWEAPON_MAGICWAND, 10, 15));
+    }
+
+    if (randomRange(1, 5) == 1){
+        item = createBaseItem("Bow and Arrow", getRandomCordInRoom(room), "\u0115", (Color) {0.4, 0.2, 0.1, 1.0}, 20);
+        addItemToRoom(room, createRangedWeapon(item, RANGEDWEAPON_ARROW, 5, 5));
+    }
+
     for (int i = 0; i < 3; i++){
         if (randomRange(1,3) == 1){
             structure = generateBaseStructure("\u010c", (Color) {1.0f, 0.0f, 0.0f, 1.0f}, getRandomCordInRoom(room));
@@ -632,12 +667,12 @@ void gps_RegularRoom(Map* map, Room* room){
     }
     for (int i = 0; i < 3; i++){
         if (randomRange(1, 2) == 1){
-            item = createBaseItem("Gold", getRandomCordInRoom(room), "G", (Color) {1.0, 0.84, 0.0, 1.0}, 10);
+            item = createBaseItem("Gold", getRandomCordInRoom(room), "\u010f", (Color) {1.0, 0.84, 0.0, 1.0}, 10);
             addItemToRoom(room, createGold(item, GOLD_NORMAL));
         }
 
         if (randomRange(1, 5) == 1){
-            item = createBaseItem("Black Gold", getRandomCordInRoom(room), "G", (Color) {0.85, 0.65, 0.13, 1.0}, 10);
+            item = createBaseItem("Black Gold", getRandomCordInRoom(room), "\u010f", (Color) {0.85, 0.65, 0.13, 1.0}, 10);
             addItemToRoom(room, createGold(item, GOLD_BLACK));
         }
     }
@@ -683,7 +718,7 @@ void gps_EnchantRoom(Room* room){
         }
 
         if (randomRange(1, 2) == 1){
-            item = createBaseItem("Gold", getRandomCordInRoom(room), "G", (Color) {1.0, 0.84, 0.0, 1.0}, 10);
+            item = createBaseItem("Gold", getRandomCordInRoom(room), "\u010f", (Color) {1.0, 0.84, 0.0, 1.0}, 10);
             addItemToRoom(room, createGold(item, GOLD_NORMAL));
         }
 
@@ -746,11 +781,11 @@ void generateItems(Map* map){
         addItemToRoom(room, createFood(item, FOOD_NORMAL, 10));
 
         sprintf(temp, "Gold %d", i);
-        item = createBaseItem(temp, getRandomCordInRoom(room), "G", COLOR_GOLD, 10);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "\u010f", COLOR_GOLD, 10);
         addItemToRoom(room, createGold(item, GOLD_NORMAL));
 
         sprintf(temp, "Gold %d", i);
-        item = createBaseItem(temp, getRandomCordInRoom(room), "G", COLOR_EMERALD, 10);
+        item = createBaseItem(temp, getRandomCordInRoom(room), "\u010f", COLOR_EMERALD, 10);
         addItemToRoom(room, createGold(item, GOLD_BLACK));
     }
 }

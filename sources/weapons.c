@@ -7,6 +7,9 @@
 #include "utils.h"
 #include "scenes/s_game.h"
 
+extern int shooting;
+extern Direction shootDir;
+
 Item* createMeleeWeapon(Item* baseItem, MeleeWeaponClass subclass, int damage){
     baseItem->itemclass = IC_MELEEWEAPON;
     MeleeWeaponExtra* extra = (MeleeWeaponExtra *) malloc(1 * sizeof(MeleeWeaponExtra));
@@ -68,6 +71,136 @@ int RWeaponOnAttack(Item* item){
     Player* player = getPlayerInstance();
     Map* map = getFloor(getCurFloor());
     RangedWeaponExtra* extra = (RangedWeaponExtra *) item->ItemExtra;
+
+    if (shootDir != NONE){
+        gCord startPos = player->pos;
+        Entity* entity = NULL;
+        gCord endPos;
+
+        switch(shootDir){
+        case DOWN: {
+            int i = 0;
+            for (; i < extra->range; i++){
+                startPos.gridY++;
+                if (findEntityByPosition(startPos) != NULL){
+                    entity = findEntityByPosition(startPos);
+                    break;
+                }
+                else if (!isInsideRoom(startPos)){
+                    startPos.gridY--;
+                    endPos = startPos;
+                    break;
+
+                }
+            }
+            if (i == extra->range){
+                endPos = startPos;
+            }
+            break;
+        }
+        case UP:{
+            int i = 0;
+            for (; i < extra->range; i++){
+                startPos.gridY--;
+                if (findEntityByPosition(startPos) != NULL){
+                    entity = findEntityByPosition(startPos);
+                    break;
+                }
+                else if (!isInsideRoom(startPos)){
+                    startPos.gridY++;
+                    endPos = startPos;
+                    break;
+
+                }
+            }
+            if (i == extra->range){
+                endPos = startPos;
+            }
+            break;
+
+        }
+        case LEFT:{
+            int i = 0;
+            for (; i < extra->range; i++){
+                startPos.gridX--;
+                if (findEntityByPosition(startPos) != NULL){
+                    entity = findEntityByPosition(startPos);
+                    break;
+                }
+                else if (!isInsideRoom(startPos)){
+                    startPos.gridX++;
+                    endPos = startPos;
+                    break;
+
+                }
+            }
+            if (i == extra->range){
+                endPos = startPos;
+            }
+            break;
+
+        }
+        case RIGHT:{
+            int i = 0;
+            for (; i < extra->range; i++){
+                startPos.gridX++;
+                if (findEntityByPosition(startPos) != NULL){
+                    entity = findEntityByPosition(startPos);
+                    break;
+                }
+                else if (!isInsideRoom(startPos)){
+                    startPos.gridX--;
+                    endPos = startPos;
+                    break;
+
+                }
+            }
+            if (i == extra->range){
+                endPos = startPos;
+            }
+            break;
+
+        }
+
+        }
+
+        if (entity != NULL){
+            player->equippedItem->count--;
+            if (player->equippedItem->count <= 0){
+                removeItemFromPlayer(player, findItemIndex(player, item));
+                player->equippedItem = NULL;
+                addEventMessage("You used up all of your %s%s", item->name, item->sprite);
+            }
+            if (extra->subclass == RANGEDWEAPON_MAGICWAND){
+                entity->frozen = 1;
+                addEventMessage("You froze %s%s in place", entity->name, entity->sprite);
+            }
+
+            entity->health -= extra->damage * player->multies[0];
+            if (entity->health <= 0){
+                removeEntityFromMap(map, findEntityIndex(map, entity));
+                addEventMessage("You killed %s%s", entity->name, entity->sprite);
+                free(entity);
+            }
+            else{
+                addEventMessage("You dealt %d%s to %s%s, has %d\u0100 left", extra->damage * player->multies[0], item->sprite, entity->name, entity->sprite, entity->health);
+            }
+        }
+        else{
+            player->equippedItem->count--;
+            if (player->equippedItem->count <= 0){
+                removeItemFromPlayer(player, findItemIndex(player, item));
+                player->equippedItem = NULL;
+                addEventMessage("You used up all of your %s%s", item->name, item->sprite);
+            }
+            if (extra->subclass == RANGEDWEAPON_DAGGER){
+                Item* temp = createBaseItem(item->name, endPos, item->sprite, item->spriteColor, 1);
+                addItemToRoom(findPlayerRoom(), createRangedWeapon(temp, extra->subclass, extra->range, extra->damage));
+                addEventMessage("You hit a wall!");
+            }
+        }
+
+    }
 
 
 //    Item* _item = createBaseItem(_item->name, , _item->sprite, _item->spriteColor, 1);
